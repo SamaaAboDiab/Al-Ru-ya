@@ -1,6 +1,8 @@
 import type { CookieOptions, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import {
   ERROR_CODES,
+  ROLES,
   SIGNUP_DRAFT_TTL_MINUTES,
   type AuthMethodsDTO,
   type SignInResultDTO,
@@ -21,8 +23,16 @@ import type { Logger } from '../../utils/logger';
 import type { Mailer } from '../../utils/mailer';
 import { ok } from '../../utils/respond';
 import * as authService from './auth.service';
+import * as google from './google.service';
 import * as passwordless from './passwordless.service';
 import * as resetService from './passwordReset.service';
+
+const OAUTH_COOKIE = 'ruya_oauth';
+const OAUTH_TTL_MINUTES = 10;
+
+/** Same-site paths only, so a sign-in can never send someone to another site. */
+const safeNext = (value: unknown) =>
+  typeof value === 'string' && /^\/(?![/\\])/.test(value) && value.length <= 300 ? value : undefined;
 
 export interface AuthDeps {
   mailer: Mailer;
@@ -38,6 +48,16 @@ export function createAuthController(config: Config, deps: AuthDeps) {
     path: '/',
   };
   const passwordlessDeps = { ...deps, secret: config.JWT_SECRET };
+  const googleConfig =
+    config.GOOGLE_CLIENT_ID && config.GOOGLE_CLIENT_SECRET
+      ? {
+          clientId: config.GOOGLE_CLIENT_ID,
+          clientSecret: config.GOOGLE_CLIENT_SECRET,
+          // Through the web origin, so the session cookie lands on the site people use.
+          redirectUri: `${deps.webOrigin}/api/auth/google/callback`,
+        }
+      : null;
+  const toWeb = (path: string) => `${deps.webOrigin}${path}`;
 
   function startSession(res: Response, user: UserDTO) {
     const token = signToken({ id: user.id, role: user.role }, config.JWT_SECRET, config.JWT_EXPIRES_IN_DAYS);
@@ -74,7 +94,57 @@ export function createAuthController(config: Config, deps: AuthDeps) {
 
   return {
     methods(_req: Request, res: Response) {
-      ok<AuthMethodsDTO>(res, { google: false, phone: false });
+      ok<AuthMethodsDTO>(res, { google: Boolean(googleConfig), phone: false });
+    },
+
+    /** Sends the browser to Google, remembering (signed, in a cookie) what must come back. */
+    googleStart(req: Request, res: Response) {
+      if (!googleConfig) throw AppError.notFound('Route');
+      const trip = google.newRoundTrip();
+      const next = safeNext(req.query.next);
+      const sealed = jwt.sign({ state: trip.state, verifier: trip.verifier, next }, config.JWT_SECRET, {
+        audience: 'oauth',
+        expiresIn: `${OAUTH_TTL_MINUTES}m`,
+      });
+      res.cookie(OAUTH_COOKIE, sealed, { ...cookieOptions, maxAge: OAUTH_TTL_MINUTES * 60 * 1000 });
+      res.redirect(google.authorizeUrl(googleConfig, trip.state, trip.challenge));
+    },
+
+    /** Google sends the browser back here. Every failure lands on the login page with one message. */
+    async googleCallback(req: Request, res: Response) {
+      const failed = () => res.redirect(toWeb('/login?error=google'));
+      if (!googleConfig) return failed();
+      res.clearCookie(OAUTH_COOKIE, cookieOptions);
+
+      let trip: { state: string; verifier: string; next?: string };
+      try {
+        trip = jwt.verify(req.cookies?.[OAUTH_COOKIE] ?? '', config.JWT_SECRET, {
+          audience: 'oauth',
+          algorithms: ['HS256'],
+        }) as typeof trip;
+      } catch {
+        return failed();
+      }
+      const { code, state } = req.query;
+      if (typeof code !== 'string' || typeof state !== 'string' || state !== trip.state) return failed();
+
+      let outcome: Awaited<ReturnType<typeof google.signInWithGoogle>>;
+      try {
+        outcome = await google.signInWithGoogle(googleConfig, code, trip.verifier);
+      } catch (err) {
+        deps.logger.error({ err }, 'Google sign-in failed');
+        return failed();
+      }
+      if (!outcome) return failed();
+
+      const next = safeNext(trip.next);
+      if ('user' in outcome) {
+        res.clearCookie(SIGNUP_COOKIE, cookieOptions);
+        startSession(res, outcome.user);
+        return res.redirect(toWeb(next ?? (outcome.user.role === ROLES.CHILD ? '/child' : '/parent')));
+      }
+      keepDraft(res, outcome.draft);
+      res.redirect(toWeb(`/register/complete${next ? `?next=${encodeURIComponent(next)}` : ''}`));
     },
 
     async register(req: Request, res: Response) {

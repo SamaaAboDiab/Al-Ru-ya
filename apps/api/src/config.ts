@@ -14,6 +14,9 @@ const envSchema = z.object({
   SMTP_USER: z.string().min(1).optional(),
   SMTP_PASS: z.string().min(1).optional(),
   MAIL_FROM: z.string().min(1).default('الرؤية <no-reply@localhost>'),
+  // "Sign in with Google" appears only when both are set (Google Cloud console, OAuth client).
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
 });
 
 export type Config = z.infer<typeof envSchema>;

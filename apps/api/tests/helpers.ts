@@ -9,7 +9,8 @@ import type { MailMessage } from '../src/utils/mailer';
 
 let mongo: MongoMemoryServer;
 
-export function useTestApp() {
+/** `env` adds settings, e.g. Google credentials, on top of the test defaults. */
+export function useTestApp(env: Record<string, string> = {}) {
   const ctx = { mails: [] } as unknown as { app: ReturnType<typeof createApp>; mails: MailMessage[] };
 
   beforeAll(async () => {
@@ -20,6 +21,7 @@ export function useTestApp() {
       NODE_ENV: 'test',
       MONGODB_URI: mongo.getUri(),
       JWT_SECRET: 'test-secret-that-is-long-enough-for-validation',
+      ...env,
     });
     ctx.app = createApp(config, createLogger('silent', false), {
       send: async (message) => {

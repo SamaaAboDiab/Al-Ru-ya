@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { OtherSignIn } from '@/components/auth/OtherSignIn';
 import { AuthShell } from '@/components/AuthShell';
+import { FormAlert } from '@/components/FormAlert';
 import { homeFor, safeNext } from '@/lib/routes';
 import { getAuthMethods, getCurrentUser, getDictionary, getLocale } from '@/lib/server';
 import { LoginForm } from './LoginForm';
 
-type SearchParams = Promise<{ next?: string | string[]; email?: string | string[] }>;
+type SearchParams = Promise<{ next?: string | string[]; email?: string | string[]; error?: string | string[] }>;
 
 export default async function LoginPage({ searchParams }: { searchParams: SearchParams }) {
   const query = await searchParams;
@@ -25,6 +26,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         <h1 className="auth-title">{t.login.title}</h1>
         <p className="auth-subtitle">{t.login.subtitle}</p>
       </div>
+      {query.error === 'google' && <FormAlert>{t.signin.googleFailed}</FormAlert>}
       <LoginForm locale={locale} next={next} email={email} />
       <OtherSignIn locale={locale} methods={methods} next={next} />
       <p className="auth-footer">

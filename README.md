@@ -34,6 +34,11 @@ LOG_LEVEL=info
 # SMTP_USER=
 # SMTP_PASS=
 # MAIL_FROM="الرؤية <no-reply@your-domain.com>"
+
+# "Sign in with Google" (Google Cloud console > APIs & Services > Credentials > OAuth client ID,
+# type "Web application"; authorized redirect URI: <WEB_ORIGIN>/api/auth/google/callback).
+# GOOGLE_CLIENT_ID=
+# GOOGLE_CLIENT_SECRET=
 ```
 
 ```bash

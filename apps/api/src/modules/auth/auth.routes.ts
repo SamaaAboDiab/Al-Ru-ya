@@ -24,6 +24,8 @@ export function authRoutes(config: Config, authLimiter: RequestHandler, deps: Au
   // Passwordless: an emailed link, then (for newcomers) one last step to create the account.
   router.post('/email-link', authLimiter, validateBody(emailLinkSchema), controller.emailLink);
   router.post('/email-link/verify', authLimiter, validateBody(linkTokenSchema), controller.verifyEmailLink);
+  router.get('/google/start', authLimiter, controller.googleStart);
+  router.get('/google/callback', authLimiter, controller.googleCallback);
   router.get('/signup', controller.signupDraft);
   router.post('/signup', authLimiter, validateBody(completeSignupSchema), controller.completeSignup);
 
