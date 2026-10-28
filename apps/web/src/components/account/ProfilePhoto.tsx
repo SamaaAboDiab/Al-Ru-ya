@@ -34,10 +34,10 @@ async function toSquare(file: File): Promise<Blob | null> {
   return webp?.type === 'image/webp' ? webp : encode('image/jpeg');
 }
 
-type Props = { locale: Locale; user: { id: string; name: string; photoUrl?: string }; isChild: boolean };
+type Props = { locale: Locale; user: { id: string; name: string; photoUrl?: string } };
 
-/** Settings card for the profile photo: add, change or remove it. */
-export function ProfilePhoto({ locale, user, isChild }: Props) {
+/** Settings card for the profile photo: choose one, then edit (replace) or delete it. */
+export function ProfilePhoto({ locale, user }: Props) {
   const t = dictionaries[locale];
   const a = t.account;
   const router = useRouter();
@@ -90,7 +90,6 @@ export function ProfilePhoto({ locale, user, isChild }: Props) {
         </div>
 
         <div className="photo-setting-text">
-          <p className="muted">{a.photoHint(isChild)}</p>
           <div className="photo-setting-actions">
             {/* A label opens the file picker, so the visible button needs no script. */}
             <label htmlFor={inputId} className="btn btn-secondary btn-sm" aria-disabled={busy || undefined}>

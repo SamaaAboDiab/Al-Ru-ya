@@ -26,7 +26,7 @@ export default async function SettingsPage() {
         </div>
 
         <div className="stack">
-          <ProfilePhoto locale={locale} user={user} isChild={user.role === ROLES.CHILD} />
+          <ProfilePhoto locale={locale} user={user} />
 
           <section className="card">
             <LanguageChoice locale={locale} />
