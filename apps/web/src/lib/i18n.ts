@@ -43,8 +43,15 @@ function arabicYears(n: number) {
 
 const ar = {
   appName: 'الرؤية',
+  appSubtitle: 'Al-Ru’ya',
   tagline: 'تنظيم زيارات الأطفال وجدولهم، بهدوء ووضوح.',
   switchLanguage: 'English',
+  welcome: {
+    tagline: 'لأن كل طفل يستاهل يتشاف، وكل أب وأم يستاهلوا فرصة.',
+    getStarted: 'يلا نبدأ',
+    haveAccount: 'عندك حساب؟',
+    signIn: 'ادخل',
+  },
   nav: { logout: 'خروج' },
   login: {
     title: 'تسجيل الدخول',
@@ -122,9 +129,16 @@ const ar = {
 export type Dictionary = typeof ar;
 
 const en: Dictionary = {
-  appName: 'Al-Ruya',
+  appName: 'Al-Ru’ya',
+  appSubtitle: 'The Vision',
   tagline: "Organize children's visits and schedules, calmly and clearly.",
   switchLanguage: 'العربية',
+  welcome: {
+    tagline: 'Because every child deserves to be seen, and every parent deserves a chance.',
+    getStarted: 'Get Started',
+    haveAccount: 'Already have an account?',
+    signIn: 'Sign in',
+  },
   nav: { logout: 'Sign out' },
   login: {
     title: 'Sign in',

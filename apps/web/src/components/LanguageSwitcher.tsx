@@ -5,7 +5,7 @@ import { useTransition } from 'react';
 import type { Locale } from '@ruya/shared';
 import { LOCALE_COOKIE, dictionaries } from '@/lib/i18n';
 
-export function LanguageSwitcher({ locale }: { locale: Locale }) {
+export function LanguageSwitcher({ locale, variant }: { locale: Locale; variant?: 'on-dark' }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const next: Locale = locale === 'ar' ? 'en' : 'ar';
@@ -16,7 +16,10 @@ export function LanguageSwitcher({ locale }: { locale: Locale }) {
   }
 
   return (
-    <button type="button" className="btn btn-ghost" onClick={switchLanguage} disabled={pending} lang={next}>
+    <button
+      type="button"
+      className={variant === 'on-dark' ? 'btn btn-ghost-dark' : 'btn btn-ghost'}
+      onClick={switchLanguage} disabled={pending} lang={next}>
       {dictionaries[locale].switchLanguage}
     </button>
   );

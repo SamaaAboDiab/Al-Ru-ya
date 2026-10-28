@@ -1,8 +1,38 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { getCurrentUser } from '@/lib/server';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { LogoMark } from '@/components/Logo';
 import { homeFor } from '@/lib/routes';
+import { getCurrentUser, getDictionary, getLocale } from '@/lib/server';
 
-export default async function Home() {
+/** The screen the app opens on. Signed-in users go straight to their page. */
+export default async function Welcome() {
   const user = await getCurrentUser();
-  redirect(user ? homeFor(user.role) : '/login');
+  if (user) redirect(homeFor(user.role));
+
+  const locale = await getLocale();
+  const t = await getDictionary();
+  return (
+    <main className="welcome">
+      <div className="welcome-lang">
+        <LanguageSwitcher locale={locale} variant="on-dark" />
+      </div>
+
+      <div className="welcome-hero">
+        <LogoMark size={150} className="welcome-logo" />
+        <h1 className="welcome-name">{t.appName}</h1>
+        <p className="welcome-sub">{t.appSubtitle}</p>
+        <p className="welcome-tagline">{t.welcome.tagline}</p>
+      </div>
+
+      <div className="welcome-actions">
+        <Link href="/register" className="btn btn-on-dark">
+          {t.welcome.getStarted}
+        </Link>
+        <p>
+          {t.welcome.haveAccount} <Link href="/login">{t.welcome.signIn}</Link>
+        </p>
+      </div>
+    </main>
+  );
 }
