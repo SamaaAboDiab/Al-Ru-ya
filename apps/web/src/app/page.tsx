@@ -1,9 +1,9 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { LogoMark } from '@/components/Logo';
 import { homeFor } from '@/lib/routes';
 import { getCurrentUser, getDictionary, getLocale } from '@/lib/server';
+import { WelcomeActions } from './WelcomeActions';
 
 /** The screen the app opens on. Signed-in users go straight to their page. */
 export default async function Welcome() {
@@ -25,14 +25,7 @@ export default async function Welcome() {
         <p className="welcome-tagline">{t.welcome.tagline}</p>
       </div>
 
-      <div className="welcome-actions">
-        <Link href="/register" className="btn btn-on-dark">
-          {t.welcome.getStarted}
-        </Link>
-        <p>
-          {t.welcome.haveAccount} <Link href="/login">{t.welcome.signIn}</Link>
-        </p>
-      </div>
+      <WelcomeActions locale={locale} />
     </main>
   );
 }

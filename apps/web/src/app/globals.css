@@ -431,14 +431,100 @@ a {
   gap: var(--space-4);
 }
 
-.welcome-actions p {
-  margin: 0;
-  color: rgb(255 255 255 / 0.75);
+.welcome-actions {
+  min-block-size: 120px;
+  justify-content: flex-end;
 }
 
-.welcome-actions p a {
+.welcome-actions-in {
+  animation: rise-in 400ms ease-out both;
+}
+
+.btn-outline-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 100%;
+  min-height: 52px;
+  border-radius: 999px;
+  background: transparent;
   color: #ffffff;
-  font-weight: 600;
+  border-color: rgb(255 255 255 / 0.5);
+  text-decoration: none;
+}
+
+.btn-outline-dark:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.splash-progress {
+  align-self: center;
+  inline-size: 120px;
+  block-size: 4px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.18);
+  overflow: hidden;
+}
+
+.splash-progress span {
+  display: block;
+  block-size: 100%;
+  inline-size: 100%;
+  border-radius: inherit;
+  background: #ffffff;
+  animation: fill var(--splash-ms, 2500ms) ease-in-out forwards;
+}
+
+[dir='rtl'] .splash-progress span {
+  transform-origin: right;
+}
+
+[dir='ltr'] .splash-progress span {
+  transform-origin: left;
+}
+
+.splash-label {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgb(255 255 255 / 0.65);
+}
+
+.welcome-logo {
+  animation: logo-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes logo-breathe {
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-logo,
+  .welcome-actions-in,
+  .splash-progress span {
+    animation: none;
+  }
 }
 
 .ltr {

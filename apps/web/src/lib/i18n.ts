@@ -48,9 +48,9 @@ const ar = {
   switchLanguage: 'English',
   welcome: {
     tagline: 'لأن كل طفل يستاهل يتشاف، وكل أب وأم يستاهلوا فرصة.',
-    getStarted: 'يلا نبدأ',
-    haveAccount: 'عندك حساب؟',
-    signIn: 'ادخل',
+    loading: 'بنجهّز لك التطبيق…',
+    createAccount: 'إنشاء حساب',
+    signIn: 'تسجيل الدخول',
   },
   nav: { logout: 'خروج' },
   login: {
@@ -135,8 +135,8 @@ const en: Dictionary = {
   switchLanguage: 'العربية',
   welcome: {
     tagline: 'Because every child deserves to be seen, and every parent deserves a chance.',
-    getStarted: 'Get Started',
-    haveAccount: 'Already have an account?',
+    loading: 'Getting things ready…',
+    createAccount: 'Create account',
     signIn: 'Sign in',
   },
   nav: { logout: 'Sign out' },
