@@ -14,9 +14,22 @@ packages/shared  Zod schemas, roles, error codes and types used by both apps.
 
 Requires Node 20+.
 
+Create `apps/api/.env` with:
+
+```bash
+NODE_ENV=development
+PORT=4000
+MONGODB_URI=mongodb://127.0.0.1:27017/ruya
+# At least 32 random characters:
+# node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+JWT_SECRET=
+JWT_EXPIRES_IN_DAYS=7
+WEB_ORIGIN=http://localhost:3000
+LOG_LEVEL=info
+```
+
 ```bash
 npm install
-cp apps/api/.env.example apps/api/.env        # then set JWT_SECRET
 cp apps/web/.env.example apps/web/.env.local
 
 npm run dev:db    # local MongoDB on 27017 if you don't have one (data in apps/api/.dev-db)
