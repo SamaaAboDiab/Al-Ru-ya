@@ -30,7 +30,7 @@ export default async function MyDayPage({ searchParams }: { searchParams: Search
 
   return (
     <>
-      <main className="page page-narrow">
+      <main className="page">
         <div className="page-head">
           <BackButton href="/child" label={t.nav.home} />
           <div>

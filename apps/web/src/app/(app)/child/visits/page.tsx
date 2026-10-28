@@ -26,7 +26,7 @@ export default async function MyVisitsPage() {
 
   return (
     <>
-      <main className="page page-narrow">
+      <main className="page">
         <div className="page-head">
           <BackButton href="/child" label={t.nav.home} />
           <div>

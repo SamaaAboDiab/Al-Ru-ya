@@ -24,7 +24,7 @@ export default async function MyMessagesPage() {
 
   return (
     <>
-      <main className="page page-narrow">
+      <main className="page">
         <div className="page-head">
           <BackButton href="/child" label={t.nav.home} />
           <div>

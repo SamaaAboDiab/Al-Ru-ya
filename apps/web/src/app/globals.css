@@ -1345,9 +1345,10 @@
   }
 
   /* ========== Messages ========== */
+  /* One conversation per parent: side by side on wide screens, stacked on phones. */
   .convo-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
     gap: var(--space-3);
     margin: 0;
     padding: 0;
