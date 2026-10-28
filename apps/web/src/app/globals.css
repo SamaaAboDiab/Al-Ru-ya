@@ -3443,7 +3443,8 @@
     border-color: var(--gray-400);
   }
 
-  .picker-button:focus-visible {
+  .picker-button:focus-visible,
+  .picker-button[aria-expanded='true'] {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 4px rgb(61 123 224 / 0.15);
@@ -3458,16 +3459,51 @@
     color: var(--accent);
   }
 
+  .picker-value,
+  .picker-placeholder {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .picker-value {
+    flex: 1;
     font-weight: 500;
   }
 
+  /* Side-by-side fields stack while one of them has its picker open, so the panel gets the full width. */
+  .field-row:has(.calendar, .time-panel) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 420px) {
+    .field-row:has(.picker) {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .picker-placeholder {
+    flex: 1;
     color: var(--gray-400);
   }
 
+  .picker-caret {
+    flex-shrink: 0;
+    color: var(--gray-400);
+    transition: transform 150ms var(--ease-out);
+  }
+
+  .picker-button[aria-expanded='true'] .picker-caret {
+    transform: rotate(180deg);
+  }
+
   .picker:has(.picker-clear) .picker-button {
-    padding-inline-end: 48px;
+    padding-inline-end: 52px;
+  }
+
+  .picker:has(.picker-clear) .picker-caret {
+    display: none;
   }
 
   .picker-clear {
@@ -3489,14 +3525,242 @@
     color: var(--text);
   }
 
-  /* The native input stays in the form and anchors the browser's picker, but is never seen. */
-  .picker-native {
-    position: absolute;
-    inset: 0;
+  /* Panels open inline under the field, so dialogs and small screens never clip them. */
+  .calendar,
+  .time-panel {
+    min-width: 0;
+    margin-block-start: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    animation: panel-in 160ms var(--ease-out);
+  }
+
+  @keyframes panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  .calendar-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-3);
+  }
+
+  .calendar-head .icon-btn {
+    border-color: transparent;
+    background: var(--gray-50);
+  }
+
+  .calendar-selects {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .calendar-selects select {
+    inline-size: auto;
+    appearance: auto;
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--gray-50);
+    color: var(--navy-800);
+    font: inherit;
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .calendar-selects select:hover {
+    background: var(--blue-50);
+  }
+
+  /* minmax(0, 1fr): columns share the width and never push past the panel. */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+  }
+
+  .calendar-weekday {
+    display: grid;
+    place-items: center;
+    block-size: 32px;
+    color: var(--gray-500);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  html[lang='ar'] .calendar-weekday {
+    font-size: var(--text-sm);
+  }
+
+  .calendar-day {
+    display: grid;
+    place-items: center;
     inline-size: 100%;
-    block-size: 100%;
-    opacity: 0;
-    pointer-events: none;
+    max-inline-size: 44px;
+    aspect-ratio: 1;
+    justify-self: center;
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color 120ms var(--ease-out);
+  }
+
+  .calendar-day:hover:not(:disabled) {
+    background: var(--blue-50);
+  }
+
+  .calendar-day[data-today] {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .calendar-day[aria-pressed='true'] {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .calendar-day:disabled {
+    color: var(--gray-300);
+    cursor: not-allowed;
+  }
+
+  .picker-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-block-start: var(--space-3);
+    padding-block-start: var(--space-3);
+    border-block-start: 1px solid var(--gray-100);
+  }
+
+  .picker-link {
+    min-height: 36px;
+    padding: 0 var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--blue-50);
+    color: var(--navy-700);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .picker-link:hover {
+    background: var(--blue-100);
+  }
+
+  .picker-link-muted {
+    background: transparent;
+    color: var(--gray-500);
+  }
+
+  .picker-link-muted:hover {
+    background: var(--gray-100);
+    color: var(--text);
+  }
+
+  /* Time */
+  .time-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .time-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .time-label {
+    color: var(--gray-500);
+    font-size: var(--text-xs);
+    font-weight: 600;
+  }
+
+  html[lang='ar'] .time-label {
+    font-size: var(--text-sm);
+  }
+
+  .time-hours {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-1);
+  }
+
+  .time-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-3);
+  }
+
+  .time-row .time-section {
+    flex: 1;
+  }
+
+  .time-minutes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-1);
+  }
+
+  .time-period {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-1);
+    padding: 3px;
+    border-radius: var(--radius-sm);
+    background: var(--gray-50);
+  }
+
+  .time-chip {
+    min-height: 40px;
+    padding: 0 var(--space-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--gray-50);
+    color: var(--text);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color 120ms var(--ease-out);
+  }
+
+  .time-chip:hover {
+    background: var(--blue-50);
+  }
+
+  .time-period .time-chip {
+    background: transparent;
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .time-chip[aria-pressed='true'] {
+    background: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
   }
 }
 
