@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
 import type { Locale, UserDTO } from '@ruya/shared';
 import { Field } from '@/components/Field';
+import { FormAlert } from '@/components/FormAlert';
+import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
 import { useApiForm } from '@/lib/useApiForm';
@@ -29,13 +31,15 @@ export function LoginForm({ locale, next, email }: Props) {
   }
 
   return (
-    <form className="stack" onSubmit={onSubmit} noValidate>
-      {formError && <p className="alert alert-error" role="alert">{formError}</p>}
+    <form className="form" onSubmit={onSubmit} noValidate>
+      {formError && <FormAlert>{formError}</FormAlert>}
       <Field
         label={t.fields.email}
         name="email"
         type="email"
+        inputMode="email"
         autoComplete="email"
+        placeholder="name@example.com"
         dir="ltr"
         required
         defaultValue={email}
@@ -48,11 +52,12 @@ export function LoginForm({ locale, next, email }: Props) {
         autoComplete="current-password"
         dir="ltr"
         required
+        toggleLabels={{ show: t.fields.showPassword, hide: t.fields.hidePassword }}
         error={fieldErrors.password}
       />
-      <button type="submit" className="btn btn-primary" disabled={pending}>
+      <SubmitButton className="btn btn-primary btn-lg btn-block" loading={pending}>
         {t.login.submit}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

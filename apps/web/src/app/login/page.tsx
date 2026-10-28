@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { TopBar } from '@/components/TopBar';
+import { AuthShell } from '@/components/AuthShell';
 import { homeFor, safeNext } from '@/lib/routes';
 import { getCurrentUser, getDictionary, getLocale } from '@/lib/server';
 import { LoginForm } from './LoginForm';
@@ -19,20 +19,15 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
   const t = await getDictionary();
   const carry = new URLSearchParams({ ...(next && { next }), ...(email && { email }) }).toString();
   return (
-    <main className="auth-page">
-      <div className="auth-card">
-        <TopBar locale={locale} signedIn={false} />
-        <div className="card stack">
-          <div>
-            <h1>{t.login.title}</h1>
-            <p className="muted">{t.login.subtitle}</p>
-          </div>
-          <LoginForm locale={locale} next={next} email={email} />
-          <p className="muted">
-            {t.login.noAccount} <Link href={`/register${carry ? `?${carry}` : ''}`}>{t.login.toRegister}</Link>
-          </p>
-        </div>
+    <AuthShell locale={locale}>
+      <div>
+        <h1 className="auth-title">{t.login.title}</h1>
+        <p className="auth-subtitle">{t.login.subtitle}</p>
       </div>
-    </main>
+      <LoginForm locale={locale} next={next} email={email} />
+      <p className="auth-footer">
+        {t.login.noAccount} <Link href={`/register${carry ? `?${carry}` : ''}`}>{t.login.toRegister}</Link>
+      </p>
+    </AuthShell>
   );
 }

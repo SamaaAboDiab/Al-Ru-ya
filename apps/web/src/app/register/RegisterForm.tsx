@@ -1,9 +1,12 @@
 'use client';
 
+import { CircleAlert, User, UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
-import { PARENT_ROLES, type Locale, type UserDTO } from '@ruya/shared';
+import { ROLES, PARENT_ROLES, type Locale, type UserDTO } from '@ruya/shared';
 import { Field } from '@/components/Field';
+import { FormAlert } from '@/components/FormAlert';
+import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
 import { useApiForm } from '@/lib/useApiForm';
@@ -32,30 +35,46 @@ export function RegisterForm({ locale, next, email }: Props) {
   }
 
   return (
-    <form className="stack" onSubmit={onSubmit} noValidate>
-      {formError && <p className="alert alert-error" role="alert">{formError}</p>}
-      <fieldset className="field segmented" aria-describedby={fieldErrors.role ? 'role-error' : undefined}>
-        <legend>{t.fields.role}</legend>
-        <div className="segmented-options">
-          {PARENT_ROLES.map((role) => (
-            <label key={role}>
-              <input type="radio" name="role" value={role} required />
-              {t.fields[role]}
-            </label>
-          ))}
+    <form className="form" onSubmit={onSubmit} noValidate>
+      {formError && <FormAlert>{formError}</FormAlert>}
+      <fieldset className="choice-group" aria-describedby={fieldErrors.role ? 'role-error' : undefined}>
+        <legend className="field-label">{t.fields.role}</legend>
+        <div className="choice-options">
+          {PARENT_ROLES.map((role) => {
+            const Icon = role === ROLES.MOTHER ? UserRound : User;
+            return (
+              <label key={role} className="choice">
+                <input type="radio" name="role" value={role} required />
+                <span className="choice-icon">
+                  <Icon size={18} aria-hidden />
+                </span>
+                {t.fields[role]}
+              </label>
+            );
+          })}
         </div>
         {fieldErrors.role && (
-          <span id="role-error" className="error">
+          <span id="role-error" className="field-error">
+            <CircleAlert size={14} aria-hidden />
             {fieldErrors.role}
           </span>
         )}
       </fieldset>
-      <Field label={t.fields.name} name="name" autoComplete="name" dir="auto" required error={fieldErrors.name} />
+      <Field
+        label={t.fields.name}
+        name="name"
+        autoComplete="name"
+        placeholder={t.fields.namePlaceholder}
+        required
+        error={fieldErrors.name}
+      />
       <Field
         label={t.fields.email}
         name="email"
         type="email"
+        inputMode="email"
         autoComplete="email"
+        placeholder="name@example.com"
         dir="ltr"
         required
         defaultValue={email}
@@ -70,11 +89,12 @@ export function RegisterForm({ locale, next, email }: Props) {
         minLength={8}
         required
         hint={t.fields.passwordHint}
+        toggleLabels={{ show: t.fields.showPassword, hide: t.fields.hidePassword }}
         error={fieldErrors.password}
       />
-      <button type="submit" className="btn btn-primary" disabled={pending}>
+      <SubmitButton className="btn btn-primary btn-lg btn-block" loading={pending}>
         {t.register.submit}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

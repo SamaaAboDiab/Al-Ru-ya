@@ -1,14 +1,18 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState, type FormEvent } from 'react';
 import type { Locale, UserDTO } from '@ruya/shared';
 import { Field } from '@/components/Field';
+import { FormAlert } from '@/components/FormAlert';
+import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { useApiForm } from '@/lib/useApiForm';
 
-/** US-02: shown only for children aged 10 or more; the API enforces the same rule. */
-export function ChildAccountForm({ locale, childId }: { locale: Locale; childId: string }) {
+/** US-02: offered only for children aged 10 or more; the API enforces the same rule. */
+export function ChildAccountForm({ locale, childId, onDone }: { locale: Locale; childId: string; onDone: () => void }) {
   const t = dictionaries[locale];
+  const router = useRouter();
   const [created, setCreated] = useState(false);
   const { pending, formError, fieldErrors, submit } = useApiForm<UserDTO>(locale);
 
@@ -19,25 +23,37 @@ export function ChildAccountForm({ locale, childId }: { locale: Locale; childId:
       email: form.get('email'),
       password: form.get('password'),
     });
-    // No refresh here: it would swap this message for the "has a login" badge before it's read.
     if (result.ok) setCreated(true);
   }
 
+  function finish() {
+    onDone();
+    router.refresh();
+  }
+
   if (created) {
-    return <p className="alert alert-success" role="status">{t.parent.accountCreated}</p>;
+    return (
+      <div className="stack">
+        <FormAlert tone="success">{t.parent.accountCreated}</FormAlert>
+        <button type="button" className="btn btn-primary btn-block" onClick={finish}>
+          {t.parent.done}
+        </button>
+      </div>
+    );
   }
 
   return (
-    <form className="stack" onSubmit={onSubmit} noValidate aria-label={t.parent.createAccountTitle}>
-      <strong>{t.parent.createAccountTitle}</strong>
-      {formError && <p className="alert alert-error" role="alert">{formError}</p>}
+    <form className="form" onSubmit={onSubmit} noValidate>
+      {formError && <FormAlert>{formError}</FormAlert>}
       <Field
         label={t.fields.email}
         name="email"
         type="email"
+        inputMode="email"
         autoComplete="off"
         dir="ltr"
         required
+        autoFocus
         error={fieldErrors.email}
       />
       <Field
@@ -49,11 +65,12 @@ export function ChildAccountForm({ locale, childId }: { locale: Locale; childId:
         minLength={8}
         required
         hint={t.fields.passwordHint}
+        toggleLabels={{ show: t.fields.showPassword, hide: t.fields.hidePassword }}
         error={fieldErrors.password}
       />
-      <button type="submit" className="btn btn-ghost" disabled={pending}>
+      <SubmitButton className="btn btn-primary btn-block" loading={pending}>
         {t.parent.createAccount}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

@@ -1,3 +1,4 @@
+import { CheckCircle2, Clock, Users } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import {
   INVITE_STATUSES,
@@ -5,24 +6,27 @@ import {
   MIN_CHILD_ACCOUNT_AGE,
   ROLES,
   ageInYears,
+  type ChildDTO,
+  type InvitationDTO,
+  type Locale,
 } from '@ruya/shared';
+import { AppHeader } from '@/components/AppHeader';
+import { Avatar } from '@/components/Avatar';
 import { Forbidden } from '@/components/Forbidden';
-import { TopBar } from '@/components/TopBar';
-import { formatDate } from '@/lib/i18n';
+import { dictionaries, formatDate } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
-import { getCurrentUser, getDictionary, getInvitations, getLocale, getMyChildren } from '@/lib/server';
-import { AddChildForm } from './AddChildForm';
-import { ChildAccountForm } from './ChildAccountForm';
-import { InviteParentForm } from './InviteParentForm';
+import { getCurrentUser, getInvitations, getLocale, getMyChildren } from '@/lib/server';
+import { AddChildDialog } from './AddChildDialog';
+import { ChildActions } from './ChildActions';
 
 export default async function ParentPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
   const locale = await getLocale();
-  if (user.role === ROLES.CHILD) return <Forbidden locale={locale} homeHref={homeFor(user.role)} />;
+  if (user.role === ROLES.CHILD) return <Forbidden locale={locale} user={user} homeHref={homeFor(user.role)} />;
 
-  const t = await getDictionary();
+  const t = dictionaries[locale];
   const children = (await getMyChildren()) ?? [];
   // Only children still missing a parent need their invitations.
   const pendingInvites = new Map(
@@ -37,85 +41,116 @@ export default async function ParentPage() {
   );
 
   return (
-    <main className="page">
-      <TopBar locale={locale} signedIn />
-      <h1 style={{ marginBlockEnd: 'var(--space-5)' }}>
-        {t.parent.greeting(user.name)}
-      </h1>
+    <>
+      <AppHeader locale={locale} user={user} />
+      <main className="page">
+        <div className="page-head">
+          <div>
+            <h1 className="page-title">{t.parent.greeting(user.name)}</h1>
+            <p className="page-subtitle">{t.parent.subtitle}</p>
+          </div>
+          {children.length > 0 && <AddChildDialog locale={locale} />}
+        </div>
 
-      <div className="grid-2">
-        <section className="card" aria-labelledby="children-title">
-          <h2 id="children-title" className="section-title">
-            {t.parent.childrenTitle}
-          </h2>
-          {children.length === 0 ? (
-            <p className="empty muted">{t.parent.noChildren}</p>
-          ) : (
-            <ul className="child-list">
-              {children.map((child) => {
-                const age = ageInYears(child.birthDate);
-                return (
-                  <li key={child.id} className="child-item">
-                    <div className="child-head">
-                      <span className="avatar" aria-hidden>
-                        {child.name.charAt(0)}
-                      </span>
-                      <div>
-                        <strong>
-                          <bdi>{child.name}</bdi>
-                        </strong>
-                        <div className="muted">
-                          {t.parent.age(age)} · {formatDate(child.birthDate, locale)}
-                        </div>
-                      </div>
-                    </div>
-                    {child.hasAccount ? (
-                      <span className="badge badge-success" style={{ alignSelf: 'start' }}>
-                        {t.parent.hasAccount}
-                      </span>
-                    ) : age >= MIN_CHILD_ACCOUNT_AGE ? (
-                      <ChildAccountForm locale={locale} childId={child.id} />
-                    ) : (
-                      <span className="badge" style={{ alignSelf: 'start' }}>
-                        {t.parent.managedByParents}
-                      </span>
-                    )}
-                    <p className="muted linked-parents">
-                      {t.parent.linkedParents}{' '}
-                      {child.parents.map((p, i) => (
-                        <span key={p.id}>
-                          {i > 0 && (locale === 'ar' ? '، ' : ', ')}
-                          <bdi>{p.name}</bdi> ({t.fields[p.role]})
-                        </span>
-                      ))}
-                    </p>
-                    {child.parents.length < MAX_PARENTS_PER_CHILD && (
-                      <div className="invite-box">
-                        {pendingInvites.get(child.id) && (
-                          <p className="muted hint-text">
-                            {t.parent.pendingInvite(
-                              pendingInvites.get(child.id)!.email,
-                              formatDate(pendingInvites.get(child.id)!.expiresAt.slice(0, 10), locale),
-                            )}
-                          </p>
-                        )}
-                        <InviteParentForm locale={locale} childId={child.id} />
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
+        {children.length === 0 ? (
+          <div className="empty-state">
+            <span className="empty-icon">
+              <Users size={28} aria-hidden />
+            </span>
+            <h2 className="section-title" style={{ margin: 0 }}>
+              {t.parent.emptyTitle}
+            </h2>
+            <p>{t.parent.emptyBody}</p>
+            <AddChildDialog locale={locale} />
+          </div>
+        ) : (
+          <ul className="child-grid">
+            {children.map((child) => (
+              <ChildCard key={child.id} locale={locale} child={child} pendingInvite={pendingInvites.get(child.id)} />
+            ))}
+          </ul>
+        )}
+      </main>
+    </>
+  );
+}
 
-        <section className="card" aria-labelledby="add-child-title">
-          <h2 id="add-child-title" className="section-title">
-            {t.parent.addChildTitle}
+function ChildCard({
+  locale,
+  child,
+  pendingInvite,
+}: {
+  locale: Locale;
+  child: ChildDTO;
+  pendingInvite?: InvitationDTO;
+}) {
+  const t = dictionaries[locale].parent;
+  const fields = dictionaries[locale].fields;
+  const age = ageInYears(child.birthDate);
+  const canCreateLogin = !child.hasAccount && age >= MIN_CHILD_ACCOUNT_AGE;
+  const canInvite = child.parents.length < MAX_PARENTS_PER_CHILD;
+
+  return (
+    <li className="card child-card">
+      <div className="child-card-head">
+        <Avatar name={child.name} id={child.id} size="lg" />
+        <div>
+          <h2 className="child-card-name">
+            <bdi>{child.name}</bdi>
           </h2>
-          <AddChildForm locale={locale} />
-        </section>
+          <p className="child-card-meta">
+            {t.age(age)} · {t.born(formatDate(child.birthDate, locale))}
+          </p>
+        </div>
       </div>
-    </main>
+
+      <div className="chip-row">
+        {child.hasAccount ? (
+          <span className="chip chip-success">
+            <CheckCircle2 size={14} aria-hidden />
+            {t.hasAccount}
+          </span>
+        ) : (
+          age < MIN_CHILD_ACCOUNT_AGE && <span className="chip">{t.managedByParents}</span>
+        )}
+        {pendingInvite && (
+          <span className="chip chip-warning">
+            <Clock size={14} aria-hidden />
+            {t.pendingInvite}
+          </span>
+        )}
+      </div>
+
+      <div className="parents-row">
+        <span className="avatar-stack">
+          {child.parents.map((p) => (
+            <Avatar key={p.id} name={p.name} id={p.id} size="sm" />
+          ))}
+        </span>
+        <span>
+          {child.parents.map((p, i) => (
+            <span key={p.id}>
+              {i > 0 && (locale === 'ar' ? '، ' : ', ')}
+              <bdi>{p.name}</bdi> ({fields[p.role]})
+            </span>
+          ))}
+        </span>
+      </div>
+
+      {(canCreateLogin || canInvite) && (
+        <ChildActions
+          locale={locale}
+          childId={child.id}
+          childName={child.name}
+          canCreateLogin={canCreateLogin}
+          canInvite={canInvite}
+          pendingInvite={
+            pendingInvite
+              ? { email: pendingInvite.email, until: formatDate(pendingInvite.expiresAt.slice(0, 10), locale) }
+              : undefined
+          }
+        />
+      )}
+    </li>
   );
 }

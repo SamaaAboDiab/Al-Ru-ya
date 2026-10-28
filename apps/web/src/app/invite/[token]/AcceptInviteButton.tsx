@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import type { ChildDTO, Locale } from '@ruya/shared';
+import { FormAlert } from '@/components/FormAlert';
+import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { useApiForm } from '@/lib/useApiForm';
 
@@ -19,10 +21,10 @@ export function AcceptInviteButton({ locale, token }: { locale: Locale; token: s
 
   return (
     <div className="stack">
-      {formError && <p className="alert alert-error" role="alert">{formError}</p>}
-      <button type="button" className="btn btn-primary" onClick={accept} disabled={pending}>
+      {formError && <FormAlert>{formError}</FormAlert>}
+      <SubmitButton type="button" className="btn btn-primary btn-lg btn-block" loading={pending} onClick={accept}>
         {dictionaries[locale].invitePage.accept}
-      </button>
+      </SubmitButton>
     </div>
   );
 }

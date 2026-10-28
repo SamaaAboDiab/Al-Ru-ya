@@ -1,25 +1,53 @@
+import { CalendarDays, ClipboardCheck, House, MessageCircle } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
+import { AppHeader } from '@/components/AppHeader';
 import { Forbidden } from '@/components/Forbidden';
-import { TopBar } from '@/components/TopBar';
+import { LogoMark } from '@/components/Logo';
+import { dictionaries } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
-import { getCurrentUser, getDictionary, getLocale } from '@/lib/server';
+import { getCurrentUser, getLocale } from '@/lib/server';
+
+const TILE_ICONS = [CalendarDays, ClipboardCheck, House, MessageCircle];
 
 export default async function ChildPage() {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
 
   const locale = await getLocale();
-  if (user.role !== ROLES.CHILD) return <Forbidden locale={locale} homeHref={homeFor(user.role)} />;
+  if (user.role !== ROLES.CHILD) return <Forbidden locale={locale} user={user} homeHref={homeFor(user.role)} />;
 
-  const t = await getDictionary();
+  const t = dictionaries[locale].child;
   return (
-    <main className="page">
-      <TopBar locale={locale} signedIn />
-      <section className="card stack">
-        <h1>{t.child.greeting(user.name)}</h1>
-        <p className="muted">{t.child.intro}</p>
-      </section>
-    </main>
+    <>
+      <AppHeader locale={locale} user={user} />
+      <main className="page">
+        <section className="hero">
+          <div>
+            <h1>{t.greeting(user.name)}</h1>
+            <p>{t.intro}</p>
+          </div>
+          <LogoMark size={140} className="hero-mark" />
+        </section>
+
+        <ul className="tile-grid">
+          {t.tiles.map((tile, i) => {
+            const Icon = TILE_ICONS[i];
+            return (
+              <li key={tile.title} className="card tile" aria-disabled="true">
+                <span className="tile-icon">
+                  <Icon size={22} aria-hidden />
+                </span>
+                <div>
+                  <h2 className="tile-title">{tile.title}</h2>
+                  <p className="tile-desc">{tile.desc}</p>
+                </div>
+                <span className="chip chip-info">{t.soon}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </main>
+    </>
   );
 }
