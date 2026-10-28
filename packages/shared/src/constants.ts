@@ -21,6 +21,13 @@ export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_RESET_TTL_MINUTES = 30;
 /** A sign-in link works once, for this long. */
 export const LOGIN_LINK_TTL_MINUTES = 15;
+/** Phone sign-in codes: short, so they expire fast and allow only a few guesses. */
+export const PHONE_CODE_LENGTH = 6;
+export const PHONE_CODE_TTL_MINUTES = 10;
+export const PHONE_CODE_MAX_ATTEMPTS = 5;
+/** Each SMS costs money, so a number gets a code at most this often, and this many an hour. */
+export const PHONE_CODE_RESEND_SECONDS = 60;
+export const PHONE_CODES_PER_HOUR = 5;
 /** After proving who they are, a newcomer has this long to finish creating the account. */
 export const SIGNUP_DRAFT_TTL_MINUTES = 30;
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
-import type { Locale, SignupDraftDTO, UserDTO } from '@ruya/shared';
+import { formatEgyptMobile, type Locale, type SignupDraftDTO, type UserDTO } from '@ruya/shared';
 import { roleOptions } from '@/components/auth/roleOptions';
 import { ChoiceField } from '@/components/ChoiceField';
 import { Field } from '@/components/Field';
@@ -38,6 +38,14 @@ export function CompleteForm({ locale, draft, next }: Props) {
   return (
     <form className="form" onSubmit={onSubmit} noValidate>
       {formError && <FormAlert>{formError}</FormAlert>}
+      {draft.phone && (
+        <p className="phone-sent">
+          {t.phone.yourNumber}:{' '}
+          <bdi dir="ltr" className="phone-number">
+            {formatEgyptMobile(draft.phone)}
+          </bdi>
+        </p>
+      )}
       <ChoiceField label={t.fields.role} name="role" required options={roleOptions(t)} error={fieldErrors.role} />
       <Field
         label={t.fields.name}

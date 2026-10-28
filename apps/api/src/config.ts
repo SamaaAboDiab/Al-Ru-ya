@@ -17,6 +17,11 @@ const envSchema = z.object({
   // "Sign in with Google" appears only when both are set (Google Cloud console, OAuth client).
   GOOGLE_CLIENT_ID: z.string().min(1).optional(),
   GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+  // Phone codes by SMS through Twilio. TWILIO_FROM is a Twilio number, or a Messaging Service id (MG...).
+  // Without these, codes are only logged, and phone sign-in is offered outside production only.
+  TWILIO_ACCOUNT_SID: z.string().min(1).optional(),
+  TWILIO_AUTH_TOKEN: z.string().min(1).optional(),
+  TWILIO_FROM: z.string().min(1).optional(),
 });
 
 export type Config = z.infer<typeof envSchema>;

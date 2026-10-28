@@ -10,6 +10,7 @@ import {
   SCHEDULE_DAYS,
 } from './constants';
 import { isIsoDate } from './dates';
+import { normalizeEgyptMobile, toLatinDigits } from './phone';
 
 const email = z.string().trim().toLowerCase().pipe(z.email('EMAIL_INVALID'));
 const password = z
@@ -80,6 +81,28 @@ export const completeSignupSchema = z.object({
   locale: z.enum(LOCALES).optional(),
 });
 export type CompleteSignupInput = z.infer<typeof completeSignupSchema>;
+
+/** An Egyptian mobile, normalized to E.164. */
+const phone = z.string().transform((value, ctx) => {
+  const e164 = normalizeEgyptMobile(value);
+  if (!e164) {
+    ctx.addIssue({ code: 'custom', message: 'PHONE_INVALID' });
+    return z.NEVER;
+  }
+  return e164;
+});
+
+export const phoneSendSchema = z.object({ phone, locale: z.enum(LOCALES).optional() });
+export type PhoneSendInput = z.infer<typeof phoneSendSchema>;
+
+export const phoneVerifySchema = z.object({
+  phone,
+  code: z
+    .string()
+    .transform((value) => toLatinDigits(value).replace(/\s/g, ''))
+    .pipe(z.string().regex(/^\d{6}$/, 'CODE_INVALID')),
+});
+export type PhoneVerifyInput = z.infer<typeof phoneVerifySchema>;
 
 /** Child profile, managed by the parents (any age). */
 export const createChildSchema = z.object({

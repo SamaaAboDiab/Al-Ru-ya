@@ -15,6 +15,8 @@ function toAppError(err: unknown): AppError | null {
   }
   const e = err as { code?: number; type?: string; status?: number } | null;
   if (e?.code === 11000) {
+    const key = (err as { keyPattern?: Record<string, unknown> }).keyPattern ?? {};
+    if ('phone' in key) return new AppError(409, ERROR_CODES.PHONE_TAKEN, 'This number belongs to another account');
     return new AppError(409, ERROR_CODES.EMAIL_TAKEN, 'Email is already registered');
   }
   if (e?.type === 'entity.parse.failed') {

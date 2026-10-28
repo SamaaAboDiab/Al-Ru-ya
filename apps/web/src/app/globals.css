@@ -628,7 +628,8 @@
   .choice-cards .choice {
     min-block-size: 64px;
     padding: var(--space-3);
-    padding-inline-end: var(--space-6);
+    /* Room for the corner check without starving short labels on phones. */
+    padding-inline-end: var(--space-4);
     border-radius: var(--radius-md);
   }
 
@@ -670,7 +671,7 @@
 
   .choice-cards .choice-label {
     font-weight: 600;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .choice-hint {
@@ -2190,6 +2191,55 @@
 
   .auth-done .auth-footer {
     text-align: start;
+  }
+
+  /* Phone sign-in: the number the code went to, the code box, and resend / change. */
+  .phone-sent {
+    color: var(--text-muted);
+  }
+
+  .phone-number {
+    color: var(--text);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .code-input {
+    font-size: var(--text-xl);
+    letter-spacing: 0.4em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .phone-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .phone-setting {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .phone-setting-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: var(--radius-full);
+    background: var(--blue-50);
+    color: var(--accent);
+  }
+
+  .phone-setting-text {
+    flex: 1;
+    min-width: 12rem;
   }
 
   .link-btn {

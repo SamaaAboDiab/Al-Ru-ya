@@ -39,6 +39,12 @@ LOG_LEVEL=info
 # type "Web application"; authorized redirect URI: <WEB_ORIGIN>/api/auth/google/callback).
 # GOOGLE_CLIENT_ID=
 # GOOGLE_CLIENT_SECRET=
+
+# Sign-in codes by SMS through Twilio (Egyptian mobiles only). TWILIO_FROM is a Twilio number or a
+# Messaging Service id (MG...). Without these, codes are logged and phone sign-in is hidden in production.
+# TWILIO_ACCOUNT_SID=
+# TWILIO_AUTH_TOKEN=
+# TWILIO_FROM=
 ```
 
 ```bash

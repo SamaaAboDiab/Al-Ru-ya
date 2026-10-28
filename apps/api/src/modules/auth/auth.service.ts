@@ -26,6 +26,7 @@ export function toUserDTO(user: User & { _id: unknown }): UserDTO {
     role: user.role as UserDTO['role'],
     locale: (user.locale ?? 'ar') as UserDTO['locale'],
     ...(user.child ? { childId: String(user.child) } : {}),
+    ...(user.phone ? { phone: user.phone } : {}),
     ...(url ? { photoUrl: url } : {}),
   };
 }

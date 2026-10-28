@@ -21,10 +21,12 @@ import {
 import { AppError } from '../../utils/AppError';
 import type { Logger } from '../../utils/logger';
 import type { Mailer } from '../../utils/mailer';
+import type { SmsSender } from '../../utils/sms';
 import { ok } from '../../utils/respond';
 import * as authService from './auth.service';
 import * as google from './google.service';
 import * as passwordless from './passwordless.service';
+import * as phoneService from './phone.service';
 import * as resetService from './passwordReset.service';
 
 const OAUTH_COOKIE = 'ruya_oauth';
@@ -38,6 +40,7 @@ export interface AuthDeps {
   mailer: Mailer;
   logger: Logger;
   webOrigin: string;
+  sms: SmsSender;
 }
 
 export function createAuthController(config: Config, deps: AuthDeps) {
@@ -94,7 +97,8 @@ export function createAuthController(config: Config, deps: AuthDeps) {
 
   return {
     methods(_req: Request, res: Response) {
-      ok<AuthMethodsDTO>(res, { google: Boolean(googleConfig), phone: false });
+      // Without a real SMS provider, codes only reach the log: fine for trying it out, not for real users.
+      ok<AuthMethodsDTO>(res, { google: Boolean(googleConfig), phone: deps.sms.live || config.NODE_ENV !== 'production' });
     },
 
     /** Sends the browser to Google, remembering (signed, in a cookie) what must come back. */
@@ -166,6 +170,23 @@ export function createAuthController(config: Config, deps: AuthDeps) {
 
     async verifyEmailLink(req: Request, res: Response) {
       finishSignIn(res, await passwordless.verifyEmailLink(req.body.token, config.JWT_SECRET));
+    },
+
+    async phoneSend(req: Request, res: Response) {
+      await phoneService.sendCode(req.body.phone, req.body.locale ?? 'ar', { ...deps, secret: config.JWT_SECRET });
+      res.status(204).end();
+    },
+
+    async phoneVerify(req: Request, res: Response) {
+      finishSignIn(res, await phoneService.verifyCode(req.body.phone, req.body.code, config.JWT_SECRET));
+    },
+
+    async phoneLink(req: Request, res: Response) {
+      ok(res, await phoneService.linkPhone(req.user!.id, req.body.phone, req.body.code, config.JWT_SECRET));
+    },
+
+    async phoneUnlink(req: Request, res: Response) {
+      ok(res, await phoneService.unlinkPhone(req.user!.id));
     },
 
     signupDraft(req: Request, res: Response) {

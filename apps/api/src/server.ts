@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { loadConfig } from './config';
 import { createLogger } from './utils/logger';
 import { createMailer } from './utils/mailer';
+import { createSms } from './utils/sms';
 import { createApp } from './app';
 
 const config = loadConfig();
@@ -12,7 +13,7 @@ const logger = createLogger(config.LOG_LEVEL, config.NODE_ENV === 'development')
 await mongoose.connect(config.MONGODB_URI, { minPoolSize: 10, maxPoolSize: 50 });
 logger.info('Connected to MongoDB');
 
-const server = createApp(config, logger, createMailer(config, logger)).listen(config.PORT, () => {
+const server = createApp(config, logger, createMailer(config, logger), createSms(config, logger)).listen(config.PORT, () => {
   logger.info(`API listening on http://localhost:${config.PORT}`);
 });
 

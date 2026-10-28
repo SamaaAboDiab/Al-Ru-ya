@@ -4,6 +4,8 @@ import {
   emailLinkSchema,
   forgotPasswordSchema,
   linkTokenSchema,
+  phoneSendSchema,
+  phoneVerifySchema,
   loginSchema,
   registerParentSchema,
   resetPasswordSchema,
@@ -26,6 +28,10 @@ export function authRoutes(config: Config, authLimiter: RequestHandler, deps: Au
   router.post('/email-link/verify', authLimiter, validateBody(linkTokenSchema), controller.verifyEmailLink);
   router.get('/google/start', authLimiter, controller.googleStart);
   router.get('/google/callback', authLimiter, controller.googleCallback);
+  router.post('/phone/send', authLimiter, validateBody(phoneSendSchema), controller.phoneSend);
+  router.post('/phone/verify', authLimiter, validateBody(phoneVerifySchema), controller.phoneVerify);
+  router.post('/phone/link', requireAuth(config.JWT_SECRET), authLimiter, validateBody(phoneVerifySchema), controller.phoneLink);
+  router.delete('/phone', requireAuth(config.JWT_SECRET), controller.phoneUnlink);
   router.get('/signup', controller.signupDraft);
   router.post('/signup', authLimiter, validateBody(completeSignupSchema), controller.completeSignup);
 

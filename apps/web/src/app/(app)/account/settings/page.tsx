@@ -2,12 +2,13 @@ import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { BackButton } from '@/components/BackButton';
 import { LanguageChoice } from '@/components/account/LanguageChoice';
+import { PhoneSetting } from '@/components/account/PhoneSetting';
 import { ProfilePhoto } from '@/components/account/ProfilePhoto';
 import { dictionaries } from '@/lib/i18n';
-import { getCurrentUser, getLocale } from '@/lib/server';
+import { getAuthMethods, getCurrentUser, getLocale } from '@/lib/server';
 
 export default async function SettingsPage() {
-  const user = await getCurrentUser();
+  const [user, methods] = await Promise.all([getCurrentUser(), getAuthMethods()]);
   if (!user) redirect('/login');
 
   const locale = await getLocale();
@@ -27,6 +28,7 @@ export default async function SettingsPage() {
 
         <div className="stack">
           <ProfilePhoto locale={locale} user={user} />
+          {(methods?.phone || user.phone) && <PhoneSetting locale={locale} phone={user.phone} />}
 
           <section className="card">
             <LanguageChoice locale={locale} />

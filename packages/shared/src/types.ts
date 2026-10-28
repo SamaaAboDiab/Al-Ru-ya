@@ -28,6 +28,8 @@ export interface UserDTO {
   locale: Locale;
   /** Set only for child accounts: the child profile this login belongs to. */
   childId?: string;
+  /** Verified mobile (E.164), when the person added one. */
+  phone?: string;
   /** Present when the person has a profile photo. Only family members can load it. */
   photoUrl?: string;
 }

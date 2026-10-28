@@ -7,6 +7,7 @@ import { pinoHttp } from 'pino-http';
 import type { Config } from './config';
 import type { Logger } from './utils/logger';
 import { createLogMailer, type Mailer } from './utils/mailer';
+import { createLogSms, type SmsSender } from './utils/sms';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 import { authRoutes } from './modules/auth/auth.routes';
 import { childrenRoutes } from './modules/children/children.routes';
@@ -18,7 +19,12 @@ import { notificationRoutes } from './modules/notifications/notifications.routes
 import { messageRoutes } from './modules/messages/messages.routes';
 import { photoRoutes } from './modules/photos/photos.routes';
 
-export function createApp(config: Config, logger: Logger, mailer: Mailer = createLogMailer(logger)) {
+export function createApp(
+  config: Config,
+  logger: Logger,
+  mailer: Mailer = createLogMailer(logger),
+  sms: SmsSender = createLogSms(logger),
+) {
   const app = express();
 
   app.disable('x-powered-by');
@@ -41,7 +47,7 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
   app.get('/api/health', (_req, res) => {
     res.json({ success: true, data: { status: 'ok' } });
   });
-  app.use('/api/auth', authRoutes(config, limiter(20), mailDeps));
+  app.use('/api/auth', authRoutes(config, limiter(20), { ...mailDeps, sms }));
   app.use(
     '/api/children/:childId/invitations',
     childInvitationRoutes(config, mailDeps, limiter(20)),
