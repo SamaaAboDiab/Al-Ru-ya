@@ -1,4 +1,4 @@
-import { CalendarDays, CheckCircle2, ChevronRight, ClipboardCheck, Clock, House, MessageCircle, Users } from 'lucide-react';
+import { CalendarDays, CheckCircle2, ClipboardCheck, Clock, House, MessageCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
@@ -14,11 +14,14 @@ import {
 import { AppHeader } from '@/components/AppHeader';
 import { Avatar } from '@/components/Avatar';
 import { Forbidden } from '@/components/Forbidden';
-import { dictionaries, formatDate } from '@/lib/i18n';
+import { HomeHero, nextUpcoming, type HomeVisit } from '@/components/HomeHero';
+import { dictionaries, formatDate, formatNumber } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
-import { getCurrentUser, getInvitations, getLocale, getMyChildren } from '@/lib/server';
+import { getConversations, getCurrentUser, getInvitations, getLocale, getMyChildren, getVisits } from '@/lib/server';
 import { AddChildDialog } from './AddChildDialog';
 import { ChildActions } from './ChildActions';
+
+type ChildExtras = { pendingInvite?: InvitationDTO; unread: number; toConfirm: number };
 
 export default async function ParentPage() {
   const user = await getCurrentUser();
@@ -29,27 +32,53 @@ export default async function ParentPage() {
 
   const t = dictionaries[locale];
   const children = (await getMyChildren()) ?? [];
-  // Only children still missing a parent need their invitations.
-  const pendingInvites = new Map(
-    await Promise.all(
-      children
-        .filter((c) => c.parents.length < MAX_PARENTS_PER_CHILD)
-        .map(async (c) => {
-          const invites = (await getInvitations(c.id)) ?? [];
-          return [c.id, invites.find((i) => i.status === INVITE_STATUSES.PENDING)] as const;
-        }),
-    ),
+
+  // One round of requests per child: visits (for the hero), unread messages, open invitations.
+  const perChild = await Promise.all(
+    children.map(async (c) => {
+      const [visits, conversations, invites] = await Promise.all([
+        getVisits(c.id),
+        getConversations(c.id),
+        c.parents.length < MAX_PARENTS_PER_CHILD ? getInvitations(c.id) : Promise.resolve(null),
+      ]);
+      const list = visits ?? [];
+      const extras: ChildExtras = {
+        pendingInvite: invites?.find((i) => i.status === INVITE_STATUSES.PENDING),
+        unread: (conversations ?? []).reduce((sum, conv) => sum + conv.unread, 0),
+        toConfirm: list.filter((v) => v.canConfirm).length,
+      };
+      const homeVisits: HomeVisit[] = list.map((visit) => ({
+        visit,
+        childName: c.name,
+        href: `/parent/children/${c.id}/visits/${visit.id}`,
+      }));
+      return { child: c, extras, homeVisits };
+    }),
   );
+
+  const next = nextUpcoming(perChild.flatMap((p) => p.homeVisits));
+  const toConfirm = perChild.reduce((sum, p) => sum + p.extras.toConfirm, 0);
+  const firstToConfirm = perChild.find((p) => p.extras.toConfirm > 0);
 
   return (
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page">
-        <div className="page-head">
-          <div>
-            <h1 className="page-title">{t.parent.greeting(user.name)}</h1>
-            <p className="page-subtitle">{t.parent.subtitle}</p>
-          </div>
+        <HomeHero
+          locale={locale}
+          title={t.parent.greeting(user.name)}
+          subtitle={t.parent.subtitle}
+          next={next}
+          withLabel={(v) => `${v.childName}, ${t.home.withParent(v.visit.parent.name)}`}
+          toConfirm={
+            firstToConfirm
+              ? { count: toConfirm, href: `/parent/children/${firstToConfirm.child.id}/visits?status=pending` }
+              : undefined
+          }
+        />
+
+        <div className="section-head">
+          <h2 className="section-title">{t.nav.myChildren}</h2>
           {children.length > 0 && <AddChildDialog locale={locale} />}
         </div>
 
@@ -58,16 +87,16 @@ export default async function ParentPage() {
             <span className="empty-icon">
               <Users size={28} aria-hidden />
             </span>
-            <h2 className="section-title" style={{ margin: 0 }}>
+            <h3 className="section-title" style={{ margin: 0 }}>
               {t.parent.emptyTitle}
-            </h2>
+            </h3>
             <p>{t.parent.emptyBody}</p>
             <AddChildDialog locale={locale} />
           </div>
         ) : (
           <ul className="child-grid">
-            {children.map((child) => (
-              <ChildCard key={child.id} locale={locale} child={child} pendingInvite={pendingInvites.get(child.id)} />
+            {perChild.map(({ child, extras }) => (
+              <ChildCard key={child.id} locale={locale} child={child} extras={extras} />
             ))}
           </ul>
         )}
@@ -76,89 +105,73 @@ export default async function ParentPage() {
   );
 }
 
-function ChildCard({
-  locale,
-  child,
-  pendingInvite,
-}: {
-  locale: Locale;
-  child: ChildDTO;
-  pendingInvite?: InvitationDTO;
-}) {
-  const t = dictionaries[locale].parent;
-  const fields = dictionaries[locale].fields;
+function ChildCard({ locale, child, extras }: { locale: Locale; child: ChildDTO; extras: ChildExtras }) {
+  const t = dictionaries[locale];
+  const p = t.parent;
   const age = ageInYears(child.birthDate);
   const canCreateLogin = !child.hasAccount && age >= MIN_CHILD_ACCOUNT_AGE;
   const canInvite = child.parents.length < MAX_PARENTS_PER_CHILD;
+  const base = `/parent/children/${child.id}`;
+  const links = [
+    { href: `${base}/schedule`, label: t.schedule.open, Icon: CalendarDays, count: 0 },
+    { href: `${base}/day`, label: t.day.open, Icon: ClipboardCheck, count: 0 },
+    { href: `${base}/visits`, label: t.visits.open, Icon: House, count: extras.toConfirm },
+    { href: `${base}/messages`, label: t.messages.open, Icon: MessageCircle, count: extras.unread },
+  ];
 
   return (
     <li className="card child-card">
       <div className="child-card-head">
         <Avatar name={child.name} id={child.id} size="lg" />
-        <div>
-          <h2 className="child-card-name">
+        <div className="child-card-id">
+          <h3 className="child-card-name">
             <bdi>{child.name}</bdi>
-          </h2>
-          <p className="child-card-meta">
-            {t.age(age)} · {t.born(formatDate(child.birthDate, locale))}
-          </p>
+          </h3>
+          <p className="child-card-meta">{p.age(age)}</p>
+          <p className="child-card-sub">{p.born(formatDate(child.birthDate, locale))}</p>
+          <div className="child-card-status">
+            {child.hasAccount ? (
+              <span className="chip chip-success">
+                <CheckCircle2 size={14} aria-hidden />
+                {p.hasAccount}
+              </span>
+            ) : (
+              age < MIN_CHILD_ACCOUNT_AGE && <span className="chip">{p.managedByParents}</span>
+            )}
+            {extras.pendingInvite && (
+              <span className="chip chip-warning">
+                <Clock size={14} aria-hidden />
+                {p.pendingInvite}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="chip-row">
-        {child.hasAccount ? (
-          <span className="chip chip-success">
-            <CheckCircle2 size={14} aria-hidden />
-            {t.hasAccount}
-          </span>
-        ) : (
-          age < MIN_CHILD_ACCOUNT_AGE && <span className="chip">{t.managedByParents}</span>
-        )}
-        {pendingInvite && (
-          <span className="chip chip-warning">
-            <Clock size={14} aria-hidden />
-            {t.pendingInvite}
-          </span>
-        )}
-      </div>
+      <nav className="card-links" aria-label={child.name}>
+        {links.map(({ href, label, Icon, count }) => (
+          <Link key={href} href={href} className="card-link">
+            <Icon size={18} aria-hidden />
+            <span>{label}</span>
+            {count > 0 && <span className="count-badge">{formatNumber(count, locale)}</span>}
+          </Link>
+        ))}
+      </nav>
 
       <div className="parents-row">
         <span className="avatar-stack">
-          {child.parents.map((p) => (
-            <Avatar key={p.id} name={p.name} id={p.id} size="sm" />
+          {child.parents.map((parent) => (
+            <Avatar key={parent.id} name={parent.name} id={parent.id} size="sm" />
           ))}
         </span>
-        <span>
-          {child.parents.map((p, i) => (
-            <span key={p.id}>
+        <span className="parents-names">
+          {child.parents.map((parent, i) => (
+            <span key={parent.id}>
               {i > 0 && (locale === 'ar' ? '، ' : ', ')}
-              <bdi>{p.name}</bdi> ({fields[p.role]})
+              <bdi>{parent.name}</bdi> ({t.fields[parent.role]})
             </span>
           ))}
         </span>
-      </div>
-
-      <div className="card-links">
-        <Link href={`/parent/children/${child.id}/schedule`} className="card-link">
-          <CalendarDays size={18} aria-hidden />
-          {dictionaries[locale].schedule.open}
-          <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
-        </Link>
-        <Link href={`/parent/children/${child.id}/day`} className="card-link">
-          <ClipboardCheck size={18} aria-hidden />
-          {dictionaries[locale].day.open}
-          <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
-        </Link>
-        <Link href={`/parent/children/${child.id}/visits`} className="card-link">
-          <House size={18} aria-hidden />
-          {dictionaries[locale].visits.open}
-          <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
-        </Link>
-        <Link href={`/parent/children/${child.id}/messages`} className="card-link">
-          <MessageCircle size={18} aria-hidden />
-          {dictionaries[locale].messages.open}
-          <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
-        </Link>
       </div>
 
       {(canCreateLogin || canInvite) && (
@@ -169,8 +182,11 @@ function ChildCard({
           canCreateLogin={canCreateLogin}
           canInvite={canInvite}
           pendingInvite={
-            pendingInvite
-              ? { email: pendingInvite.email, until: formatDate(pendingInvite.expiresAt.slice(0, 10), locale) }
+            extras.pendingInvite
+              ? {
+                  email: extras.pendingInvite.email,
+                  until: formatDate(extras.pendingInvite.expiresAt.slice(0, 10), locale),
+                }
               : undefined
           }
         />

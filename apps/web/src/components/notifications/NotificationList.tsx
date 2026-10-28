@@ -60,7 +60,7 @@ export function NotificationList({ locale, items: initial, isChild }: Props) {
           const Icon = ICONS[item.type];
           const when = n.when(formatDayLong(item.visitDate, locale), formatTime(item.visitTime, locale));
           const reason = item.reason
-            ? [item.reason.code ? t.visits.reasons[item.reason.code] : null, item.reason.note].filter(Boolean).join(' · ')
+            ? [item.reason.code ? t.visits.reasons[item.reason.code] : null, item.reason.note].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
             : null;
           return (
             <li key={item.id}>
@@ -69,8 +69,11 @@ export function NotificationList({ locale, items: initial, isChild }: Props) {
                   <Icon size={20} aria-hidden />
                 </span>
                 <span className="notif-text">
-                  <span className="notif-title">
-                    {n[item.type]} · <bdi>{item.childName}</bdi>
+                  <span className="notif-head">
+                    <span className="notif-title">{n[item.type]}</span>
+                    <span className="notif-child">
+                      <bdi>{item.childName}</bdi>
+                    </span>
                   </span>
                   <span className="notif-body">{n.body[item.type](item.actorName, when)}</span>
                   {reason && (

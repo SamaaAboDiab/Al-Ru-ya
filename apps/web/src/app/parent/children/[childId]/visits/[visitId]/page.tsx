@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { ROLES, VISIT_STATUSES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
 import { BackLink } from '@/components/BackLink';
+import { ChildContext } from '@/components/ChildContext';
 import { Forbidden } from '@/components/Forbidden';
 import { CantVisitDialog, ConfirmVisitButton } from '@/components/visits/ParentVisitActions';
 import { VisitDetail } from '@/components/visits/VisitDetail';
@@ -30,24 +31,27 @@ export default async function ParentVisitPage({ params }: Props) {
   return (
     <>
       <AppHeader locale={locale} user={user} />
-      <main className="page page-narrow">
-        <BackLink href={`/parent/children/${childId}/visits`} label={t.visits.childTitle(child.name)} />
-        <VisitDetail
-          locale={locale}
-          visit={visit}
-          actions={
-            open && (
-              <div className="stack">
-                {visit.canConfirm && <ConfirmVisitButton locale={locale} childId={childId} visitId={visit.id} />}
-                {isMine && visit.status === VISIT_STATUSES.UPCOMING && (
-                  <p className="muted field-hint">{t.visits.notStarted}</p>
-                )}
-                {visit.canCancel && <CantVisitDialog locale={locale} childId={childId} visitId={visit.id} variant="block" />}
-                {!isMine && <p className="muted field-hint">{t.visits.notYours(visit.parent.name)}</p>}
-              </div>
-            )
-          }
-        />
+      <main className="page">
+        <ChildContext locale={locale} child={child} active="visits" />
+        <div className="content-narrow">
+          <BackLink href={`/parent/children/${childId}/visits`} label={t.visits.open} />
+          <VisitDetail
+            locale={locale}
+            visit={visit}
+            actions={
+              open && (
+                <div className="stack">
+                  {visit.canConfirm && <ConfirmVisitButton locale={locale} childId={childId} visitId={visit.id} />}
+                  {isMine && visit.status === VISIT_STATUSES.UPCOMING && (
+                    <p className="muted field-hint">{t.visits.notStarted}</p>
+                  )}
+                  {visit.canCancel && <CantVisitDialog locale={locale} childId={childId} visitId={visit.id} variant="block" />}
+                  {!isMine && <p className="muted field-hint">{t.visits.notYours(visit.parent.name)}</p>}
+                </div>
+              )
+            }
+          />
+        </div>
       </main>
     </>
   );

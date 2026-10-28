@@ -1,11 +1,18 @@
 'use client';
 
-import { Check, CheckCheck, Lock, SendHorizontal } from 'lucide-react';
+import { Award, Check, CheckCheck, Heart, Lock, SendHorizontal, Sparkles, ThumbsUp, type LucideIcon } from 'lucide-react';
 import { Fragment, useCallback, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import { MESSAGE_MAX_LENGTH, todayIn, type Locale, type MessageDTO } from '@ruya/shared';
 import { FormAlert } from '@/components/FormAlert';
 import { apiGet, apiPost } from '@/lib/client';
-import { dictionaries, formatClock, formatDayLong } from '@/lib/i18n';
+import { dictionaries, formatClock, formatDayLong, type EncouragementId } from '@/lib/i18n';
+
+const PRESET_ICONS: Record<EncouragementId, LucideIcon> = {
+  great: ThumbsUp,
+  proud: Award,
+  love: Heart,
+  luck: Sparkles,
+};
 
 /** How often an open conversation checks for new messages. Sockets can replace this later. */
 const POLL_MS = 10_000;
@@ -157,11 +164,15 @@ export function ChatThread({ locale, childId, parentId, initial, privacyNote, sh
 
       {showPresets && (
         <div className="chat-presets" role="group" aria-label={m.encourage}>
-          {m.presets.map((p) => (
-            <button key={p} type="button" className="chip chip-info chat-preset" onClick={() => setDraft(p)}>
-              {p}
-            </button>
-          ))}
+          {m.presets.map((p) => {
+            const Icon = PRESET_ICONS[p.id];
+            return (
+              <button key={p.id} type="button" className="chat-preset" onClick={() => setDraft(p.text)}>
+                <Icon size={16} aria-hidden />
+                {p.text}
+              </button>
+            );
+          })}
         </div>
       )}
 

@@ -10,6 +10,9 @@ export function resolveLocale(value: string | undefined): Locale {
   return isLocale(value) ? value : DEFAULT_LOCALE;
 }
 
+/** Quick encouragement phrases (US-15). Each has an icon in the UI; the text is sent as-is. */
+export type EncouragementId = 'great' | 'proud' | 'love' | 'luck';
+
 export const dir = (locale: Locale) => (locale === 'ar' ? 'rtl' : 'ltr');
 
 /** US-16: dates and numbers follow the chosen language. */
@@ -102,7 +105,14 @@ const ar = {
       'بيانات كل طفل خاصة بيه لوحده',
     ],
   },
-  nav: { logout: 'تسجيل الخروج', parent: 'ولي أمر', child: 'حساب طفل' },
+  nav: {
+    logout: 'تسجيل الخروج',
+    parent: 'ولي أمر',
+    child: 'حساب طفل',
+    home: 'الرئيسية',
+    sections: 'أقسام التطبيق',
+    myChildren: 'أولادك',
+  },
   login: {
     title: 'أهلاً بيك تاني',
     subtitle: 'ادخل بالإيميل والباسورد بتوعك.',
@@ -312,6 +322,16 @@ const ar = {
     },
     by: (name: string) => `من ${name}`,
   },
+  home: {
+    nextVisit: 'الزيارة الجاية',
+    today: 'النهاردة',
+    tomorrow: 'بكرة',
+    noUpcoming: 'مفيش زيارات جاية متسجلة.',
+    toConfirm: (n: number) => (n === 1 ? 'زيارة مستنية تأكيدك' : `${formatNumber(n, 'ar')} زيارات مستنية تأكيدك`),
+    withParent: (name: string) => `مع ${name}`,
+    dayProgress: (done: number, total: number) => `النهاردة: ${formatNumber(done, 'ar')} من ${formatNumber(total, 'ar')}`,
+    unreadMessages: (n: number) => (n === 1 ? 'رسالة جديدة' : `${formatNumber(n, 'ar')} رسايل جديدة`),
+  },
   messages: {
     open: 'الرسايل',
     myTitle: 'رسايلي',
@@ -326,7 +346,12 @@ const ar = {
     you: 'انت: ',
     unread: (n: number) => `${formatNumber(n, 'ar')} جديدة`,
     encourage: 'رسالة تشجيع سريعة',
-    presets: ['شغل جامد 👏', 'عاش 💪', 'كل الحب ❤️', 'يوم موفق ✨'],
+    presets: [
+      { id: 'great', text: 'شغل جامد' },
+      { id: 'proud', text: 'عاش' },
+      { id: 'love', text: 'كل الحب' },
+      { id: 'luck', text: 'يوم موفق' },
+    ] as { id: EncouragementId; text: string }[],
     seen: 'اتشافت',
     sent: 'اتبعتت',
     loadOlder: 'رسايل أقدم',
@@ -442,7 +467,14 @@ const en: Dictionary = {
       "Each child's data kept private",
     ],
   },
-  nav: { logout: 'Sign out', parent: 'Parent', child: 'Child account' },
+  nav: {
+    logout: 'Sign out',
+    parent: 'Parent',
+    child: 'Child account',
+    home: 'Home',
+    sections: 'App sections',
+    myChildren: 'Your children',
+  },
   login: {
     title: 'Welcome back',
     subtitle: 'Sign in with your email and password.',
@@ -651,6 +683,16 @@ const en: Dictionary = {
     },
     by: (name) => `by ${name}`,
   },
+  home: {
+    nextVisit: 'Next visit',
+    today: 'Today',
+    tomorrow: 'Tomorrow',
+    noUpcoming: 'No upcoming visits logged.',
+    toConfirm: (n) => (n === 1 ? 'A visit is waiting for your confirmation' : `${n} visits are waiting for your confirmation`),
+    withParent: (name) => `With ${name}`,
+    dayProgress: (done, total) => `Today: ${done} of ${total}`,
+    unreadMessages: (n) => (n === 1 ? '1 new message' : `${n} new messages`),
+  },
   messages: {
     open: 'Messages',
     myTitle: 'Messages',
@@ -665,7 +707,12 @@ const en: Dictionary = {
     you: 'You: ',
     unread: (n) => `${n} new`,
     encourage: 'Quick encouragement',
-    presets: ['Great job 👏', 'Well done 💪', 'All my love ❤️', 'Have a great day ✨'],
+    presets: [
+      { id: 'great', text: 'Great job' },
+      { id: 'proud', text: 'Well done' },
+      { id: 'love', text: 'All my love' },
+      { id: 'luck', text: 'Have a great day' },
+    ],
     seen: 'Seen',
     sent: 'Sent',
     loadOlder: 'Older messages',

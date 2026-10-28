@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
 import { Avatar } from '@/components/Avatar';
-import { BackLink } from '@/components/BackLink';
 import { Forbidden } from '@/components/Forbidden';
 import { dictionaries, formatClock, formatNumber } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
@@ -27,7 +26,6 @@ export default async function MyMessagesPage() {
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page page-narrow">
-        <BackLink href="/child" label={t.schedule.back} />
         <div className="page-head">
           <div>
             <h1 className="page-title">{t.messages.myTitle}</h1>

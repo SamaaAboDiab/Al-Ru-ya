@@ -2,7 +2,6 @@ import { House } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { BackLink } from '@/components/BackLink';
 import { Forbidden } from '@/components/Forbidden';
 import { LogVisitDialog } from '@/components/visits/VisitDialogs';
 import { VisitList } from '@/components/visits/VisitList';
@@ -29,7 +28,6 @@ export default async function MyVisitsPage() {
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page page-narrow">
-        <BackLink href="/child" label={t.schedule.back} />
         <div className="page-head">
           <div>
             <h1 className="page-title">{t.visits.myTitle}</h1>

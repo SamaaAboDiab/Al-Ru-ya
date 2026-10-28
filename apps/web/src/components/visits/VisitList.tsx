@@ -13,7 +13,7 @@ export function reasonText(v: Pick<VisitDTO, 'cancelReason'>, locale: Locale) {
   const r = v.cancelReason;
   if (!r) return null;
   const label = r.code ? dictionaries[locale].visits.reasons[r.code] : null;
-  return [label, r.note].filter(Boolean).join(' · ');
+  return [label, r.note].filter(Boolean).join(locale === 'ar' ? '، ' : ', ');
 }
 
 /** US-13: one row per visit, newest first, linking to its details. */

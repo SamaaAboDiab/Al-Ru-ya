@@ -2,7 +2,6 @@ import { Lock } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { ROLES, isIsoDate, todayIn } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { BackLink } from '@/components/BackLink';
 import { DailyChecklist } from '@/components/daily/DailyChecklist';
 import { DayNav } from '@/components/daily/DayNav';
 import { Forbidden } from '@/components/Forbidden';
@@ -33,7 +32,6 @@ export default async function MyDayPage({ searchParams }: { searchParams: Search
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page page-narrow">
-        <BackLink href="/child" label={t.schedule.back} />
         <div className="page-head">
           <div>
             <h1 className="page-title">{t.day.myTitle}</h1>

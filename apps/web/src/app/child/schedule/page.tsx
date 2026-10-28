@@ -2,7 +2,6 @@ import { CalendarDays } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { BackLink } from '@/components/BackLink';
 import { Forbidden } from '@/components/Forbidden';
 import { AddScheduleItem } from '@/components/schedule/AddScheduleItem';
 import { WeekSchedule } from '@/components/schedule/WeekSchedule';
@@ -27,7 +26,6 @@ export default async function MySchedulePage() {
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page">
-        <BackLink href="/child" label={t.schedule.back} />
         <div className="page-head">
           <div>
             <h1 className="page-title">{t.schedule.myTitle}</h1>

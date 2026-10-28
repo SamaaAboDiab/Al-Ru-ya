@@ -2,7 +2,7 @@ import { ClipboardCheck, Eye } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import { ROLES, isIsoDate, todayIn } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { BackLink } from '@/components/BackLink';
+import { ChildContext } from '@/components/ChildContext';
 import { DailyChecklist } from '@/components/daily/DailyChecklist';
 import { DayNav } from '@/components/daily/DayNav';
 import { Forbidden } from '@/components/Forbidden';
@@ -38,34 +38,31 @@ export default async function ChildDayPage({ params, searchParams }: Props) {
   return (
     <>
       <AppHeader locale={locale} user={user} />
-      <main className="page page-narrow">
-        <BackLink href="/parent" label={t.schedule.back} />
-        <div className="page-head">
-          <div>
-            <h1 className="page-title">
-              <bdi>{t.day.childTitle(child.name)}</bdi>
-            </h1>
-            <p className="page-subtitle">{t.day.childSubtitle}</p>
-          </div>
-          <span className="chip chip-info">
-            <Eye size={14} aria-hidden />
-            {t.schedule.readOnly}
-          </span>
-        </div>
-
-        {child.hasAccount ? (
-          <section className="card stack">
-            <DayNav locale={locale} basePath={basePath} date={date} today={log.today} />
-            <DailyChecklist key={date} locale={locale} childId={childId} log={log} />
-          </section>
-        ) : (
-          <div className="empty-state">
-            <span className="empty-icon">
-              <ClipboardCheck size={28} aria-hidden />
+      <main className="page">
+        <ChildContext locale={locale} child={child} active="day" />
+        <div className="content-narrow">
+          <div className="section-bar">
+            <p className="section-note">{t.day.childSubtitle}</p>
+            <span className="chip chip-info">
+              <Eye size={14} aria-hidden />
+              {t.schedule.readOnly}
             </span>
-            <p>{t.day.noAccountBody(child.name)}</p>
           </div>
-        )}
+
+          {child.hasAccount ? (
+            <section className="card stack">
+              <DayNav locale={locale} basePath={basePath} date={date} today={log.today} />
+              <DailyChecklist key={date} locale={locale} childId={childId} log={log} />
+            </section>
+          ) : (
+            <div className="empty-state">
+              <span className="empty-icon">
+                <ClipboardCheck size={28} aria-hidden />
+              </span>
+              <p>{t.day.noAccountBody(child.name)}</p>
+            </div>
+          )}
+        </div>
       </main>
     </>
   );

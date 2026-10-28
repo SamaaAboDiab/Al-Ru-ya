@@ -2,7 +2,7 @@ import { CalendarDays, Eye } from 'lucide-react';
 import { notFound, redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { BackLink } from '@/components/BackLink';
+import { ChildContext } from '@/components/ChildContext';
 import { Forbidden } from '@/components/Forbidden';
 import { WeekSchedule } from '@/components/schedule/WeekSchedule';
 import { dictionaries } from '@/lib/i18n';
@@ -30,14 +30,9 @@ export default async function ChildSchedulePage({ params }: { params: Promise<{ 
     <>
       <AppHeader locale={locale} user={user} />
       <main className="page">
-        <BackLink href="/parent" label={s.back} />
-        <div className="page-head">
-          <div>
-            <h1 className="page-title">
-              <bdi>{s.childTitle(child.name)}</bdi>
-            </h1>
-            <p className="page-subtitle">{s.childSubtitle(child.name)}</p>
-          </div>
+        <ChildContext locale={locale} child={child} active="schedule" />
+        <div className="section-bar">
+          <p className="section-note">{s.childSubtitle(child.name)}</p>
           <span className="chip chip-info">
             <Eye size={14} aria-hidden />
             {s.readOnly}

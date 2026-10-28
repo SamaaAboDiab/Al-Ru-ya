@@ -1,8 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { AppHeader } from '@/components/AppHeader';
-import { Avatar } from '@/components/Avatar';
-import { BackLink } from '@/components/BackLink';
+import { ChildContext } from '@/components/ChildContext';
 import { Forbidden } from '@/components/Forbidden';
 import { FormAlert } from '@/components/FormAlert';
 import { ChatThread } from '@/components/messages/ChatThread';
@@ -26,25 +25,19 @@ export default async function ParentChatPage({ params }: { params: Promise<{ chi
   return (
     <>
       <AppHeader locale={locale} user={user} />
-      <main className="page page-narrow page-chat">
-        <BackLink href="/parent" label={t.schedule.back} />
-        <div className="chat-head">
-          <Avatar name={child.name} id={child.id} size="lg" />
-          <div>
-            <h1 className="page-title">
-              <bdi>{t.messages.parentTitle(child.name)}</bdi>
-            </h1>
-          </div>
+      <main className="page page-chat">
+        <ChildContext locale={locale} child={child} active="messages" />
+        <div className="content-narrow">
+          {!child.hasAccount && <FormAlert tone="warning">{t.messages.noAccount}</FormAlert>}
+          <ChatThread
+            locale={locale}
+            childId={childId}
+            parentId={user.id}
+            initial={messages}
+            privacyNote={t.messages.privateParent}
+            showPresets
+          />
         </div>
-        {!child.hasAccount && <FormAlert tone="warning">{t.messages.noAccount}</FormAlert>}
-        <ChatThread
-          locale={locale}
-          childId={childId}
-          parentId={user.id}
-          initial={messages}
-          privacyNote={t.messages.privateParent}
-          showPresets
-        />
       </main>
     </>
   );
