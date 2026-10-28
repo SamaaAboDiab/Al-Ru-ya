@@ -334,7 +334,7 @@ html[lang='ar'] .btn {
 
 .card-links {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: var(--space-2);
 }
 
@@ -346,6 +346,389 @@ html[lang='ar'] .btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.chip.chip-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.btn-danger-text {
+  color: var(--danger);
+}
+
+.btn-danger-text:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: rgb(194 57 43 / 0.3);
+}
+
+/* ========== Header bell ========== */
+.bell {
+  position: relative;
+}
+
+.bell-badge {
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-end: -4px;
+  display: grid;
+  place-items: center;
+  min-inline-size: 20px;
+  block-size: 20px;
+  padding: 0 5px;
+  border: 2px solid var(--surface);
+  border-radius: var(--radius-full);
+  background: var(--danger);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ========== Visits ========== */
+.filter-tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin-block-end: var(--space-4);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filter-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--gray-700);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.filter-tab:hover {
+  border-color: var(--gray-300);
+}
+
+.filter-tab[aria-current='page'] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.filter-count {
+  display: grid;
+  place-items: center;
+  min-inline-size: 22px;
+  block-size: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--gray-100);
+  color: var(--gray-700);
+  font-size: var(--text-xs);
+}
+
+.filter-tab[aria-current='page'] .filter-count {
+  background: rgb(255 255 255 / 0.2);
+  color: #ffffff;
+}
+
+.visit-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card.visit-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  color: inherit;
+  text-decoration: none;
+  border-inline-start: 4px solid var(--border);
+  transition:
+    box-shadow 200ms var(--ease-out),
+    border-color 200ms var(--ease-out);
+}
+
+.visit-row:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card.visit-row[data-status='upcoming'] {
+  border-inline-start-color: var(--blue-400);
+}
+
+.card.visit-row[data-status='pending'] {
+  border-inline-start-color: #e0a458;
+}
+
+.card.visit-row[data-status='confirmed'] {
+  border-inline-start-color: var(--success);
+}
+
+.card.visit-row[data-status='cancelled'] {
+  border-inline-start-color: var(--danger);
+}
+
+.visit-row-date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.visit-row-time,
+.visit-row-who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.visit-row-who {
+  grid-column: 1;
+}
+
+.visit-row-reason {
+  grid-column: 1;
+  font-size: var(--text-sm);
+  color: var(--danger);
+}
+
+.visit-row-end {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.visit-row-arrow {
+  color: var(--gray-400);
+}
+
+@media (max-width: 520px) {
+  .card.visit-row {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+
+  .visit-row-end {
+    grid-column: 1;
+    grid-row: 1;
+    justify-content: space-between;
+  }
+}
+
+.visit-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.visit-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.visit-facts {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.visit-facts > div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.visit-facts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.visit-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: var(--space-3);
+  padding-block-end: var(--space-4);
+}
+
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  inset-block: 34px 0;
+  inset-inline-start: 15px;
+  inline-size: 2px;
+  background: var(--gray-200);
+}
+
+.timeline-dot {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: var(--radius-full);
+  background: var(--blue-50);
+  color: var(--accent);
+}
+
+.timeline-item[data-action='confirmed'] .timeline-dot {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.timeline-item[data-action='cancelled'] .timeline-dot {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.timeline-time {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.reason-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.choice-sm {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+}
+
+/* ========== Notifications ========== */
+.notif-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notif {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  inline-size: 100%;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: box-shadow 200ms var(--ease-out);
+}
+
+.notif:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.notif[data-unread] {
+  background: var(--blue-50);
+  border-color: var(--blue-100);
+}
+
+.notif-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: var(--radius-full);
+  background: var(--blue-100);
+  color: var(--accent);
+}
+
+.notif[data-type='visit_confirmed'] .notif-icon {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.notif[data-type='visit_cancelled'] .notif-icon {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.notif-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.notif-title {
+  font-weight: 700;
+}
+
+.notif-body,
+.notif-time {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.notif-reason {
+  font-size: var(--text-sm);
+  color: var(--danger);
+}
+
+.notif-time {
+  font-size: var(--text-xs);
+}
+
+.notif-dot {
+  flex-shrink: 0;
+  inline-size: 10px;
+  block-size: 10px;
+  margin-block-start: 6px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
 }
 
 /* ========== Daily log ========== */

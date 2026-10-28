@@ -5,8 +5,10 @@ import type {
   DailyLogDTO,
   InvitationDTO,
   InvitationPreviewDTO,
+  NotificationListDTO,
   ScheduleItemDTO,
   UserDTO,
+  VisitDTO,
 } from '@ruya/shared';
 import { LOCALE_COOKIE, dictionaries, resolveLocale } from './i18n';
 
@@ -41,5 +43,10 @@ export const getSchedule = (childId: string) =>
   serverGet<ScheduleItemDTO[]>(`/api/children/${encodeURIComponent(childId)}/schedule`);
 export const getDailyLog = (childId: string, date: string) =>
   serverGet<DailyLogDTO>(`/api/children/${encodeURIComponent(childId)}/daily-logs/${encodeURIComponent(date)}`);
+export const getVisits = (childId: string) =>
+  serverGet<VisitDTO[]>(`/api/children/${encodeURIComponent(childId)}/visits`);
+export const getVisit = (childId: string, visitId: string) =>
+  serverGet<VisitDTO>(`/api/children/${encodeURIComponent(childId)}/visits/${encodeURIComponent(visitId)}`);
+export const getNotifications = () => serverGet<NotificationListDTO>('/api/notifications');
 export const getInvitationPreview = (token: string) =>
   serverGet<InvitationPreviewDTO>(`/api/invitations/${encodeURIComponent(token)}`);

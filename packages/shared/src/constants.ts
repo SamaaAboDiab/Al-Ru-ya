@@ -44,3 +44,29 @@ export type DailyItem = (typeof DAILY_ITEMS)[number];
  * move this to the family's profile when other countries are added.
  */
 export const FAMILY_TIMEZONE = 'Africa/Cairo';
+
+/** US-13: a visit's status is derived from its data, never stored. */
+export const VISIT_STATUSES = {
+  UPCOMING: 'upcoming',
+  PENDING: 'pending',
+  CONFIRMED: 'confirmed',
+  CANCELLED: 'cancelled',
+} as const;
+export type VisitStatus = (typeof VISIT_STATUSES)[keyof typeof VISIT_STATUSES];
+
+/** US-11: reasons a parent can pick for "I can't visit". "other" needs a note. */
+export const CANCEL_REASONS = ['sick', 'work', 'travel', 'emergency', 'other'] as const;
+export type CancelReason = (typeof CANCEL_REASONS)[number];
+export const CANCEL_NOTE_MAX = 200;
+
+/** US-13: every change to a visit is kept with its time and author. */
+export const VISIT_ACTIONS = ['created', 'edited', 'confirmed', 'cancelled'] as const;
+export type VisitAction = (typeof VISIT_ACTIONS)[number];
+
+/** US-12: in-app notifications about visits. */
+export const NOTIFICATION_TYPES = {
+  VISIT_LOGGED: 'visit_logged',
+  VISIT_CONFIRMED: 'visit_confirmed',
+  VISIT_CANCELLED: 'visit_cancelled',
+} as const;
+export type NotificationType = (typeof NOTIFICATION_TYPES)[keyof typeof NOTIFICATION_TYPES];

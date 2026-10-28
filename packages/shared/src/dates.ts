@@ -11,6 +11,17 @@ export function todayIn(timeZone: string = FAMILY_TIMEZONE, now: Date = new Date
   }).format(now);
 }
 
+/** The date (YYYY-MM-DD) and wall-clock time (HH:MM) it is right now in `timeZone`. */
+export function nowIn(timeZone: string = FAMILY_TIMEZONE, now: Date = new Date()): { date: string; time: string } {
+  const time = new Intl.DateTimeFormat('en-GB', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).format(now);
+  return { date: todayIn(timeZone, now), time };
+}
+
 /** Adds whole days to a YYYY-MM-DD date. */
 export function addDays(isoDate: string, days: number): string {
   const d = new Date(`${isoDate}T00:00:00Z`);

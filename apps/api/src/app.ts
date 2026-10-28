@@ -13,6 +13,8 @@ import { childrenRoutes } from './modules/children/children.routes';
 import { childInvitationRoutes, invitationRoutes } from './modules/invitations/invitations.routes';
 import { scheduleRoutes } from './modules/schedule/schedule.routes';
 import { dailyLogRoutes } from './modules/dailyLogs/dailyLogs.routes';
+import { visitRoutes } from './modules/visits/visits.routes';
+import { notificationRoutes } from './modules/notifications/notifications.routes';
 
 export function createApp(config: Config, logger: Logger, mailer: Mailer = createLogMailer(logger)) {
   const app = express();
@@ -44,6 +46,8 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
   );
   app.use('/api/children/:childId/schedule', scheduleRoutes(config));
   app.use('/api/children/:childId/daily-logs', dailyLogRoutes(config));
+  app.use('/api/children/:childId/visits', visitRoutes(config));
+  app.use('/api/notifications', notificationRoutes(config));
   app.use('/api/children', childrenRoutes(config));
   app.use('/api/invitations', invitationRoutes(config, invitationDeps, limiter(60)));
 

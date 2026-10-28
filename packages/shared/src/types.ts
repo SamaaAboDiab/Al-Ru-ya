@@ -1,4 +1,15 @@
-import type { DailyItem, InviteStatus, Locale, ParentRole, Role, ScheduleDay } from './constants';
+import type {
+  CancelReason,
+  DailyItem,
+  InviteStatus,
+  Locale,
+  NotificationType,
+  ParentRole,
+  Role,
+  ScheduleDay,
+  VisitAction,
+  VisitStatus,
+} from './constants';
 import type { ErrorCode } from './errors';
 
 export interface ParentSummary {
@@ -53,6 +64,50 @@ export interface DailyLogDTO {
   updatedAt: string | null;
   /** True only for the child's own log, on the same day. */
   editable: boolean;
+}
+
+export interface VisitHistoryEntry {
+  action: VisitAction;
+  at: string;
+  byName: string;
+  byRole: Role;
+}
+
+/** US-09..13. `can*` flags are computed for the user who asked. */
+export interface VisitDTO {
+  id: string;
+  childId: string;
+  parent: ParentSummary;
+  date: string;
+  startTime: string;
+  endTime?: string;
+  status: VisitStatus;
+  cancelReason?: { code?: CancelReason; note?: string };
+  history: VisitHistoryEntry[];
+  canEdit: boolean;
+  canConfirm: boolean;
+  canCancel: boolean;
+}
+
+/** US-12 */
+export interface NotificationDTO {
+  id: string;
+  type: NotificationType;
+  childId: string;
+  childName: string;
+  visitId: string;
+  actorName: string;
+  actorRole: Role;
+  visitDate: string;
+  visitTime: string;
+  reason?: { code?: CancelReason; note?: string };
+  createdAt: string;
+  read: boolean;
+}
+
+export interface NotificationListDTO {
+  items: NotificationDTO[];
+  unread: number;
 }
 
 /** What the invited person sees when opening the link. */

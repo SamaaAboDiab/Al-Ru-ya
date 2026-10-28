@@ -1,5 +1,14 @@
 import { z } from 'zod';
-import { DAILY_ITEMS, LOCALES, PARENT_ROLES, PASSWORD_MIN_LENGTH, SCHEDULE_DAYS } from './constants';
+import {
+  CANCEL_NOTE_MAX,
+  CANCEL_REASONS,
+  DAILY_ITEMS,
+  LOCALES,
+  PARENT_ROLES,
+  PASSWORD_MIN_LENGTH,
+  SCHEDULE_DAYS,
+} from './constants';
+import { isIsoDate } from './dates';
 
 const email = z.string().trim().toLowerCase().pipe(z.email('EMAIL_INVALID'));
 const password = z
@@ -75,4 +84,42 @@ export const dailyLogSchema = z.object({
     .refine((items) => new Set(items).size === items.length, 'ITEM_DUPLICATE'),
 });
 export type DailyLogInput = z.infer<typeof dailyLogSchema>;
+
+const anyDate = z.string().refine(isIsoDate, 'DATE_INVALID');
+const objectId = z.string().regex(/^[a-f\d]{24}$/i, 'PARENT_REQUIRED');
+
+/** US-09: the child logs a visit with one of their parents. */
+export const visitSchema = z
+  .object({
+    parentId: objectId,
+    date: anyDate,
+    startTime: time,
+    endTime: time.optional().or(z.literal('').transform(() => undefined)),
+  })
+  .refine((v) => !v.endTime || v.endTime > v.startTime, { message: 'END_BEFORE_START', path: ['endTime'] });
+export type VisitInput = z.infer<typeof visitSchema>;
+
+/** US-11: a reason is required: one from the list, or a short note (required for "other"). */
+const reasonFields = {
+  reasonCode: z.enum(CANCEL_REASONS, 'REASON_REQUIRED').optional(),
+  note: z
+    .string()
+    .trim()
+    .max(CANCEL_NOTE_MAX, 'NOTE_TOO_LONG')
+    .optional()
+    .transform((v) => (v ? v : undefined)),
+};
+type ReasonFields = { reasonCode?: string; note?: string };
+const hasReason = (v: ReasonFields) => Boolean(v.note) || (Boolean(v.reasonCode) && v.reasonCode !== 'other');
+
+export const cancelVisitSchema = z
+  .object(reasonFields)
+  .refine(hasReason, { message: 'REASON_REQUIRED', path: ['reasonCode'] });
+export type CancelVisitInput = z.infer<typeof cancelVisitSchema>;
+
+/** US-11: "I can't visit" for a date the child hasn't logged. */
+export const cantVisitSchema = z
+  .object({ ...reasonFields, date: anyDate, startTime: time })
+  .refine(hasReason, { message: 'REASON_REQUIRED', path: ['reasonCode'] });
+export type CantVisitInput = z.infer<typeof cantVisitSchema>;
 export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;

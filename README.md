@@ -53,7 +53,12 @@ npm run typecheck
 | US-06 Child's weekly schedule | Done (child edits, parents read-only) |
 | US-07 Child logs their day | Done (today only; time saved per item, Cairo time) |
 | US-08 Parents see the daily log | Done (by date, read-only) |
-| US-09 Child logs a visit | Next |
+| US-09 Child logs a visit | Done (same-day edits only) |
+| US-10 Parent confirms the child is with them | Done (only the visit's parent, from the visit time) |
+| US-11 "I can't visit" | Done (reason required; one-way notice) |
+| US-12 Visit notifications | Done (in-app, each opens its visit) |
+| US-13 Visit log | Done (never deleted; every change has time and author) |
+| US-14 Child chats with each parent | Next |
 
 ## Before launch
 
