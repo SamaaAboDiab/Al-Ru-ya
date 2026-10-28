@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { OtherSignIn } from '@/components/auth/OtherSignIn';
 import { AuthShell } from '@/components/AuthShell';
 import { homeFor, safeNext } from '@/lib/routes';
-import { getCurrentUser, getDictionary, getLocale } from '@/lib/server';
+import { getAuthMethods, getCurrentUser, getDictionary, getLocale } from '@/lib/server';
 import { LoginForm } from './LoginForm';
 
 type SearchParams = Promise<{ next?: string | string[]; email?: string | string[] }>;
@@ -12,7 +13,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
   const next = safeNext(query.next);
   const email = typeof query.email === 'string' ? query.email : undefined;
 
-  const user = await getCurrentUser();
+  const [user, methods] = await Promise.all([getCurrentUser(), getAuthMethods()]);
   if (user) redirect(next ?? homeFor(user.role));
 
   const locale = await getLocale();
@@ -25,6 +26,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
         <p className="auth-subtitle">{t.login.subtitle}</p>
       </div>
       <LoginForm locale={locale} next={next} email={email} />
+      <OtherSignIn locale={locale} methods={methods} next={next} />
       <p className="auth-footer">
         {t.login.noAccount} <Link href={`/register${carry ? `?${carry}` : ''}`}>{t.login.toRegister}</Link>
       </p>

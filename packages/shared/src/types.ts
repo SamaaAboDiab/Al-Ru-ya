@@ -42,6 +42,24 @@ export interface ChildDTO {
   photoUrl?: string;
 }
 
+/** Result of any passwordless sign-in: either signed in, or a newcomer who must finish their account. */
+export type SignInResultDTO = { status: 'signed-in'; user: UserDTO } | { status: 'signup' };
+
+/** What a newcomer already proved, to prefill the last step. */
+export interface SignupDraftDTO {
+  name?: string;
+  email?: string;
+  phone?: string;
+  /** True when the email came from the proof itself (a link or Google), so it can't be changed. */
+  emailVerified: boolean;
+}
+
+/** Which sign-in methods this server has set up. */
+export interface AuthMethodsDTO {
+  google: boolean;
+  phone: boolean;
+}
+
 /** What the inviting parent sees. `inviteUrl` is only returned right after creating it. */
 export interface InvitationDTO {
   id: string;

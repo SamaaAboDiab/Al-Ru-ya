@@ -19,6 +19,10 @@ export const DEFAULT_LOCALE: Locale = 'ar';
 export const PASSWORD_MIN_LENGTH = 8;
 /** A password reset link works once, for this long. */
 export const PASSWORD_RESET_TTL_MINUTES = 30;
+/** A sign-in link works once, for this long. */
+export const LOGIN_LINK_TTL_MINUTES = 15;
+/** After proving who they are, a newcomer has this long to finish creating the account. */
+export const SIGNUP_DRAFT_TTL_MINUTES = 30;
 
 /** US-04: an invitation to link the other parent stays valid for this many days. */
 export const INVITE_TTL_DAYS = 7;

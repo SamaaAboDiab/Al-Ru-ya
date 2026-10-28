@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { cache } from 'react';
 import type {
   ApiResponse,
+  AuthMethodsDTO,
   ChildDTO,
   ConversationSummaryDTO,
   DailyLogDTO,
@@ -10,6 +11,7 @@ import type {
   MessageDTO,
   NotificationListDTO,
   ScheduleItemDTO,
+  SignupDraftDTO,
   UserDTO,
   VisitDTO,
 } from '@ruya/shared';
@@ -46,6 +48,8 @@ function serverGet<T>(path: string): Promise<T | null> {
 }
 
 export const getCurrentUser = () => serverGet<UserDTO>('/api/auth/me');
+export const getAuthMethods = () => serverGet<AuthMethodsDTO>('/api/auth/methods');
+export const getSignupDraft = () => serverGet<SignupDraftDTO>('/api/auth/signup');
 export const getMyChildren = () => serverGet<ChildDTO[]>('/api/children');
 export const getChild = (id: string) => serverGet<ChildDTO>(`/api/children/${encodeURIComponent(id)}`);
 export const getInvitations = (childId: string) =>

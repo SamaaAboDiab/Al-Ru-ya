@@ -51,6 +51,36 @@ export const resetPasswordSchema = z.object({
 });
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
+/** Sign in with an emailed link instead of a password. Newcomers get a link that starts an account. */
+export const emailLinkSchema = z.object({
+  email,
+  locale: z.enum(LOCALES).optional(),
+  /** Where to go after signing in, carried in the link. Same-site paths only. */
+  next: z
+    .string()
+    .max(300)
+    .regex(/^\/(?![/\\])/, 'NEXT_INVALID')
+    .optional(),
+});
+export type EmailLinkInput = z.infer<typeof emailLinkSchema>;
+
+export const linkTokenSchema = z.object({
+  token: z.string().min(20, 'LINK_INVALID').max(200, 'LINK_INVALID'),
+});
+export type LinkTokenInput = z.infer<typeof linkTokenSchema>;
+
+/**
+ * The last step for someone who proved who they are with a link, Google or a phone code
+ * but has no account yet. Email is asked only when that proof didn't include one.
+ */
+export const completeSignupSchema = z.object({
+  name,
+  role: z.enum(PARENT_ROLES, 'ROLE_REQUIRED'),
+  email: email.optional(),
+  locale: z.enum(LOCALES).optional(),
+});
+export type CompleteSignupInput = z.infer<typeof completeSignupSchema>;
+
 /** Child profile, managed by the parents (any age). */
 export const createChildSchema = z.object({
   name,

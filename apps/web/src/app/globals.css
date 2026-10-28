@@ -530,48 +530,6 @@
     margin-block-start: 3px;
   }
 
-  .choice-group {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .choice-options {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
-  }
-
-  .choice {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    min-height: 52px;
-    padding: 0 var(--space-4);
-    border: 1px solid var(--gray-300);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      border-color 150ms var(--ease-out),
-      background-color 150ms var(--ease-out);
-  }
-
-  .choice:hover {
-    border-color: var(--gray-400);
-  }
-
-  .choice input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
   .choice-icon {
     display: grid;
     place-items: center;
@@ -582,21 +540,11 @@
     color: var(--gray-500);
   }
 
-  .choice:has(input:checked) {
-    border-color: var(--primary);
-    background: var(--blue-50);
-    box-shadow: inset 0 0 0 1px var(--primary);
-  }
-
   .choice:has(input:checked) .choice-icon {
     background: var(--primary);
     color: #ffffff;
   }
 
-  .choice:has(input:focus-visible) {
-    outline: 3px solid var(--focus);
-    outline-offset: 2px;
-  }
 
   .field-row {
     display: grid;
@@ -1505,19 +1453,6 @@
     color: var(--text-muted);
   }
 
-  .reason-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-  }
-
-  .choice-sm {
-    min-height: 40px;
-    padding: 0 var(--space-4);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-  }
-
   /* ========== Messages ========== */
   /* One conversation per parent: side by side on wide screens, stacked on phones. */
   .convo-list {
@@ -2209,6 +2144,44 @@
     border-radius: var(--radius-full);
     background: var(--success-bg);
     color: var(--success);
+  }
+
+  .auth-done-icon-info {
+    background: var(--blue-50);
+    color: var(--accent);
+  }
+
+  /* "or", then the other ways in, under the main form. */
+  .other-signin {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .other-signin-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-end: var(--space-1);
+    color: var(--gray-400);
+    font-size: var(--text-sm);
+  }
+
+  .other-signin-divider::before,
+  .other-signin-divider::after {
+    content: '';
+    flex: 1;
+    block-size: 1px;
+    background: var(--gray-200);
+  }
+
+  .other-signin-btn {
+    gap: var(--space-2);
+  }
+
+  .field input[readonly] {
+    background: var(--gray-50);
+    color: var(--gray-500);
   }
 
   .auth-done .auth-subtitle {

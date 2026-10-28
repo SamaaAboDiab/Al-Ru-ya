@@ -7,6 +7,7 @@ import { CANCEL_NOTE_MAX, CANCEL_REASONS, todayIn, type Locale, type VisitDTO } 
 import { Dialog } from '@/components/Dialog';
 import { Field } from '@/components/Field';
 import { PickerField } from '@/components/PickerField';
+import { ChoiceField } from '@/components/ChoiceField';
 import { FormAlert } from '@/components/FormAlert';
 import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
@@ -74,22 +75,13 @@ function CantVisitForm({ locale, childId, visitId, onDone }: CancelProps) {
           <PickerField locale={locale} label={v.from} name="startTime" type="time" required error={fieldErrors.startTime} />
         </div>
       )}
-      <fieldset className="choice-group" aria-describedby={fieldErrors.reasonCode ? 'reason-error' : undefined}>
-        <legend className="field-label">{v.reasonLabel}</legend>
-        <div className="reason-options">
-          {CANCEL_REASONS.map((code) => (
-            <label key={code} className="choice choice-sm">
-              <input type="radio" name="reasonCode" value={code} />
-              {v.reasons[code]}
-            </label>
-          ))}
-        </div>
-        {fieldErrors.reasonCode && (
-          <span id="reason-error" className="field-error">
-            {fieldErrors.reasonCode}
-          </span>
-        )}
-      </fieldset>
+      <ChoiceField
+        label={v.reasonLabel}
+        name="reasonCode"
+        variant="chips"
+        options={CANCEL_REASONS.map((code) => ({ value: code, label: v.reasons[code] }))}
+        error={fieldErrors.reasonCode}
+      />
       <Field
         label={v.noteLabel}
         name="note"

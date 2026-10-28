@@ -1,5 +1,6 @@
 'use client';
 
+import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import type { Locale } from '@ruya/shared';
@@ -18,9 +19,9 @@ export function LanguageChoice({ locale }: { locale: Locale }) {
   }
 
   return (
-    <fieldset className="choice-group" disabled={pending}>
+    <fieldset className="field choice-field" disabled={pending}>
       <legend className="field-label">{t.language}</legend>
-      <div className="choice-options">
+      <div className="choice-cards">
         {(['ar', 'en'] as const).map((value) => (
           <label key={value} className="choice" lang={value}>
             <input
@@ -29,9 +30,15 @@ export function LanguageChoice({ locale }: { locale: Locale }) {
               value={value}
               checked={locale === value}
               onChange={() => choose(value)}
+              className="visually-hidden"
             />
             <span className="choice-icon display">{value === 'ar' ? 'ع' : 'En'}</span>
-            {value === 'ar' ? t.arabic : t.english}
+            <span className="choice-text">
+              <span className="choice-label">{value === 'ar' ? t.arabic : t.english}</span>
+            </span>
+            <span className="choice-check" aria-hidden>
+              <Check size={14} strokeWidth={3} />
+            </span>
           </label>
         ))}
       </div>

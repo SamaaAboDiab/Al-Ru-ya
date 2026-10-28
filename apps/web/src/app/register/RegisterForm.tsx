@@ -1,9 +1,10 @@
 'use client';
 
-import { CircleAlert, User, UserRound } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
-import { ROLES, PARENT_ROLES, type Locale, type UserDTO } from '@ruya/shared';
+import type { Locale, UserDTO } from '@ruya/shared';
+import { roleOptions } from '@/components/auth/roleOptions';
+import { ChoiceField } from '@/components/ChoiceField';
 import { Field } from '@/components/Field';
 import { FormAlert } from '@/components/FormAlert';
 import { SubmitButton } from '@/components/SubmitButton';
@@ -37,29 +38,7 @@ export function RegisterForm({ locale, next, email }: Props) {
   return (
     <form className="form" onSubmit={onSubmit} noValidate>
       {formError && <FormAlert>{formError}</FormAlert>}
-      <fieldset className="choice-group" aria-describedby={fieldErrors.role ? 'role-error' : undefined}>
-        <legend className="field-label">{t.fields.role}</legend>
-        <div className="choice-options">
-          {PARENT_ROLES.map((role) => {
-            const Icon = role === ROLES.MOTHER ? UserRound : User;
-            return (
-              <label key={role} className="choice">
-                <input type="radio" name="role" value={role} required />
-                <span className="choice-icon">
-                  <Icon size={18} aria-hidden />
-                </span>
-                {t.fields[role]}
-              </label>
-            );
-          })}
-        </div>
-        {fieldErrors.role && (
-          <span id="role-error" className="field-error">
-            <CircleAlert size={14} aria-hidden />
-            {fieldErrors.role}
-          </span>
-        )}
-      </fieldset>
+      <ChoiceField label={t.fields.role} name="role" required options={roleOptions(t)} error={fieldErrors.role} />
       <Field
         label={t.fields.name}
         name="name"
