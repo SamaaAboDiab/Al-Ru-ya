@@ -1526,25 +1526,6 @@
     display: inline-flex;
   }
 
-  .chat-presets {
-    display: flex;
-    gap: var(--space-2);
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .chat-preset {
-    flex-shrink: 0;
-    border: 0;
-    cursor: pointer;
-    font: inherit;
-    font-size: var(--text-sm);
-  }
-
-  .chat-preset:hover {
-    background: var(--blue-100);
-  }
-
   .chat-composer {
     display: flex;
     align-items: flex-end;
@@ -2426,22 +2407,6 @@
     font-weight: 600;
   }
 
-  .chat-preset {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 0 var(--space-3);
-    border: 1px solid var(--blue-100);
-    border-radius: var(--radius-full);
-    background: var(--blue-50);
-    color: var(--navy-700);
-    font-weight: 600;
-  }
-
-  .chat-preset svg {
-    color: var(--accent);
-  }
 
   .tile-grid {
     display: grid;
@@ -3761,6 +3726,76 @@
     background: var(--primary);
     color: #ffffff;
     font-weight: 600;
+  }
+
+  /* ========== Encouragement phrases (parents) ========== */
+  .chat-presets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius-md);
+    background: var(--blue-50);
+    animation: panel-in 160ms var(--ease-out);
+  }
+
+  .chat-preset {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: 0 var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--navy-800);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-align: start;
+    cursor: pointer;
+    transition:
+      border-color 150ms var(--ease-out),
+      background-color 150ms var(--ease-out);
+  }
+
+  .chat-preset:hover {
+    border-color: var(--blue-100);
+  }
+
+  .chat-preset svg {
+    flex-shrink: 0;
+    color: var(--accent);
+  }
+
+  .chat-presets-toggle {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 48px;
+    block-size: 48px;
+    border: 1px solid var(--blue-100);
+    border-radius: var(--radius-full);
+    background: var(--blue-50);
+    color: var(--accent);
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-out);
+  }
+
+  .chat-presets-toggle:hover,
+  .chat-presets-toggle[aria-expanded='true'] {
+    background: var(--blue-100);
+  }
+
+  .chat-presets-toggle[aria-expanded='true'] {
+    border-color: var(--accent);
+  }
+
+  .chat-send:disabled {
+    background: var(--gray-200);
+    color: var(--gray-500);
+    opacity: 1;
   }
 }
 

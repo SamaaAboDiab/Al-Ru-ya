@@ -44,7 +44,16 @@ export function ChatThread({ locale, childId, parentId, initial, privacyNote, sh
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [presetsOpen, setPresetsOpen] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // A phrase lands in the composer so it can still be edited, then the panel closes.
+  function pickPreset(text: string) {
+    setDraft(text);
+    setPresetsOpen(false);
+    inputRef.current?.focus();
+  }
   const stickToBottom = useRef(true);
 
   const markRead = useCallback(() => {
@@ -162,12 +171,12 @@ export function ChatThread({ locale, childId, parentId, initial, privacyNote, sh
         })}
       </div>
 
-      {showPresets && (
-        <div className="chat-presets" role="group" aria-label={m.encourage}>
+      {showPresets && presetsOpen && (
+        <div id="chat-presets" className="chat-presets" role="group" aria-label={m.encourage}>
           {m.presets.map((p) => {
             const Icon = PRESET_ICONS[p.id];
             return (
-              <button key={p.id} type="button" className="chat-preset" onClick={() => setDraft(p.text)}>
+              <button key={p.id} type="button" className="chat-preset" onClick={() => pickPreset(p.text)}>
                 <Icon size={16} aria-hidden />
                 {p.text}
               </button>
@@ -178,10 +187,24 @@ export function ChatThread({ locale, childId, parentId, initial, privacyNote, sh
 
       {error && <FormAlert>{error}</FormAlert>}
       <form className="chat-composer" onSubmit={send}>
+        {showPresets && (
+          <button
+            type="button"
+            className="chat-presets-toggle"
+            onClick={() => setPresetsOpen((o) => !o)}
+            aria-expanded={presetsOpen}
+            aria-controls="chat-presets"
+            aria-label={m.encourage}
+            title={m.encourage}
+          >
+            <Sparkles size={20} aria-hidden />
+          </button>
+        )}
         <label htmlFor="chat-input" className="visually-hidden">
           {m.placeholder}
         </label>
         <textarea
+          ref={inputRef}
           id="chat-input"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
