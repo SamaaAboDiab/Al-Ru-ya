@@ -23,10 +23,11 @@ describe('US-07 child logs their day', () => {
     const { kid, childId } = await family();
     const url = `/api/children/${childId}/daily-logs/${today()}`;
 
-    const res = await kid.put(url).send({ items: ['lunch', 'school'] });
+    const res = await kid.put(url).send({ items: ['school', 'lunch'] });
     expect(res.status).toBe(200);
     expect(res.body.data).toMatchObject({ date: today(), editable: true });
-    expect(res.body.data.entries.map((e: { item: string }) => e.item)).toEqual(['school', 'lunch']);
+    // Display order follows the areas: meals come before education.
+    expect(res.body.data.entries.map((e: { item: string }) => e.item)).toEqual(['lunch', 'school']);
     for (const e of res.body.data.entries) expect(Date.parse(e.doneAt)).not.toBeNaN();
   });
 

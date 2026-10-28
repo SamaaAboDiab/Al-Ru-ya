@@ -35,9 +35,20 @@ export const SCHEDULE_DAYS = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'] a
 export type ScheduleDay = (typeof SCHEDULE_DAYS)[number];
 export const MAX_SCHEDULE_ITEMS = 100;
 
-/** US-07: what a child can check off for the day, in display order. */
-export const DAILY_ITEMS = ['school', 'breakfast', 'lunch', 'dinner', 'homework', 'training', 'reading'] as const;
-export type DailyItem = (typeof DAILY_ITEMS)[number];
+/**
+ * US-07: what a child can check off for the day, grouped by area, in display order.
+ * Keys are stored in logs, so existing keys must never be renamed or removed.
+ */
+export const DAILY_CATEGORIES = {
+  meals: ['breakfast', 'lunch', 'dinner', 'snack'],
+  health: ['medicine', 'doctor', 'sleep'],
+  education: ['school', 'homework', 'reading'],
+  skills: ['language', 'art', 'music'],
+  club: ['training', 'club', 'course'],
+} as const;
+export type DailyCategory = keyof typeof DAILY_CATEGORIES;
+export type DailyItem = (typeof DAILY_CATEGORIES)[DailyCategory][number];
+export const DAILY_ITEMS = Object.values(DAILY_CATEGORIES).flat() as DailyItem[];
 
 /**
  * "Today" for daily logs and same-day edits. The MVP serves families in Egypt;

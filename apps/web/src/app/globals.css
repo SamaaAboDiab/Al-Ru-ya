@@ -1712,96 +1712,6 @@
     font-size: var(--text-sm);
   }
 
-  .check-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
-    gap: var(--space-2);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .check-tile {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    inline-size: 100%;
-    min-block-size: 68px;
-    padding: var(--space-3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: var(--surface);
-    color: var(--text);
-    font: inherit;
-    text-align: start;
-    transition:
-      border-color 150ms var(--ease-out),
-      background-color 150ms var(--ease-out),
-      transform 100ms var(--ease-out);
-  }
-
-  button.check-tile {
-    cursor: pointer;
-  }
-
-  button.check-tile:hover:not(:disabled) {
-    border-color: var(--accent);
-  }
-
-  button.check-tile:active:not(:disabled) {
-    transform: scale(0.98);
-  }
-
-  button.check-tile:disabled {
-    cursor: progress;
-  }
-
-  .check-tile[data-done] {
-    border-color: rgb(26 127 82 / 0.35);
-    background: var(--success-bg);
-  }
-
-  .check-icon {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    inline-size: 40px;
-    block-size: 40px;
-    border-radius: var(--radius-sm);
-    background: var(--blue-50);
-    color: var(--accent);
-  }
-
-  .check-tile[data-done] .check-icon {
-    background: #ffffff;
-    color: var(--success);
-  }
-
-  .check-text {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-    line-height: 1.35;
-  }
-
-  .check-label {
-    font-weight: 600;
-  }
-
-  .check-meta {
-    font-size: var(--text-xs);
-    color: var(--text-muted);
-  }
-
-  html[lang='ar'] .check-meta {
-    font-size: var(--text-sm);
-  }
-
-  .check-tile[data-done] .check-meta {
-    color: var(--success);
-  }
-
   .check-mark {
     display: grid;
     place-items: center;
@@ -1813,9 +1723,176 @@
     color: #ffffff;
   }
 
-  .check-tile[data-done] .check-mark {
-    border-color: var(--success);
-    background: var(--success);
+  /* ========== Daily log by area ========== */
+  /* Columns instead of a grid: areas have different lengths, so they pack without gaps. */
+  .day-areas {
+    columns: 3 320px;
+    column-gap: var(--space-4);
+  }
+
+  .day-areas > .day-area {
+    break-inside: avoid;
+    margin-block-end: var(--space-4);
+  }
+
+  .day-area {
+    --area-bg: var(--blue-50);
+    --area-fg: var(--accent);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  /* Each area keeps a quiet color of its own, so the page reads at a glance. */
+  .day-area[data-area='meals'] {
+    --area-bg: #fdf1e3;
+    --area-fg: #b4691f;
+  }
+
+  .day-area[data-area='health'] {
+    --area-bg: #fdecef;
+    --area-fg: #c2394f;
+  }
+
+  .day-area[data-area='education'] {
+    --area-bg: var(--blue-50);
+    --area-fg: var(--accent);
+  }
+
+  .day-area[data-area='skills'] {
+    --area-bg: #f1ebfc;
+    --area-fg: #6941b5;
+  }
+
+  .day-area[data-area='club'] {
+    --area-bg: #e3f5ec;
+    --area-fg: #1a7f52;
+  }
+
+  .day-area-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-block-end: 1px solid var(--gray-100);
+  }
+
+  .day-area-head h3 {
+    flex: 1;
+    font-size: var(--text-base);
+  }
+
+  .day-area-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 36px;
+    block-size: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--area-bg);
+    color: var(--area-fg);
+  }
+
+  .day-area-count {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full);
+    background: var(--gray-50);
+    color: var(--gray-500);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  html[lang='ar'] .day-area-count {
+    font-size: var(--text-sm);
+  }
+
+  .day-area[data-complete] .day-area-count {
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .day-items {
+    margin: 0;
+    padding: var(--space-1);
+    list-style: none;
+  }
+
+  .day-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    inline-size: 100%;
+    min-block-size: 56px;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    text-align: start;
+    transition: background-color 120ms var(--ease-out);
+  }
+
+  button.day-item {
+    cursor: pointer;
+  }
+
+  button.day-item:hover:not(:disabled) {
+    background: var(--gray-50);
+  }
+
+  button.day-item:disabled {
+    cursor: progress;
+  }
+
+  .day-item-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 32px;
+    block-size: 32px;
+    border-radius: var(--radius-full);
+    background: var(--gray-50);
+    color: var(--gray-500);
+  }
+
+  .day-item[data-done] .day-item-icon {
+    background: var(--area-bg);
+    color: var(--area-fg);
+  }
+
+  .day-item-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.35;
+  }
+
+  .day-item-label {
+    font-weight: 600;
+  }
+
+  .day-item-meta {
+    color: var(--gray-400);
+    font-size: var(--text-xs);
+  }
+
+  html[lang='ar'] .day-item-meta {
+    font-size: var(--text-sm);
+  }
+
+  .day-item[data-done] .day-item-meta {
+    color: var(--success);
+    font-weight: 500;
+  }
+
+  .day-item .check-mark {
+    inline-size: 24px;
+    block-size: 24px;
   }
 
   .check-mark .spinner {
@@ -1824,13 +1901,13 @@
     color: var(--accent);
   }
 
-  .check-tile[data-readonly]:not([data-done]) {
-    background: var(--gray-50);
+  .day-item[data-done] .check-mark {
+    border-color: var(--success);
+    background: var(--success);
   }
 
-  .check-tile[data-readonly]:not([data-done]) .check-icon {
-    background: var(--gray-100);
-    color: var(--gray-400);
+  .day-item[data-readonly]:not([data-done]) {
+    opacity: 0.75;
   }
 
   .spinner {
@@ -4129,11 +4206,6 @@
 
     .child-page .chat {
       block-size: calc(100dvh - 390px);
-    }
-
-    /* Seven daily items sit as 4 + 3 instead of 5 + 2. */
-    .check-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 }
