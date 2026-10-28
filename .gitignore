@@ -4,3 +4,7 @@ dist/
 .env
 .env.local
 *.log
+.dev-db/
+.playwright-mcp/
+next-env.d.ts
+*.tsbuildinfo
