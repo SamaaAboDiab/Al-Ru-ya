@@ -2187,6 +2187,57 @@
     font-weight: 600;
   }
 
+  .auth-forgot {
+    align-self: flex-end;
+    margin-block-start: calc(var(--space-2) * -1);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  /* The "check your email" and "password changed" screens. */
+  .auth-done {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .auth-done-icon {
+    display: grid;
+    place-items: center;
+    inline-size: 56px;
+    block-size: 56px;
+    border-radius: var(--radius-full);
+    background: var(--success-bg);
+    color: var(--success);
+  }
+
+  .auth-done .auth-subtitle {
+    margin: 0;
+  }
+
+  .auth-done .auth-footer {
+    text-align: start;
+  }
+
+  .link-btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .link-btn:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+
+  .link-btn:disabled {
+    cursor: progress;
+    opacity: 0.6;
+  }
+
   @media (min-width: 960px) {
     .auth {
       grid-template-columns: minmax(380px, 5fr) 7fr;

@@ -4,8 +4,9 @@ import type { Config } from '../../config';
 import { AUTH_COOKIE, signToken } from '../../middlewares/auth';
 import { ok } from '../../utils/respond';
 import * as authService from './auth.service';
+import * as resetService from './passwordReset.service';
 
-export function createAuthController(config: Config) {
+export function createAuthController(config: Config, resetDeps: resetService.ResetDeps) {
   const cookieOptions: CookieOptions = {
     httpOnly: true,
     sameSite: 'lax',
@@ -32,6 +33,16 @@ export function createAuthController(config: Config) {
       const user = await authService.login(req.body);
       startSession(res, user);
       ok(res, user);
+    },
+
+    async forgotPassword(req: Request, res: Response) {
+      await resetService.requestPasswordReset(req.body, resetDeps);
+      res.status(204).end();
+    },
+
+    async resetPassword(req: Request, res: Response) {
+      await resetService.resetPassword(req.body);
+      res.status(204).end();
     },
 
     logout(_req: Request, res: Response) {

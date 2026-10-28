@@ -26,6 +26,14 @@ JWT_SECRET=
 JWT_EXPIRES_IN_DAYS=7
 WEB_ORIGIN=http://localhost:3000
 LOG_LEVEL=info
+
+# Email (invitations, password reset). Leave SMTP_HOST out and emails are only logged.
+# Works with any SMTP service: Gmail (app password), Brevo, Resend, SendGrid...
+# SMTP_HOST=smtp.example.com
+# SMTP_PORT=587
+# SMTP_USER=
+# SMTP_PASS=
+# MAIL_FROM="الرؤية <no-reply@your-domain.com>"
 ```
 
 ```bash

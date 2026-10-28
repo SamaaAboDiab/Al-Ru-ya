@@ -41,6 +41,16 @@ export const loginSchema = z.object({
 });
 export type LoginInput = z.infer<typeof loginSchema>;
 
+/** Forgot password: the reply is the same whether or not the email has an account. */
+export const forgotPasswordSchema = z.object({ email });
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(20, 'RESET_LINK_INVALID').max(200, 'RESET_LINK_INVALID'),
+  password,
+});
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
 /** Child profile, managed by the parents (any age). */
 export const createChildSchema = z.object({
   name,

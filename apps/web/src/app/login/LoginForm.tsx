@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import type { FormEvent } from 'react';
+import { useRef, type FormEvent } from 'react';
 import type { Locale, UserDTO } from '@ruya/shared';
 import { Field } from '@/components/Field';
 import { FormAlert } from '@/components/FormAlert';
@@ -16,6 +17,13 @@ export function LoginForm({ locale, next, email }: Props) {
   const t = dictionaries[locale];
   const router = useRouter();
   const { pending, formError, fieldErrors, submit } = useApiForm<UserDTO>(locale);
+  const form = useRef<HTMLFormElement>(null);
+
+  /** Carries whatever email is typed so far, so it needn't be typed again. */
+  function forgotHref() {
+    const typed = form.current?.email?.value?.trim() || email;
+    return typed ? `/forgot-password?email=${encodeURIComponent(typed)}` : '/forgot-password';
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -31,7 +39,7 @@ export function LoginForm({ locale, next, email }: Props) {
   }
 
   return (
-    <form className="form" onSubmit={onSubmit} noValidate>
+    <form ref={form} className="form" onSubmit={onSubmit} noValidate>
       {formError && <FormAlert>{formError}</FormAlert>}
       <Field
         label={t.fields.email}
@@ -55,6 +63,16 @@ export function LoginForm({ locale, next, email }: Props) {
         toggleLabels={{ show: t.fields.showPassword, hide: t.fields.hidePassword }}
         error={fieldErrors.password}
       />
+      <Link
+        href="/forgot-password"
+        className="auth-forgot"
+        onClick={(e) => {
+          e.preventDefault();
+          router.push(forgotHref());
+        }}
+      >
+        {t.login.forgot}
+      </Link>
       <SubmitButton className="btn btn-primary btn-lg btn-block" loading={pending}>
         {t.login.submit}
       </SubmitButton>

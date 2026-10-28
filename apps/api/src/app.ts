@@ -36,15 +36,15 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
       legacyHeaders: false,
       handler: (_req, _res, next) => next({ status: 429 }),
     });
-  const invitationDeps = { mailer, logger, webOrigin: config.WEB_ORIGIN };
+  const mailDeps = { mailer, logger, webOrigin: config.WEB_ORIGIN };
 
   app.get('/api/health', (_req, res) => {
     res.json({ success: true, data: { status: 'ok' } });
   });
-  app.use('/api/auth', authRoutes(config, limiter(20)));
+  app.use('/api/auth', authRoutes(config, limiter(20), mailDeps));
   app.use(
     '/api/children/:childId/invitations',
-    childInvitationRoutes(config, invitationDeps, limiter(20)),
+    childInvitationRoutes(config, mailDeps, limiter(20)),
   );
   app.use('/api/children/:childId/schedule', scheduleRoutes(config));
   app.use('/api/children/:childId/daily-logs', dailyLogRoutes(config));
@@ -53,7 +53,7 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
   app.use('/api/notifications', notificationRoutes(config));
   app.use('/api/users', photoRoutes(config, limiter(30)));
   app.use('/api/children', childrenRoutes(config));
-  app.use('/api/invitations', invitationRoutes(config, invitationDeps, limiter(60)));
+  app.use('/api/invitations', invitationRoutes(config, mailDeps, limiter(60)));
 
   app.use(notFoundHandler);
   app.use(errorHandler(logger));
