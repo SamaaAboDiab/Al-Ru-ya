@@ -1766,6 +1766,11 @@
     --area-fg: #6941b5;
   }
 
+  .day-area[data-area='worship'] {
+    --area-bg: #e2f4f4;
+    --area-fg: #13777a;
+  }
+
   .day-area[data-area='club'] {
     --area-bg: #e3f5ec;
     --area-fg: #1a7f52;

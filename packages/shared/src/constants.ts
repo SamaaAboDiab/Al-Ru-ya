@@ -41,9 +41,10 @@ export const MAX_SCHEDULE_ITEMS = 100;
  */
 export const DAILY_CATEGORIES = {
   meals: ['breakfast', 'lunch', 'dinner', 'snack'],
-  health: ['medicine', 'doctor', 'sleep'],
-  education: ['school', 'homework', 'reading'],
-  skills: ['language', 'art', 'music'],
+  health: ['medicine', 'doctor', 'therapy', 'water', 'sleep'],
+  worship: ['prayer', 'quran', 'adhkar'],
+  education: ['school', 'lesson', 'online_class', 'homework', 'study', 'exam_prep', 'reading'],
+  skills: ['language', 'coding', 'art', 'music'],
   club: ['training', 'club', 'course'],
 } as const;
 export type DailyCategory = keyof typeof DAILY_CATEGORIES;
