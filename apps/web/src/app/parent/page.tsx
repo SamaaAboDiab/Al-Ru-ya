@@ -1,4 +1,4 @@
-import { CalendarDays, CheckCircle2, ChevronRight, ClipboardCheck, Clock, House, Users } from 'lucide-react';
+import { CalendarDays, CheckCircle2, ChevronRight, ClipboardCheck, Clock, House, MessageCircle, Users } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
@@ -152,6 +152,11 @@ function ChildCard({
         <Link href={`/parent/children/${child.id}/visits`} className="card-link">
           <House size={18} aria-hidden />
           {dictionaries[locale].visits.open}
+          <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
+        </Link>
+        <Link href={`/parent/children/${child.id}/messages`} className="card-link">
+          <MessageCircle size={18} aria-hidden />
+          {dictionaries[locale].messages.open}
           <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
         </Link>
       </div>

@@ -70,3 +70,7 @@ export const NOTIFICATION_TYPES = {
   VISIT_CANCELLED: 'visit_cancelled',
 } as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[keyof typeof NOTIFICATION_TYPES];
+
+/** US-14: one conversation per child-parent pair. */
+export const MESSAGE_MAX_LENGTH = 1000;
+export const MESSAGES_PAGE_SIZE = 50;

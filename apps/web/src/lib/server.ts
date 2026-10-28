@@ -2,9 +2,11 @@ import { cookies } from 'next/headers';
 import type {
   ApiResponse,
   ChildDTO,
+  ConversationSummaryDTO,
   DailyLogDTO,
   InvitationDTO,
   InvitationPreviewDTO,
+  MessageDTO,
   NotificationListDTO,
   ScheduleItemDTO,
   UserDTO,
@@ -47,6 +49,12 @@ export const getVisits = (childId: string) =>
   serverGet<VisitDTO[]>(`/api/children/${encodeURIComponent(childId)}/visits`);
 export const getVisit = (childId: string, visitId: string) =>
   serverGet<VisitDTO>(`/api/children/${encodeURIComponent(childId)}/visits/${encodeURIComponent(visitId)}`);
+export const getConversations = (childId: string) =>
+  serverGet<ConversationSummaryDTO[]>(`/api/children/${encodeURIComponent(childId)}/conversations`);
+export const getMessages = (childId: string, parentId: string) =>
+  serverGet<MessageDTO[]>(
+    `/api/children/${encodeURIComponent(childId)}/conversations/${encodeURIComponent(parentId)}/messages`,
+  );
 export const getNotifications = () => serverGet<NotificationListDTO>('/api/notifications');
 export const getInvitationPreview = (token: string) =>
   serverGet<InvitationPreviewDTO>(`/api/invitations/${encodeURIComponent(token)}`);

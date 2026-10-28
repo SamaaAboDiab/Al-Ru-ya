@@ -4,7 +4,7 @@ export type ClientResult<T> =
   | { ok: true; data: T }
   | { ok: false; code: string; fields?: Record<string, string> };
 
-export type Method = 'POST' | 'PUT' | 'DELETE';
+export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 /** Browser-side API call through the same-origin /api rewrite. */
 export async function apiRequest<T>(method: Method, path: string, body?: unknown): Promise<ClientResult<T>> {
@@ -31,3 +31,4 @@ export async function apiRequest<T>(method: Method, path: string, body?: unknown
 }
 
 export const apiPost = <T>(path: string, body?: unknown) => apiRequest<T>('POST', path, body);
+export const apiGet = <T>(path: string) => apiRequest<T>('GET', path);

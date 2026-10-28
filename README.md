@@ -58,7 +58,8 @@ npm run typecheck
 | US-11 "I can't visit" | Done (reason required; one-way notice) |
 | US-12 Visit notifications | Done (in-app, each opens its visit) |
 | US-13 Visit log | Done (never deleted; every change has time and author) |
-| US-14 Child chats with each parent | Next |
+| US-14 Child chats with each parent | Done (one private conversation per parent; refreshes every 10s) |
+| US-15 Parents send encouragement | Done (in their own conversation, with quick phrases) |
 
 ## Before launch
 

@@ -2,32 +2,12 @@ import { describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { addDays, todayIn } from '@ruya/shared';
 import { VisitModel } from '../src/models/Visit';
-import { birthDateForAge, registerParent, useTestApp } from './helpers';
+import { linkedFamily, useTestApp } from './helpers';
 
 const ctx = useTestApp();
 type Agent = ReturnType<typeof request.agent>;
 
-/** Mother + father (linked by invitation) + a child with a login. */
-async function family(tag = '') {
-  const { agent: mother, res: m } = await registerParent(ctx.app, { name: 'Mona', email: `mona${tag}@example.com` });
-  const created = await mother.post('/api/children').send({ name: 'Yassin', birthDate: birthDateForAge(12) });
-  const childId = created.body.data.id as string;
-
-  const invite = await mother.post(`/api/children/${childId}/invitations`).send({ email: `ali${tag}@example.com` });
-  const token = invite.body.data.inviteUrl.split('/invite/')[1];
-  const { agent: father, res: f } = await registerParent(ctx.app, {
-    name: 'Ali',
-    email: `ali${tag}@example.com`,
-    role: 'father',
-  });
-  await father.post(`/api/invitations/${token}/accept`);
-
-  await mother.post(`/api/children/${childId}/account`).send({ email: `kid${tag}@example.com`, password: 'kidpass123' });
-  const kid = request.agent(ctx.app);
-  await kid.post('/api/auth/login').send({ email: `kid${tag}@example.com`, password: 'kidpass123' });
-
-  return { mother, father, kid, childId, motherId: m.body.data.id as string, fatherId: f.body.data.id as string };
-}
+const family = (tag = '') => linkedFamily(ctx.app, tag);
 
 const today = () => todayIn();
 const url = (childId: string, rest = '') => `/api/children/${childId}/visits${rest}`;

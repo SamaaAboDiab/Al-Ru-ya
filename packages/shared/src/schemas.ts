@@ -4,6 +4,7 @@ import {
   CANCEL_REASONS,
   DAILY_ITEMS,
   LOCALES,
+  MESSAGE_MAX_LENGTH,
   PARENT_ROLES,
   PASSWORD_MIN_LENGTH,
   SCHEDULE_DAYS,
@@ -122,4 +123,10 @@ export const cantVisitSchema = z
   .object({ ...reasonFields, date: anyDate, startTime: time })
   .refine(hasReason, { message: 'REASON_REQUIRED', path: ['reasonCode'] });
 export type CantVisitInput = z.infer<typeof cantVisitSchema>;
+
+/** US-14/15 */
+export const messageSchema = z.object({
+  body: z.string().trim().min(1, 'MESSAGE_REQUIRED').max(MESSAGE_MAX_LENGTH, 'MESSAGE_TOO_LONG'),
+});
+export type MessageInput = z.infer<typeof messageSchema>;
 export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;

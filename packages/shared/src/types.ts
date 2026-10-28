@@ -89,6 +89,23 @@ export interface VisitDTO {
   canCancel: boolean;
 }
 
+/** US-14/15 */
+export interface MessageDTO {
+  id: string;
+  body: string;
+  senderRole: Role;
+  fromMe: boolean;
+  createdAt: string;
+  /** Whether the other side has opened it. */
+  read: boolean;
+}
+
+export interface ConversationSummaryDTO {
+  parent: ParentSummary;
+  lastMessage?: { body: string; createdAt: string; fromMe: boolean };
+  unread: number;
+}
+
 /** US-12 */
 export interface NotificationDTO {
   id: string;

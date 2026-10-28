@@ -10,8 +10,7 @@ import { homeFor } from '@/lib/routes';
 import { getCurrentUser, getLocale } from '@/lib/server';
 
 const TILE_ICONS = [CalendarDays, ClipboardCheck, House, MessageCircle];
-/** Features that are live link to their page; the rest show "coming soon". */
-const TILE_HREFS: (string | null)[] = ['/child/schedule', '/child/day', '/child/visits', null];
+const TILE_HREFS = ['/child/schedule', '/child/day', '/child/visits', '/child/messages'];
 
 export default async function ChildPage() {
   const user = await getCurrentUser();
@@ -36,29 +35,18 @@ export default async function ChildPage() {
         <ul className="tile-grid">
           {t.tiles.map((tile, i) => {
             const Icon = TILE_ICONS[i];
-            const href = TILE_HREFS[i];
-            const content = (
-              <>
-                <span className="tile-icon">
-                  <Icon size={22} aria-hidden />
-                </span>
-                <div>
-                  <h2 className="tile-title">{tile.title}</h2>
-                  <p className="tile-desc">{tile.desc}</p>
-                </div>
-              </>
-            );
-            return href ? (
+            return (
               <li key={tile.title}>
-                <Link href={href} className="card tile tile-link">
-                  {content}
+                <Link href={TILE_HREFS[i]} className="card tile tile-link">
+                  <span className="tile-icon">
+                    <Icon size={22} aria-hidden />
+                  </span>
+                  <div>
+                    <h2 className="tile-title">{tile.title}</h2>
+                    <p className="tile-desc">{tile.desc}</p>
+                  </div>
                   <ChevronRight size={18} aria-hidden className="tile-arrow rtl-flip" />
                 </Link>
-              </li>
-            ) : (
-              <li key={tile.title} className="card tile tile-soon" aria-disabled="true">
-                {content}
-                <span className="chip chip-info">{t.soon}</span>
               </li>
             );
           })}
