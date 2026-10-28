@@ -42,24 +42,33 @@ function toDTO(m: Message & { _id: unknown; createdAt: Date }, user: AuthUser): 
 export async function listConversations(user: AuthUser, childId: string): Promise<ConversationSummaryDTO[]> {
   const child = await findAccessibleChild(user, childId);
   const parentIds = user.role === ROLES.CHILD ? child.parents.map(String) : [user.id];
-  const parents = await UserModel.find({ _id: { $in: parentIds } }).select('name role').lean();
 
-  return Promise.all(
-    parents.map(async (p) => {
-      const pair = { child: child._id, parent: p._id };
-      const [last, unread] = await Promise.all([
-        MessageModel.findOne(pair).sort({ createdAt: -1 }).lean(),
-        MessageModel.countDocuments({ ...pair, sender: { $ne: user.id }, readAt: { $exists: false } }),
-      ]);
-      return {
-        parent: { id: String(p._id), name: p.name, role: p.role as ParentSummary['role'] },
-        ...(last
-          ? { lastMessage: { body: last.body, createdAt: last.createdAt.toISOString(), fromMe: String(last.sender) === user.id } }
-          : {}),
-        unread,
-      };
-    }),
-  );
+  // Names and per-conversation stats only depend on the child, so fetch them together.
+  const [parents, stats] = await Promise.all([
+    UserModel.find({ _id: { $in: parentIds } }).select('name role').lean(),
+    Promise.all(
+      parentIds.map(async (parentId) => {
+        const pair = { child: child._id, parent: parentId };
+        const [last, unread] = await Promise.all([
+          MessageModel.findOne(pair).sort({ _id: -1 }).lean(),
+          MessageModel.countDocuments({ ...pair, sender: { $ne: user.id }, readAt: { $exists: false } }),
+        ]);
+        return [parentId, { last, unread }] as const;
+      }),
+    ),
+  ]);
+  const statsByParent = new Map(stats);
+
+  return parents.map((p) => {
+    const { last, unread } = statsByParent.get(String(p._id)) ?? { last: null, unread: 0 };
+    return {
+      parent: { id: String(p._id), name: p.name, role: p.role as ParentSummary['role'] },
+      ...(last
+        ? { lastMessage: { body: last.body, createdAt: last.createdAt.toISOString(), fromMe: String(last.sender) === user.id } }
+        : {}),
+      unread,
+    };
+  });
 }
 
 /**

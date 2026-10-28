@@ -20,7 +20,7 @@ import { UserModel } from '../../models/User';
 import { VisitModel, type Visit } from '../../models/Visit';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
-import { findAccessibleChild } from '../children/children.service';
+import { findAccessibleChild, withAccessibleChild } from '../children/children.service';
 import { notifyVisit } from '../notifications/notifications.service';
 
 const MAX_LISTED = 200;
@@ -88,7 +88,7 @@ function assertLinkedParent(child: { parents: Types.ObjectId[] }, parentId: stri
   }
 }
 
-async function loadVisit(childId: Types.ObjectId, visitId: string): Promise<VisitDoc> {
+async function loadVisit(childId: Types.ObjectId | string, visitId: string): Promise<VisitDoc> {
   if (!isValidObjectId(visitId)) throw AppError.notFound('Visit');
   const visit = await VisitModel.findOne({ _id: visitId, child: childId })
     .populate<{ parent: PopulatedParent }>('parent', 'name role')
@@ -99,18 +99,19 @@ async function loadVisit(childId: Types.ObjectId, visitId: string): Promise<Visi
 
 /** US-13: everything, newest first. Linked parents and the child can read it. */
 export async function listVisits(user: AuthUser, childId: string, now = new Date()) {
-  const child = await findAccessibleChild(user, childId);
-  const visits = await VisitModel.find({ child: child._id })
-    .sort({ date: -1, startTime: -1 })
-    .limit(MAX_LISTED)
-    .populate<{ parent: PopulatedParent }>('parent', 'name role')
-    .lean();
+  const { result: visits } = await withAccessibleChild(user, childId, () =>
+    VisitModel.find({ child: childId })
+      .sort({ date: -1, startTime: -1 })
+      .limit(MAX_LISTED)
+      .populate<{ parent: PopulatedParent }>('parent', 'name role')
+      .lean(),
+  );
   return (visits as VisitDoc[]).map((v) => toDTO(v, user, now));
 }
 
 export async function getVisit(user: AuthUser, childId: string, visitId: string, now = new Date()) {
-  const child = await findAccessibleChild(user, childId);
-  return toDTO(await loadVisit(child._id, visitId), user, now);
+  const { result: visit } = await withAccessibleChild(user, childId, () => loadVisit(childId, visitId));
+  return toDTO(visit, user, now);
 }
 
 /** US-09: the child logs a visit; both parents see it and get notified. */

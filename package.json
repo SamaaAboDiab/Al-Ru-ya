@@ -10,6 +10,7 @@
     "dev:api": "npm run dev -w @ruya/api",
     "dev:web": "npm run dev -w @ruya/web",
     "test": "npm test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "preview:web": "npm run build -w @ruya/web && npm run start -w @ruya/web"
   }
 }

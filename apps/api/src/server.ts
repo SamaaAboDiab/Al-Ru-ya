@@ -6,7 +6,9 @@ import { createApp } from './app';
 const config = loadConfig();
 const logger = createLogger(config.LOG_LEVEL, config.NODE_ENV === 'development');
 
-await mongoose.connect(config.MONGODB_URI);
+// Keep warm connections ready: opening a new TLS connection to a remote cluster costs
+// several round trips, which otherwise lands on whichever request needed it.
+await mongoose.connect(config.MONGODB_URI, { minPoolSize: 10, maxPoolSize: 50 });
 logger.info('Connected to MongoDB');
 
 const server = createApp(config, logger).listen(config.PORT, () => {

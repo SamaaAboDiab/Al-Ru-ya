@@ -42,13 +42,23 @@ function toChildDTO(child: ChildWithParents): ChildDTO {
  */
 export async function findAccessibleChild(user: AuthUser, childId: string) {
   if (!isValidObjectId(childId)) throw AppError.notFound('Child');
-  const filter =
-    user.role === ROLES.CHILD
-      ? { _id: childId, account: user.id }
-      : { _id: childId, parents: user.id };
-  const child = await ChildModel.findOne(filter).lean();
+  const child = await ChildModel.findOne(accessFilter(user, childId)).lean();
   if (!child) throw AppError.notFound('Child');
   return child;
+}
+
+function accessFilter(user: AuthUser, childId: string) {
+  return user.role === ROLES.CHILD ? { _id: childId, account: user.id } : { _id: childId, parents: user.id };
+}
+
+/**
+ * Runs a child-scoped read in parallel with the access check, to save a database
+ * round trip. The read's result is only returned once access is confirmed.
+ */
+export async function withAccessibleChild<T>(user: AuthUser, childId: string, read: () => Promise<T>) {
+  if (!isValidObjectId(childId)) throw AppError.notFound('Child');
+  const [child, result] = await Promise.all([findAccessibleChild(user, childId), read()]);
+  return { child, result };
 }
 
 export async function listChildrenForParent(parentId: string): Promise<ChildDTO[]> {
@@ -61,12 +71,13 @@ export async function listChildrenForParent(parentId: string): Promise<ChildDTO[
 }
 
 export async function getChild(user: AuthUser, childId: string): Promise<ChildDTO> {
-  const child = await findAccessibleChild(user, childId);
-  const populated = await ChildModel.findById(child._id)
+  if (!isValidObjectId(childId)) throw AppError.notFound('Child');
+  // The access filter and the populate run as one lookup instead of two.
+  const child = await ChildModel.findOne(accessFilter(user, childId))
     .populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS)
     .lean();
-  if (!populated) throw AppError.notFound('Child');
-  return toChildDTO(populated);
+  if (!child) throw AppError.notFound('Child');
+  return toChildDTO(child);
 }
 
 /** A child profile managed by the parents, for any age. */

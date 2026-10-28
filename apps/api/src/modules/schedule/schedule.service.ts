@@ -10,7 +10,7 @@ import {
 import { ScheduleItemModel, type ScheduleItem } from '../../models/ScheduleItem';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
-import { findAccessibleChild } from '../children/children.service';
+import { findAccessibleChild, withAccessibleChild } from '../children/children.service';
 
 function toDTO(item: ScheduleItem & { _id: unknown; updatedAt: Date }): ScheduleItemDTO {
   return {
@@ -28,8 +28,9 @@ const dayIndex = (day: string) => SCHEDULE_DAYS.indexOf(day as ScheduleDay);
 
 /** US-06: both linked parents and the child can read the schedule. */
 export async function listSchedule(user: AuthUser, childId: string): Promise<ScheduleItemDTO[]> {
-  const child = await findAccessibleChild(user, childId);
-  const items = await ScheduleItemModel.find({ child: child._id }).limit(MAX_SCHEDULE_ITEMS).lean();
+  const { result: items } = await withAccessibleChild(user, childId, () =>
+    ScheduleItemModel.find({ child: childId }).limit(MAX_SCHEDULE_ITEMS).lean(),
+  );
   return items
     .sort((a, b) => dayIndex(a.day) - dayIndex(b.day) || a.startTime.localeCompare(b.startTime))
     .map(toDTO);

@@ -1,6 +1,7 @@
 import { CalendarDays, CircleCheck, CirclePlus, CircleX, Clock, Pencil, User } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { Locale, VisitAction, VisitDTO } from '@ruya/shared';
+import { BackButton } from '@/components/BackButton';
 import { FormAlert } from '@/components/FormAlert';
 import { dictionaries, formatDateTime, formatDayLong } from '@/lib/i18n';
 import { reasonText, timeRange } from './VisitList';
@@ -14,7 +15,18 @@ const ACTION_ICONS: Record<VisitAction, typeof CircleCheck> = {
 };
 
 /** US-10/13: the facts, the cancellation reason, the full change log, and any actions for this user. */
-export function VisitDetail({ locale, visit, actions }: { locale: Locale; visit: VisitDTO; actions?: ReactNode }) {
+export function VisitDetail({
+  locale,
+  visit,
+  back,
+  actions,
+}: {
+  locale: Locale;
+  visit: VisitDTO;
+  /** Back to the visit list; sits beside the title. */
+  back: { href: string; label: string };
+  actions?: ReactNode;
+}) {
   const t = dictionaries[locale];
   const reason = reasonText(visit, locale);
 
@@ -22,9 +34,8 @@ export function VisitDetail({ locale, visit, actions }: { locale: Locale; visit:
     <div className="visit-detail">
       <section className="card stack">
         <div className="visit-detail-head">
-          <h2 className="section-title" style={{ margin: 0 }}>
-            {t.visits.details}
-          </h2>
+          <BackButton href={back.href} label={back.label} />
+          <h1 className="section-title visit-detail-title">{t.visits.details}</h1>
           <VisitStatusChip locale={locale} status={visit.status} />
         </div>
         <dl className="visit-facts">

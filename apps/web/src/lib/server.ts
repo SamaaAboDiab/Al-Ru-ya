@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 import type {
   ApiResponse,
   ChildDTO,
@@ -24,16 +25,24 @@ export async function getDictionary() {
   return dictionaries[await getLocale()];
 }
 
-/** Calls the API from a server component, forwarding the visitor's session cookie. */
-async function serverGet<T>(path: string): Promise<T | null> {
+/**
+ * Calls the API from a server component, forwarding the visitor's session cookie.
+ * Wrapped in React `cache`, so the layout and the page asking for the same path
+ * (the current user, notifications) share one request per render.
+ */
+const cachedGet = cache(async (path: string): Promise<unknown> => {
   const cookieHeader = (await cookies()).toString();
   const res = await fetch(`${API_URL}${path}`, {
     headers: { cookie: cookieHeader },
     cache: 'no-store',
   });
   if (!res.ok) return null;
-  const body = (await res.json()) as ApiResponse<T>;
+  const body = (await res.json()) as ApiResponse<unknown>;
   return body.success ? body.data : null;
+});
+
+function serverGet<T>(path: string): Promise<T | null> {
+  return cachedGet(path) as Promise<T | null>;
 }
 
 export const getCurrentUser = () => serverGet<UserDTO>('/api/auth/me');

@@ -26,6 +26,14 @@ npm run dev:web   # http://localhost:3000
 
 If MongoDB is already installed, skip `dev:db` and point `MONGODB_URI` at it.
 
+To try the app the way users will get it (pages built ahead, prefetching, no on-demand compiling), run the API as above and then:
+
+```bash
+npm run preview:web   # production build + start on http://localhost:3000
+```
+
+On Windows, `next dev` can hit EPERM file-lock errors while compiling a page for the first time; a refresh fixes it, and `preview:web` avoids it.
+
 ## Tests
 
 ```bash

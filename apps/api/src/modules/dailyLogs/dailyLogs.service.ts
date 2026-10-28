@@ -10,7 +10,7 @@ import {
 import { DailyLogModel } from '../../models/DailyLog';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
-import { findAccessibleChild } from '../children/children.service';
+import { findAccessibleChild, withAccessibleChild } from '../children/children.service';
 
 type StoredEntry = { item: string; doneAt: Date };
 
@@ -41,8 +41,9 @@ function toDTO(
 /** US-08: linked parents (and the child) read any day's log. */
 export async function getDailyLog(user: AuthUser, childId: string, date: string, now = new Date()) {
   assertDate(date);
-  const child = await findAccessibleChild(user, childId);
-  const log = await DailyLogModel.findOne({ child: child._id, date }).lean();
+  const { result: log } = await withAccessibleChild(user, childId, () =>
+    DailyLogModel.findOne({ child: childId, date }).lean(),
+  );
   return toDTO(user, date, log, now);
 }
 

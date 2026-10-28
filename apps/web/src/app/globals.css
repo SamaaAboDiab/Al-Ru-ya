@@ -375,20 +375,6 @@
     gap: var(--space-2);
   }
 
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    margin-block-end: var(--space-4);
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .back-link:hover {
-    color: var(--primary);
-  }
 
   .card-link {
     display: flex;
@@ -2998,6 +2984,101 @@
   .faq-item p {
     padding: 0 var(--space-5) var(--space-5);
     color: var(--gray-700);
+  }
+
+  /* ========== Title row: back button beside the title ========== */
+  .page-head {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  /* The title block takes the free space, so actions sit at the far end. */
+  .page-head > div:has(> .page-title) {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .back-btn {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .page-head:has(.page-subtitle) .back-btn {
+    margin-block-start: 2px;
+  }
+
+  .chat-head,
+  .child-context-who,
+  .visit-detail-head {
+    gap: var(--space-3);
+  }
+
+  .visit-detail-head {
+    justify-content: flex-start;
+  }
+
+  .visit-detail-title {
+    flex: 1;
+    margin: 0;
+  }
+
+  /* ========== Loading placeholders ========== */
+  .skeleton {
+    display: block;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.2s ease-in-out infinite;
+  }
+
+  .skeleton-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-block-end: var(--space-6);
+  }
+
+  .skeleton-circle {
+    inline-size: 56px;
+    block-size: 56px;
+    border-radius: var(--radius-full);
+  }
+
+  .skeleton-lines {
+    display: grid;
+    gap: var(--space-2);
+    flex: 1;
+  }
+
+  .skeleton-title {
+    inline-size: min(260px, 60%);
+    block-size: 28px;
+  }
+
+  .skeleton-text {
+    inline-size: min(420px, 85%);
+    block-size: 16px;
+  }
+
+  .skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: var(--space-4);
+  }
+
+  .skeleton-card {
+    block-size: 180px;
+    border-radius: var(--radius-md);
+  }
+
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
   }
 }
 

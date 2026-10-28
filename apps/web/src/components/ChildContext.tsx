@@ -1,8 +1,9 @@
-import { ArrowLeft, CalendarDays, ClipboardCheck, House, MessageCircle } from 'lucide-react';
+import { CalendarDays, ClipboardCheck, House, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { ageInYears, type ChildDTO, type Locale } from '@ruya/shared';
 import { dictionaries } from '@/lib/i18n';
 import { Avatar } from './Avatar';
+import { BackButton } from './BackButton';
 
 export type ChildSection = 'schedule' | 'day' | 'visits' | 'messages';
 
@@ -32,11 +33,8 @@ export function ChildContext({
 
   return (
     <header className="child-context">
-      <Link href="/parent" className="back-link">
-        <ArrowLeft size={18} aria-hidden className="rtl-flip" />
-        {t.nav.myChildren}
-      </Link>
       <div className="child-context-who">
+        <BackButton href="/parent" label={t.nav.myChildren} />
         <Avatar name={child.name} id={child.id} size="lg" />
         <div>
           <h1 className="page-title">
