@@ -5,7 +5,8 @@ import type { FormEvent } from 'react';
 import { todayIn, type Locale, type ParentSummary, type VisitDTO } from '@ruya/shared';
 import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
-import { SelectField } from '@/components/SelectField';
+import { Avatar } from '@/components/Avatar';
+import { ChoiceField } from '@/components/ChoiceField';
 import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { useApiForm } from '@/lib/useApiForm';
@@ -47,13 +48,17 @@ export function VisitForm({ locale, childId, parents, visit, onDone }: Props) {
   return (
     <form className="form" onSubmit={onSubmit} noValidate>
       {formError && <FormAlert>{formError}</FormAlert>}
-      <SelectField
+      <ChoiceField
         label={v.withWhom}
         name="parentId"
         required
-        placeholder={v.choose}
-        defaultValue={visit?.parent.id ?? (parents.length === 1 ? parents[0].id : '')}
-        options={parents.map((p) => ({ value: p.id, label: `${p.name} (${t.fields[p.role]})` }))}
+        defaultValue={visit?.parent.id ?? (parents.length === 1 ? parents[0].id : undefined)}
+        options={parents.map((p) => ({
+          value: p.id,
+          label: p.name,
+          hint: t.fields[p.role],
+          media: <Avatar name={p.name} id={p.id} photo={p.photoUrl} />,
+        }))}
         error={fieldErrors.parentId}
       />
       <PickerField

@@ -6,7 +6,7 @@ import { SCHEDULE_DAYS, type Locale, type ScheduleDay, type ScheduleItemDTO } fr
 import { Field } from '@/components/Field';
 import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
-import { SelectField } from '@/components/SelectField';
+import { ChoiceField } from '@/components/ChoiceField';
 import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
 import { useApiForm } from '@/lib/useApiForm';
@@ -58,12 +58,12 @@ export function ScheduleItemForm({ locale, childId, item, defaultDay, onDone }: 
         defaultValue={item?.activity}
         error={fieldErrors.activity}
       />
-      <SelectField
+      <ChoiceField
         label={s.day}
         name="day"
+        variant="chips"
         required
-        placeholder={s.chooseDay}
-        defaultValue={item?.day ?? defaultDay ?? ''}
+        defaultValue={item?.day ?? defaultDay}
         options={SCHEDULE_DAYS.map((d) => ({ value: d, label: t.days[d] }))}
         error={fieldErrors.day}
       />
