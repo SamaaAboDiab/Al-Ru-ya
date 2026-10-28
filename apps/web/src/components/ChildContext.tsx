@@ -34,7 +34,7 @@ export function ChildContext({ locale, child, active }: { locale: Locale; child:
     <>
       <header className="child-band" data-tone={toneOf(child.id)}>
         <BackButton href="/parent" label={t.nav.myChildren} />
-        <Avatar name={child.name} id={child.id} size="xl" />
+        <Avatar name={child.name} id={child.id} photo={child.photoUrl} size="xl" />
         <div className="child-band-text">
           <h1 className="child-band-name">
             <bdi>{child.name}</bdi>

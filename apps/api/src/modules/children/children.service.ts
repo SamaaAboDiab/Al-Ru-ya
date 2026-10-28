@@ -7,7 +7,6 @@ import {
   type ChildDTO,
   type CreateChildAccountInput,
   type CreateChildInput,
-  type ParentSummary,
   type UserDTO,
 } from '@ruya/shared';
 import { ChildModel, type Child } from '../../models/Child';
@@ -15,23 +14,31 @@ import { UserModel } from '../../models/User';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
 import { assertEmailFree, hashPassword, toUserDTO } from '../auth/auth.service';
+import { photoUrl, toParentSummary } from '../photos/photos.service';
 
-type PopulatedParent = { _id: unknown; name: string; role: string };
-type ChildWithParents = Omit<Child, 'parents'> & { _id: unknown; parents: PopulatedParent[] };
+type PopulatedParent = { _id: unknown; name: string; role: string; photoAt?: Date | null };
+/** An id when not populated; then `photoAt` is simply missing and there is no photo. */
+type PopulatedAccount = { _id: unknown; photoAt?: Date | null };
+type ChildWithParents = Omit<Child, 'parents' | 'account'> & {
+  _id: unknown;
+  parents: PopulatedParent[];
+  account?: unknown;
+};
 
-const PARENT_FIELDS = 'name role';
+const PARENT_FIELDS = 'name role photoAt';
+/** The child's photo lives on their own login, so the account is populated for it. */
+const ACCOUNT_FIELDS = 'photoAt';
 
 function toChildDTO(child: ChildWithParents): ChildDTO {
+  const account = child.account as PopulatedAccount | null | undefined;
+  const url = account ? photoUrl(account._id, account.photoAt) : undefined;
   return {
     id: String(child._id),
     name: child.name,
     birthDate: child.birthDate,
     hasAccount: Boolean(child.account),
-    parents: child.parents.map((p) => ({
-      id: String(p._id),
-      name: p.name,
-      role: p.role as ParentSummary['role'],
-    })),
+    parents: child.parents.map(toParentSummary),
+    ...(url ? { photoUrl: url } : {}),
   };
 }
 
@@ -66,6 +73,7 @@ export async function listChildrenForParent(parentId: string): Promise<ChildDTO[
     .sort({ createdAt: 1 })
     .limit(50)
     .populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS)
+    .populate('account', ACCOUNT_FIELDS)
     .lean();
   return children.map(toChildDTO);
 }
@@ -75,6 +83,7 @@ export async function getChild(user: AuthUser, childId: string): Promise<ChildDT
   // The access filter and the populate run as one lookup instead of two.
   const child = await ChildModel.findOne(accessFilter(user, childId))
     .populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS)
+    .populate('account', ACCOUNT_FIELDS)
     .lean();
   if (!child) throw AppError.notFound('Child');
   return toChildDTO(child);
@@ -89,7 +98,7 @@ export async function createChild(parentId: string, input: CreateChildInput): Pr
     createdBy: parentId,
   });
   const populated = await child.populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS);
-  return toChildDTO(populated.toObject());
+  return toChildDTO(populated.toObject<ChildWithParents>());
 }
 
 /** US-02: a child gets their own login only from MIN_CHILD_ACCOUNT_AGE. */

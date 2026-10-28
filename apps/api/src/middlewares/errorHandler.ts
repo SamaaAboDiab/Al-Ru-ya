@@ -20,6 +20,9 @@ function toAppError(err: unknown): AppError | null {
   if (e?.type === 'entity.parse.failed') {
     return new AppError(400, ERROR_CODES.VALIDATION_FAILED, 'Malformed JSON');
   }
+  if (e?.type === 'entity.too.large') {
+    return new AppError(413, ERROR_CODES.TOO_LARGE, 'Request body is too large');
+  }
   if (e?.status === 429) {
     return new AppError(429, ERROR_CODES.TOO_MANY_REQUESTS, 'Too many attempts, try again later');
   }

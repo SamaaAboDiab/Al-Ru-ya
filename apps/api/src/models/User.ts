@@ -10,6 +10,8 @@ const userSchema = new Schema(
     locale: { type: String, enum: LOCALES, default: DEFAULT_LOCALE },
     /** Only for child accounts: the child profile this login belongs to. */
     child: { type: Schema.Types.ObjectId, ref: 'Child' },
+    /** When the profile photo last changed; versions the photo URL so browsers fetch the new one. */
+    photoAt: { type: Date },
   },
   { timestamps: true },
 );

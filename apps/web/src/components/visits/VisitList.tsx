@@ -42,7 +42,7 @@ export function VisitList({ locale, visits, basePath }: { locale: Locale; visits
                   {timeRange(v, locale)}
                 </span>
                 <span className="visit-card-line">
-                  <Avatar name={v.parent.name} id={v.parent.id} size="sm" />
+                  <Avatar name={v.parent.name} id={v.parent.id} photo={v.parent.photoUrl} size="sm" />
                   {t.visits.with(v.parent.name, t.fields[v.parent.role])}
                 </span>
                 {reason && (

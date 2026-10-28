@@ -11,6 +11,7 @@ import { MessageModel, type Message } from '../../models/Message';
 import { UserModel } from '../../models/User';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
+import { toParentSummary } from '../photos/photos.service';
 import { findAccessibleChild } from '../children/children.service';
 
 /**
@@ -45,7 +46,7 @@ export async function listConversations(user: AuthUser, childId: string): Promis
 
   // Names and per-conversation stats only depend on the child, so fetch them together.
   const [parents, stats] = await Promise.all([
-    UserModel.find({ _id: { $in: parentIds } }).select('name role').lean(),
+    UserModel.find({ _id: { $in: parentIds } }).select('name role photoAt').lean(),
     Promise.all(
       parentIds.map(async (parentId) => {
         const pair = { child: child._id, parent: parentId };
@@ -62,7 +63,7 @@ export async function listConversations(user: AuthUser, childId: string): Promis
   return parents.map((p) => {
     const { last, unread } = statsByParent.get(String(p._id)) ?? { last: null, unread: 0 };
     return {
-      parent: { id: String(p._id), name: p.name, role: p.role as ParentSummary['role'] },
+      parent: toParentSummary(p),
       ...(last
         ? { lastMessage: { body: last.body, createdAt: last.createdAt.toISOString(), fromMe: String(last.sender) === user.id } }
         : {}),

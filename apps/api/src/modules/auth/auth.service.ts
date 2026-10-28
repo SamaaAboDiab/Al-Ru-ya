@@ -7,6 +7,7 @@ import {
 } from '@ruya/shared';
 import { UserModel, type User } from '../../models/User';
 import { AppError } from '../../utils/AppError';
+import { photoUrl } from '../photos/photos.service';
 
 const BCRYPT_ROUNDS = 12;
 // Compared against when the email is unknown, so login takes the same time either way.
@@ -17,6 +18,7 @@ export function hashPassword(password: string) {
 }
 
 export function toUserDTO(user: User & { _id: unknown }): UserDTO {
+  const url = photoUrl(user._id, user.photoAt);
   return {
     id: String(user._id),
     name: user.name,
@@ -24,6 +26,7 @@ export function toUserDTO(user: User & { _id: unknown }): UserDTO {
     role: user.role as UserDTO['role'],
     locale: (user.locale ?? 'ar') as UserDTO['locale'],
     ...(user.child ? { childId: String(user.child) } : {}),
+    ...(url ? { photoUrl: url } : {}),
   };
 }
 

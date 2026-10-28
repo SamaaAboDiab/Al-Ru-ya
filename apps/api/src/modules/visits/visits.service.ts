@@ -20,12 +20,13 @@ import { UserModel } from '../../models/User';
 import { VisitModel, type Visit } from '../../models/Visit';
 import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
+import { toParentSummary } from '../photos/photos.service';
 import { findAccessibleChild, withAccessibleChild } from '../children/children.service';
 import { notifyVisit } from '../notifications/notifications.service';
 
 const MAX_LISTED = 200;
 
-type PopulatedParent = { _id: Types.ObjectId; name: string; role: string };
+type PopulatedParent = { _id: Types.ObjectId; name: string; role: string; photoAt?: Date | null };
 type VisitDoc = Omit<Visit, 'parent'> & { _id: Types.ObjectId; parent: PopulatedParent; createdAt: Date };
 type Actor = { id: string; name: string; role: Role };
 
@@ -46,7 +47,7 @@ function toDTO(v: VisitDoc, user: AuthUser, now: Date): VisitDTO {
   return {
     id: String(v._id),
     childId: String(v.child),
-    parent: { id: String(v.parent._id), name: v.parent.name, role: v.parent.role as ParentSummary['role'] },
+    parent: toParentSummary(v.parent),
     date: v.date,
     startTime: v.startTime,
     ...(v.endTime ? { endTime: v.endTime } : {}),
@@ -91,7 +92,7 @@ function assertLinkedParent(child: { parents: Types.ObjectId[] }, parentId: stri
 async function loadVisit(childId: Types.ObjectId | string, visitId: string): Promise<VisitDoc> {
   if (!isValidObjectId(visitId)) throw AppError.notFound('Visit');
   const visit = await VisitModel.findOne({ _id: visitId, child: childId })
-    .populate<{ parent: PopulatedParent }>('parent', 'name role')
+    .populate<{ parent: PopulatedParent }>('parent', 'name role photoAt')
     .lean();
   if (!visit) throw AppError.notFound('Visit');
   return visit as VisitDoc;
@@ -103,7 +104,7 @@ export async function listVisits(user: AuthUser, childId: string, now = new Date
     VisitModel.find({ child: childId })
       .sort({ date: -1, startTime: -1 })
       .limit(MAX_LISTED)
-      .populate<{ parent: PopulatedParent }>('parent', 'name role')
+      .populate<{ parent: PopulatedParent }>('parent', 'name role photoAt')
       .lean(),
   );
   return (visits as VisitDoc[]).map((v) => toDTO(v, user, now));

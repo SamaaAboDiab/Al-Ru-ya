@@ -16,6 +16,8 @@ export interface ParentSummary {
   id: string;
   name: string;
   role: ParentRole;
+  /** Present when the person has a profile photo. Only family members can load it. */
+  photoUrl?: string;
 }
 
 export interface UserDTO {
@@ -26,6 +28,8 @@ export interface UserDTO {
   locale: Locale;
   /** Set only for child accounts: the child profile this login belongs to. */
   childId?: string;
+  /** Present when the person has a profile photo. Only family members can load it. */
+  photoUrl?: string;
 }
 
 export interface ChildDTO {
@@ -34,6 +38,8 @@ export interface ChildDTO {
   birthDate: string;
   hasAccount: boolean;
   parents: ParentSummary[];
+  /** The photo the child set from their own account. */
+  photoUrl?: string;
 }
 
 /** What the inviting parent sees. `inviteUrl` is only returned right after creating it. */

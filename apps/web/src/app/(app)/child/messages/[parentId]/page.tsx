@@ -28,7 +28,7 @@ export default async function ChildChatPage({ params }: { params: Promise<{ pare
     <main className="page page-narrow page-chat">
       <div className="chat-head">
         <BackButton href="/child/messages" label={t.messages.myTitle} />
-        <Avatar name={parent.name} id={parent.id} size="lg" />
+        <Avatar name={parent.name} id={parent.id} photo={parent.photoUrl} size="lg" />
         <div>
           <h1 className="page-title">
             <bdi>{parent.name}</bdi>

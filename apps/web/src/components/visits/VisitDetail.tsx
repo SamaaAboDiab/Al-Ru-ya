@@ -58,7 +58,7 @@ export function VisitDetail({
                 {timeRange(visit, locale)}
               </span>
               <span className="visit-card-line">
-                <Avatar name={visit.parent.name} id={visit.parent.id} size="sm" />
+                <Avatar name={visit.parent.name} id={visit.parent.id} photo={visit.parent.photoUrl} size="sm" />
                 {t.visits.with(visit.parent.name, t.fields[visit.parent.role])}
               </span>
             </div>

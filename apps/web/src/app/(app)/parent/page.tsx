@@ -120,7 +120,7 @@ function ChildCard({ locale, child, extras }: { locale: Locale; child: ChildDTO;
   return (
     <li className="card child-card">
       <div className="child-card-head">
-        <Avatar name={child.name} id={child.id} size="lg" />
+        <Avatar name={child.name} id={child.id} photo={child.photoUrl} size="lg" />
         <div className="child-card-id">
           <h3 className="child-card-name">
             {/* Stretched over the card head: tapping the name, avatar or details opens the child page. */}
@@ -162,7 +162,7 @@ function ChildCard({ locale, child, extras }: { locale: Locale; child: ChildDTO;
       <div className="parents-row">
         <span className="avatar-stack">
           {child.parents.map((parent) => (
-            <Avatar key={parent.id} name={parent.name} id={parent.id} size="sm" />
+            <Avatar key={parent.id} name={parent.name} id={parent.id} photo={parent.photoUrl} size="sm" />
           ))}
         </span>
         <span className="parents-names">

@@ -83,6 +83,11 @@ export const NOTIFICATION_TYPES = {
 } as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[keyof typeof NOTIFICATION_TYPES];
 
+/** Profile photos are resized in the browser to a small square before upload, so this is generous. */
+export const PROFILE_PHOTO_MAX_BYTES = 300 * 1024;
+export const PROFILE_PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+export type ProfilePhotoType = (typeof PROFILE_PHOTO_TYPES)[number];
+
 /** US-14: one conversation per child-parent pair. */
 export const MESSAGE_MAX_LENGTH = 1000;
 export const MESSAGES_PAGE_SIZE = 50;

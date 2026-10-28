@@ -6,14 +6,15 @@ export type ClientResult<T> =
 
 export type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-/** Browser-side API call through the same-origin /api rewrite. */
+/** Browser-side API call through the same-origin /api rewrite. A Blob (an image) is sent as-is. */
 export async function apiRequest<T>(method: Method, path: string, body?: unknown): Promise<ClientResult<T>> {
   let res: Response;
   try {
+    const isFile = body instanceof Blob;
     res = await fetch(path, {
       method,
-      headers: body === undefined ? undefined : { 'content-type': 'application/json' },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: body === undefined ? undefined : { 'content-type': isFile ? body.type : 'application/json' },
+      body: body === undefined ? undefined : isFile ? body : JSON.stringify(body),
       credentials: 'same-origin',
     });
   } catch {

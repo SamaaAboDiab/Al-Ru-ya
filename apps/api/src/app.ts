@@ -16,6 +16,7 @@ import { dailyLogRoutes } from './modules/dailyLogs/dailyLogs.routes';
 import { visitRoutes } from './modules/visits/visits.routes';
 import { notificationRoutes } from './modules/notifications/notifications.routes';
 import { messageRoutes } from './modules/messages/messages.routes';
+import { photoRoutes } from './modules/photos/photos.routes';
 
 export function createApp(config: Config, logger: Logger, mailer: Mailer = createLogMailer(logger)) {
   const app = express();
@@ -50,6 +51,7 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
   app.use('/api/children/:childId/visits', visitRoutes(config));
   app.use('/api/children/:childId/conversations', messageRoutes(config, limiter(300)));
   app.use('/api/notifications', notificationRoutes(config));
+  app.use('/api/users', photoRoutes(config, limiter(30)));
   app.use('/api/children', childrenRoutes(config));
   app.use('/api/invitations', invitationRoutes(config, invitationDeps, limiter(60)));
 

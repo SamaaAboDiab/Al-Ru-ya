@@ -37,7 +37,7 @@ export default async function MyMessagesPage() {
           {conversations.map((c) => (
             <li key={c.parent.id}>
               <Link href={`/child/messages/${c.parent.id}`} className="card convo">
-                <Avatar name={c.parent.name} id={c.parent.id} size="lg" />
+                <Avatar name={c.parent.name} id={c.parent.id} photo={c.parent.photoUrl} size="lg" />
                 <span className="convo-text">
                   <span className="convo-name">
                     <bdi>{c.parent.name}</bdi> <span className="muted">({t.fields[c.parent.role]})</span>
