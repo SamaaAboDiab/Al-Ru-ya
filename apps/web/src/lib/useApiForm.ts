@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Locale } from '@ruya/shared';
-import { apiPost, type ClientResult } from './client';
+import { apiRequest, type ClientResult, type Method } from './client';
 import { dictionaries } from './i18n';
 
 /** Submits a form to the API and turns error codes into localized messages. */
@@ -12,11 +12,11 @@ export function useApiForm<T>(locale: Locale) {
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  async function submit(path: string, body: unknown): Promise<ClientResult<T>> {
+  async function submit(path: string, body?: unknown, method: Method = 'POST'): Promise<ClientResult<T>> {
     setPending(true);
     setFormError(null);
     setFieldErrors({});
-    const result = await apiPost<T>(path, body);
+    const result = await apiRequest<T>(method, path, body);
     setPending(false);
     if (!result.ok) {
       const fields = Object.fromEntries(

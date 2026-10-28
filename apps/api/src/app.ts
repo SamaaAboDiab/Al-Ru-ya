@@ -11,6 +11,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler';
 import { authRoutes } from './modules/auth/auth.routes';
 import { childrenRoutes } from './modules/children/children.routes';
 import { childInvitationRoutes, invitationRoutes } from './modules/invitations/invitations.routes';
+import { scheduleRoutes } from './modules/schedule/schedule.routes';
 
 export function createApp(config: Config, logger: Logger, mailer: Mailer = createLogMailer(logger)) {
   const app = express();
@@ -40,6 +41,7 @@ export function createApp(config: Config, logger: Logger, mailer: Mailer = creat
     '/api/children/:childId/invitations',
     childInvitationRoutes(config, invitationDeps, limiter(20)),
   );
+  app.use('/api/children/:childId/schedule', scheduleRoutes(config));
   app.use('/api/children', childrenRoutes(config));
   app.use('/api/invitations', invitationRoutes(config, invitationDeps, limiter(60)));
 

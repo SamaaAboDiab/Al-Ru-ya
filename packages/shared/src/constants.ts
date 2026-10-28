@@ -29,3 +29,8 @@ export const INVITE_STATUSES = {
   EXPIRED: 'expired',
 } as const;
 export type InviteStatus = (typeof INVITE_STATUSES)[keyof typeof INVITE_STATUSES];
+
+/** US-06: days in week order. The week starts on Saturday, as in Egypt. */
+export const SCHEDULE_DAYS = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'] as const;
+export type ScheduleDay = (typeof SCHEDULE_DAYS)[number];
+export const MAX_SCHEDULE_ITEMS = 100;

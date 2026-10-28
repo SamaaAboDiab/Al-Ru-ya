@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LOCALES, PARENT_ROLES, PASSWORD_MIN_LENGTH } from './constants';
+import { LOCALES, PARENT_ROLES, PASSWORD_MIN_LENGTH, SCHEDULE_DAYS } from './constants';
 
 const email = z.string().trim().toLowerCase().pipe(z.email('EMAIL_INVALID'));
 const password = z
@@ -47,4 +47,23 @@ export type CreateChildAccountInput = z.infer<typeof createChildAccountSchema>;
 
 /** US-04 */
 export const createInvitationSchema = z.object({ email });
+
+const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'TIME_INVALID');
+
+/** US-06: one weekly activity. Times are "HH:MM", 24-hour. */
+export const scheduleItemSchema = z
+  .object({
+    activity: z.string().trim().min(1, 'ACTIVITY_REQUIRED').max(60, 'ACTIVITY_TOO_LONG'),
+    day: z.enum(SCHEDULE_DAYS, 'DAY_REQUIRED'),
+    startTime: time,
+    endTime: time,
+    location: z
+      .string()
+      .trim()
+      .max(80, 'LOCATION_TOO_LONG')
+      .optional()
+      .transform((v) => (v ? v : undefined)),
+  })
+  .refine((v) => v.endTime > v.startTime, { message: 'END_BEFORE_START', path: ['endTime'] });
+export type ScheduleItemInput = z.infer<typeof scheduleItemSchema>;
 export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;

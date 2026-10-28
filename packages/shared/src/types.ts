@@ -1,4 +1,4 @@
-import type { InviteStatus, Locale, ParentRole, Role } from './constants';
+import type { InviteStatus, Locale, ParentRole, Role, ScheduleDay } from './constants';
 import type { ErrorCode } from './errors';
 
 export interface ParentSummary {
@@ -32,6 +32,16 @@ export interface InvitationDTO {
   status: InviteStatus;
   expiresAt: string;
   inviteUrl?: string;
+}
+
+export interface ScheduleItemDTO {
+  id: string;
+  activity: string;
+  day: ScheduleDay;
+  startTime: string;
+  endTime: string;
+  location?: string;
+  updatedAt: string;
 }
 
 /** What the invited person sees when opening the link. */

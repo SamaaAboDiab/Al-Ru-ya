@@ -50,7 +50,8 @@ npm run typecheck
 | US-05 Sibling data isolation | Server check in place; applied to each new feature |
 | US-16 Arabic / English | Language switch, RTL, localized dates and numbers |
 | US-04 Invite the other parent | Done (emails are logged until a mail provider is added) |
-| US-06 Child's weekly schedule | Next |
+| US-06 Child's weekly schedule | Done (child edits, parents read-only) |
+| US-07 Child logs their day | Next |
 
 ## Before launch
 

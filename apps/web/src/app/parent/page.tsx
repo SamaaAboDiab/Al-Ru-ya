@@ -1,4 +1,5 @@
-import { CheckCircle2, Clock, Users } from 'lucide-react';
+import { CalendarDays, CheckCircle2, ChevronRight, Clock, Users } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
   INVITE_STATUSES,
@@ -136,6 +137,12 @@ function ChildCard({
           ))}
         </span>
       </div>
+
+      <Link href={`/parent/children/${child.id}/schedule`} className="card-link">
+        <CalendarDays size={18} aria-hidden />
+        {dictionaries[locale].schedule.open}
+        <ChevronRight size={18} aria-hidden className="rtl-flip card-link-arrow" />
+      </Link>
 
       {(canCreateLogin || canInvite) && (
         <ChildActions

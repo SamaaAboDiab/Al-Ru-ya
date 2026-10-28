@@ -4,13 +4,15 @@ export type ClientResult<T> =
   | { ok: true; data: T }
   | { ok: false; code: string; fields?: Record<string, string> };
 
+export type Method = 'POST' | 'PUT' | 'DELETE';
+
 /** Browser-side API call through the same-origin /api rewrite. */
-export async function apiPost<T>(path: string, body?: unknown): Promise<ClientResult<T>> {
+export async function apiRequest<T>(method: Method, path: string, body?: unknown): Promise<ClientResult<T>> {
   let res: Response;
   try {
     res = await fetch(path, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      method,
+      headers: body === undefined ? undefined : { 'content-type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
       credentials: 'same-origin',
     });
@@ -27,3 +29,5 @@ export async function apiPost<T>(path: string, body?: unknown): Promise<ClientRe
     return { ok: false, code: 'INTERNAL' };
   }
 }
+
+export const apiPost = <T>(path: string, body?: unknown) => apiRequest<T>('POST', path, body);

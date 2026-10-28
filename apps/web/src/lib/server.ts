@@ -4,6 +4,7 @@ import type {
   ChildDTO,
   InvitationDTO,
   InvitationPreviewDTO,
+  ScheduleItemDTO,
   UserDTO,
 } from '@ruya/shared';
 import { LOCALE_COOKIE, dictionaries, resolveLocale } from './i18n';
@@ -35,5 +36,7 @@ export const getMyChildren = () => serverGet<ChildDTO[]>('/api/children');
 export const getChild = (id: string) => serverGet<ChildDTO>(`/api/children/${encodeURIComponent(id)}`);
 export const getInvitations = (childId: string) =>
   serverGet<InvitationDTO[]>(`/api/children/${encodeURIComponent(childId)}/invitations`);
+export const getSchedule = (childId: string) =>
+  serverGet<ScheduleItemDTO[]>(`/api/children/${encodeURIComponent(childId)}/schedule`);
 export const getInvitationPreview = (token: string) =>
   serverGet<InvitationPreviewDTO>(`/api/invitations/${encodeURIComponent(token)}`);
