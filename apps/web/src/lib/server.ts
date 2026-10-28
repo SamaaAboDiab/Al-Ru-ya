@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import type {
   ApiResponse,
   ChildDTO,
+  DailyLogDTO,
   InvitationDTO,
   InvitationPreviewDTO,
   ScheduleItemDTO,
@@ -38,5 +39,7 @@ export const getInvitations = (childId: string) =>
   serverGet<InvitationDTO[]>(`/api/children/${encodeURIComponent(childId)}/invitations`);
 export const getSchedule = (childId: string) =>
   serverGet<ScheduleItemDTO[]>(`/api/children/${encodeURIComponent(childId)}/schedule`);
+export const getDailyLog = (childId: string, date: string) =>
+  serverGet<DailyLogDTO>(`/api/children/${encodeURIComponent(childId)}/daily-logs/${encodeURIComponent(date)}`);
 export const getInvitationPreview = (token: string) =>
   serverGet<InvitationPreviewDTO>(`/api/invitations/${encodeURIComponent(token)}`);

@@ -1,4 +1,4 @@
-import type { InviteStatus, Locale, ParentRole, Role, ScheduleDay } from './constants';
+import type { DailyItem, InviteStatus, Locale, ParentRole, Role, ScheduleDay } from './constants';
 import type { ErrorCode } from './errors';
 
 export interface ParentSummary {
@@ -42,6 +42,17 @@ export interface ScheduleItemDTO {
   endTime: string;
   location?: string;
   updatedAt: string;
+}
+
+/** US-07/08: one child's checklist for one date. */
+export interface DailyLogDTO {
+  date: string;
+  today: string;
+  /** Each checked item with the moment it was checked. */
+  entries: { item: DailyItem; doneAt: string }[];
+  updatedAt: string | null;
+  /** True only for the child's own log, on the same day. */
+  editable: boolean;
 }
 
 /** What the invited person sees when opening the link. */

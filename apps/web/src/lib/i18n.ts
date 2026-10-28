@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, LOCALES, type ErrorCode, type Locale } from '@ruya/shared';
+import { DEFAULT_LOCALE, FAMILY_TIMEZONE, LOCALES, type ErrorCode, type Locale } from '@ruya/shared';
 
 export const LOCALE_COOKIE = 'ruya_lang';
 
@@ -24,6 +24,25 @@ export function formatDate(isoDate: string, locale: Locale) {
 
 export function formatNumber(n: number, locale: Locale) {
   return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-US').format(n);
+}
+
+/** A moment shown on the family's clock, e.g. "٨:١٥ ص". */
+export function formatClock(iso: string, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: FAMILY_TIMEZONE,
+  }).format(new Date(iso));
+}
+
+/** "الأربع، ٢٨ أكتوبر" / "Wednesday, 28 October". */
+export function formatDayLong(isoDate: string, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(`${isoDate}T00:00:00Z`));
 }
 
 /** "17:30" → "٥:٣٠ م" / "5:30 PM". */
@@ -191,6 +210,36 @@ const ar = {
     emptyParentBody: (name: string) => `أول ما تتضاف أنشطة في حساب ${name} هتلاقيها هنا.`,
     noAccountBody: (name: string) => `لسه مفيش حساب دخول لـ ${name}. الجدول بيتعمل من حساب الطفل نفسه.`,
   },
+  dailyItems: {
+    school: 'المدرسة',
+    breakfast: 'الفطار',
+    lunch: 'الغدا',
+    dinner: 'العشا',
+    homework: 'الواجب',
+    training: 'التمرين',
+    reading: 'القراية',
+  },
+  day: {
+    open: 'اليوميات',
+    myTitle: 'يومي',
+    mySubtitle: 'علّم على اللي عملته النهاردة. بابا وماما هيشوفوا يومك.',
+    childTitle: (name: string) => `يوميات ${name}`,
+    childSubtitle: 'اللي اتعلّم عليه في اليوم ده، ووقت تسجيل كل حاجة.',
+    today: 'النهاردة',
+    prev: 'اليوم اللي قبله',
+    next: 'اليوم اللي بعده',
+    pickDate: 'اختار يوم',
+    progress: (done: number, total: number) =>
+      `${formatNumber(done, 'ar')} من ${formatNumber(total, 'ar')}`,
+    doneAt: (time: string) => `اتسجل ${time}`,
+    notYet: 'لسه',
+    notDone: 'ما اتعلّمش عليه',
+    locked: 'اليوم ده خلص، فمينفعش يتعدّل. تقدر تعدّل يوميات النهاردة بس.',
+    tapHint: 'دوس على أي حاجة عشان تعلّم عليها أو تشيل العلامة.',
+    emptyDay: 'مفيش حاجة اتسجلت في اليوم ده.',
+    lastUpdate: (time: string) => `آخر تحديث ${time}`,
+    noAccountBody: (name: string) => `لسه مفيش حساب دخول لـ ${name}. اليوميات بتتسجل من حساب الطفل نفسه.`,
+  },
   invitePage: {
     title: (inviter: string, child: string) => `${inviter} بيدعوك تتابع ${child}`,
     body: 'لما تقبل، هتشوف جدول الطفل ويومياته وزياراته من حسابك.',
@@ -226,6 +275,7 @@ const ar = {
     ALREADY_LINKED: 'الشخص ده مربوط بالطفل بالفعل.',
     CHILD_HAS_BOTH_PARENTS: 'الأب والأم الاتنين مربوطين بالطفل بالفعل.',
     SCHEDULE_FULL: 'الجدول وصل لأقصى عدد أنشطة. امسح حاجة قديمة الأول.',
+    DAY_LOCKED: 'اليوم ده خلص، فمينفعش يتعدّل.',
     TOO_MANY_REQUESTS: 'محاولات كتير. استنى شوية وجرّب تاني.',
     INTERNAL: 'حصلت مشكلة عندنا. جرّب تاني بعد شوية.',
     NETWORK: 'مش قادرين نوصل للسيرفر. اتأكد من النت وجرّب تاني.',
@@ -392,6 +442,35 @@ const en: Dictionary = {
     emptyParentBody: (name) => `Once ${name} adds activities, you'll see them here.`,
     noAccountBody: (name) => `${name} doesn't have a login yet. Children build their schedule from their own account.`,
   },
+  dailyItems: {
+    school: 'School',
+    breakfast: 'Breakfast',
+    lunch: 'Lunch',
+    dinner: 'Dinner',
+    homework: 'Homework',
+    training: 'Training',
+    reading: 'Reading',
+  },
+  day: {
+    open: 'Daily log',
+    myTitle: 'My day',
+    mySubtitle: 'Check off what you did today. Your parents will see your day.',
+    childTitle: (name) => `${name}'s daily log`,
+    childSubtitle: 'What was checked off that day, and when each item was logged.',
+    today: 'Today',
+    prev: 'Previous day',
+    next: 'Next day',
+    pickDate: 'Choose a day',
+    progress: (done, total) => `${done} of ${total}`,
+    doneAt: (time) => `Logged ${time}`,
+    notYet: 'Not yet',
+    notDone: 'Not checked',
+    locked: "This day is over, so it can't be changed. You can only edit today.",
+    tapHint: 'Tap an item to check or uncheck it.',
+    emptyDay: 'Nothing was logged on this day.',
+    lastUpdate: (time) => `Last updated ${time}`,
+    noAccountBody: (name) => `${name} doesn't have a login yet. Children log their day from their own account.`,
+  },
   invitePage: {
     title: (inviter, child) => `${inviter} invited you to follow ${child}`,
     body: "Once you accept, you'll see the child's schedule, daily log and visits from your account.",
@@ -427,6 +506,7 @@ const en: Dictionary = {
     ALREADY_LINKED: 'This person is already linked to the child.',
     CHILD_HAS_BOTH_PARENTS: 'Both parents are already linked to this child.',
     SCHEDULE_FULL: 'The schedule is full. Delete an old activity first.',
+    DAY_LOCKED: "This day is over, so it can't be changed.",
     TOO_MANY_REQUESTS: 'Too many attempts. Wait a bit and try again.',
     INTERNAL: 'Something went wrong on our side. Try again shortly.',
     NETWORK: "We can't reach the server. Check your connection and try again.",

@@ -34,3 +34,13 @@ export type InviteStatus = (typeof INVITE_STATUSES)[keyof typeof INVITE_STATUSES
 export const SCHEDULE_DAYS = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri'] as const;
 export type ScheduleDay = (typeof SCHEDULE_DAYS)[number];
 export const MAX_SCHEDULE_ITEMS = 100;
+
+/** US-07: what a child can check off for the day, in display order. */
+export const DAILY_ITEMS = ['school', 'breakfast', 'lunch', 'dinner', 'homework', 'training', 'reading'] as const;
+export type DailyItem = (typeof DAILY_ITEMS)[number];
+
+/**
+ * "Today" for daily logs and same-day edits. The MVP serves families in Egypt;
+ * move this to the family's profile when other countries are added.
+ */
+export const FAMILY_TIMEZONE = 'Africa/Cairo';

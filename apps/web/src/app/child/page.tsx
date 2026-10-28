@@ -11,7 +11,7 @@ import { getCurrentUser, getLocale } from '@/lib/server';
 
 const TILE_ICONS = [CalendarDays, ClipboardCheck, House, MessageCircle];
 /** Features that are live link to their page; the rest show "coming soon". */
-const TILE_HREFS: (string | null)[] = ['/child/schedule', null, null, null];
+const TILE_HREFS: (string | null)[] = ['/child/schedule', '/child/day', null, null];
 
 export default async function ChildPage() {
   const user = await getCurrentUser();

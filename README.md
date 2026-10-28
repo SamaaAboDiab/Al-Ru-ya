@@ -51,7 +51,9 @@ npm run typecheck
 | US-16 Arabic / English | Language switch, RTL, localized dates and numbers |
 | US-04 Invite the other parent | Done (emails are logged until a mail provider is added) |
 | US-06 Child's weekly schedule | Done (child edits, parents read-only) |
-| US-07 Child logs their day | Next |
+| US-07 Child logs their day | Done (today only; time saved per item, Cairo time) |
+| US-08 Parents see the daily log | Done (by date, read-only) |
+| US-09 Child logs a visit | Next |
 
 ## Before launch
 

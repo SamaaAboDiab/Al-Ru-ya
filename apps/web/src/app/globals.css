@@ -332,6 +332,196 @@ html[lang='ar'] .btn {
   margin-inline-start: auto;
 }
 
+.card-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.page.page-narrow {
+  max-width: 760px;
+}
+
+.inline-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ========== Daily log ========== */
+.day-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.day-nav-label {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.day-nav-today {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.day-nav [data-disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.day-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.day-progress-bar {
+  flex: 1;
+  block-size: 8px;
+  border-radius: var(--radius-full);
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+.day-progress-bar span {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--blue-400), var(--success));
+  transition: inline-size 300ms var(--ease-out);
+}
+
+.day-hint {
+  font-size: var(--text-sm);
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  min-block-size: 68px;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  transition:
+    border-color 150ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    transform 100ms var(--ease-out);
+}
+
+button.check-tile {
+  cursor: pointer;
+}
+
+button.check-tile:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button.check-tile:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+button.check-tile:disabled {
+  cursor: progress;
+}
+
+.check-tile[data-done] {
+  border-color: rgb(26 127 82 / 0.35);
+  background: var(--success-bg);
+}
+
+.check-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--blue-50);
+  color: var(--accent);
+}
+
+.check-tile[data-done] .check-icon {
+  background: #ffffff;
+  color: var(--success);
+}
+
+.check-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.check-label {
+  font-weight: 600;
+}
+
+.check-meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+html[lang='ar'] .check-meta {
+  font-size: var(--text-sm);
+}
+
+.check-tile[data-done] .check-meta {
+  color: var(--success);
+}
+
+.check-mark {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 26px;
+  block-size: 26px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  color: #ffffff;
+}
+
+.check-tile[data-done] .check-mark {
+  border-color: var(--success);
+  background: var(--success);
+}
+
+.check-mark .spinner {
+  inline-size: 14px;
+  block-size: 14px;
+  color: var(--accent);
+}
+
+.check-tile[data-readonly]:not([data-done]) {
+  background: var(--gray-50);
+}
+
+.check-tile[data-readonly]:not([data-done]) .check-icon {
+  background: var(--gray-100);
+  color: var(--gray-400);
+}
+
 .spinner {
   inline-size: 16px;
   block-size: 16px;

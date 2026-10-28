@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LOCALES, PARENT_ROLES, PASSWORD_MIN_LENGTH, SCHEDULE_DAYS } from './constants';
+import { DAILY_ITEMS, LOCALES, PARENT_ROLES, PASSWORD_MIN_LENGTH, SCHEDULE_DAYS } from './constants';
 
 const email = z.string().trim().toLowerCase().pipe(z.email('EMAIL_INVALID'));
 const password = z
@@ -66,4 +66,13 @@ export const scheduleItemSchema = z
   })
   .refine((v) => v.endTime > v.startTime, { message: 'END_BEFORE_START', path: ['endTime'] });
 export type ScheduleItemInput = z.infer<typeof scheduleItemSchema>;
+
+/** US-07: the full set of items checked today. Unchecking means leaving it out. */
+export const dailyLogSchema = z.object({
+  items: z
+    .array(z.enum(DAILY_ITEMS, 'ITEM_INVALID'))
+    .max(DAILY_ITEMS.length)
+    .refine((items) => new Set(items).size === items.length, 'ITEM_DUPLICATE'),
+});
+export type DailyLogInput = z.infer<typeof dailyLogSchema>;
 export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;
