@@ -23,7 +23,7 @@ export default async function MyVisitPage({ params }: { params: Promise<{ visitI
   const open = visit.status === VISIT_STATUSES.UPCOMING || visit.status === VISIT_STATUSES.PENDING;
 
   return (
-    <main className="page page-narrow">
+    <main className="page">
       <VisitDetail
         locale={locale}
         visit={visit}

@@ -1146,17 +1146,20 @@
     box-shadow: var(--shadow-md);
   }
 
-  .visit-card[data-status='pending'] {
+  .visit-card[data-status='pending'],
+  .visit-hero[data-status='pending'] {
     --leaf-bg: var(--warning-bg);
     --leaf-fg: var(--warning);
   }
 
-  .visit-card[data-status='confirmed'] {
+  .visit-card[data-status='confirmed'],
+  .visit-hero[data-status='confirmed'] {
     --leaf-bg: var(--success-bg);
     --leaf-fg: var(--success);
   }
 
-  .visit-card[data-status='cancelled'] {
+  .visit-card[data-status='cancelled'],
+  .visit-hero[data-status='cancelled'] {
     --leaf-bg: var(--danger-bg);
     --leaf-fg: var(--danger);
   }
@@ -1248,37 +1251,87 @@
     gap: var(--space-4);
   }
 
-  .visit-detail-head {
+  /* The visit page leads with a large calendar leaf, colored by status like the cards in the list. */
+  .visit-hero {
+    --leaf-bg: var(--blue-50);
+    --leaf-fg: var(--navy-700);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    border-block-start: 4px solid var(--leaf-fg);
+  }
+
+  .visit-hero-main {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
+    gap: var(--space-5);
   }
 
-  .visit-facts {
-    display: grid;
-    gap: var(--space-3);
-    margin: 0;
+  .visit-leaf-lg {
+    inline-size: 96px;
+    block-size: 104px;
+    border-radius: var(--radius-md);
   }
 
-  .visit-facts > div {
-    display: grid;
-    grid-template-columns: 130px 1fr;
-    gap: var(--space-3);
-    align-items: center;
+  .visit-leaf-lg .visit-leaf-day {
+    font-size: 2.75rem;
   }
 
-  .visit-facts dt {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    color: var(--text-muted);
+  .visit-leaf-lg .visit-leaf-month {
+    margin-block-start: 6px;
     font-size: var(--text-sm);
   }
 
-  .visit-facts dd {
+  html[lang='ar'] .visit-leaf-lg .visit-leaf-month {
+    font-size: var(--text-base);
+  }
+
+  .visit-hero-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .visit-hero-weekday {
     margin: 0;
-    font-weight: 600;
+    font-size: var(--text-2xl);
+  }
+
+  .visit-hero .visit-card-line {
+    font-size: var(--text-base);
+  }
+
+  .visit-hero-reason {
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+  }
+
+  .visit-hero-actions {
+    padding-block-start: var(--space-4);
+    border-block-start: 1px solid var(--gray-100);
+  }
+
+  @media (max-width: 640px) {
+    .visit-hero-main {
+      gap: var(--space-4);
+    }
+
+    .visit-leaf-lg {
+      inline-size: 76px;
+      block-size: 84px;
+    }
+
+    .visit-leaf-lg .visit-leaf-day {
+      font-size: 2.125rem;
+    }
+
+    .visit-hero-weekday {
+      font-size: var(--text-xl);
+    }
   }
 
   .timeline {
@@ -3168,18 +3221,8 @@
     margin-block-start: 2px;
   }
 
-  .chat-head,
-  .visit-detail-head {
+  .chat-head {
     gap: var(--space-3);
-  }
-
-  .visit-detail-head {
-    justify-content: flex-start;
-  }
-
-  .visit-detail-title {
-    flex: 1;
-    margin: 0;
   }
 
   /* ========== Loading placeholders ========== */
