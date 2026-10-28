@@ -2273,16 +2273,7 @@
   }
 
   /* ========== Parent: one child's area ========== */
-  .child-context {
-    margin-block-end: var(--space-5);
-  }
 
-  .child-context-who {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    margin-block-end: var(--space-5);
-  }
 
   .tabs {
     display: flex;
@@ -3009,7 +3000,6 @@
   }
 
   .chat-head,
-  .child-context-who,
   .visit-detail-head {
     gap: var(--space-3);
   }
@@ -3080,11 +3070,410 @@
       background-position: -200% 0;
     }
   }
+
+  /* ========== One child's page (parent view) ========== */
+  /* Each child keeps the color of their avatar; the band carries it across every tab. */
+  [data-tone='0'] {
+    --tone-bg: #e6effc;
+    --tone-fg: #163560;
+    --tone-accent: #3d7be0;
+  }
+
+  [data-tone='1'] {
+    --tone-bg: #fde8d7;
+    --tone-fg: #7a3a12;
+    --tone-accent: #c46a2c;
+  }
+
+  [data-tone='2'] {
+    --tone-bg: #dff3e8;
+    --tone-fg: #145c3c;
+    --tone-accent: #1a7f52;
+  }
+
+  [data-tone='3'] {
+    --tone-bg: #efe7fb;
+    --tone-fg: #4b2d86;
+    --tone-accent: #6941b5;
+  }
+
+  .child-band {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(90% 160% at 100% 0%, var(--tone-bg) 0%, transparent 70%),
+      linear-gradient(180deg, var(--tone-bg), color-mix(in srgb, var(--tone-bg) 40%, #ffffff));
+    color: var(--tone-fg);
+  }
+
+  .child-band .back-btn {
+    align-self: flex-start;
+    border-color: color-mix(in srgb, var(--tone-fg) 15%, transparent);
+    background: rgb(255 255 255 / 0.7);
+    color: var(--tone-fg);
+  }
+
+  .child-band .avatar {
+    background: #ffffff;
+    color: var(--tone-accent);
+    box-shadow: 0 8px 24px -8px color-mix(in srgb, var(--tone-fg) 40%, transparent);
+  }
+
+  .child-band-text {
+    min-width: 0;
+  }
+
+  .child-band-name {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    color: var(--tone-fg);
+  }
+
+  .child-band-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-1);
+    font-weight: 500;
+    color: color-mix(in srgb, var(--tone-fg) 80%, transparent);
+  }
+
+  .child-band-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-full);
+    background: rgb(255 255 255 / 0.7);
+    font-size: var(--text-sm);
+  }
+
+  .child-tabs {
+    margin-block: var(--space-4) var(--space-5);
+  }
+
+  .child-tabbar {
+    display: none;
+  }
+
+  /* Overview */
+  .overview-date {
+    margin-block-end: var(--space-4);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-areas:
+      'schedule day'
+      'schedule visits'
+      'schedule messages';
+    gap: var(--space-4);
+  }
+
+  .overview-schedule {
+    grid-area: schedule;
+    align-self: start;
+  }
+
+  .overview-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .overview-link {
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 150ms var(--ease-out);
+  }
+
+  .overview-link:hover {
+    border-color: var(--gray-300);
+  }
+
+  .overview-card-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .overview-card-head h2 {
+    flex: 1;
+    font-size: var(--text-lg);
+  }
+
+  .overview-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--blue-50);
+    color: var(--accent);
+  }
+
+  .overview-chevron {
+    color: var(--gray-400);
+  }
+
+  .overview-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .overview-empty {
+    color: var(--text-muted);
+  }
+
+  .overview-sub {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .overview-label {
+    color: var(--accent);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .overview-big {
+    font-size: var(--text-3xl);
+    line-height: 1;
+    color: var(--navy-800);
+  }
+
+  .overview-big span {
+    font-size: var(--text-lg);
+    color: var(--gray-400);
+  }
+
+  .overview-progress {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .overview-visit {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-1);
+  }
+
+  .overview-visit strong {
+    font-size: var(--text-xl);
+    color: var(--navy-800);
+  }
+
+  .overview-alert {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--warning-bg);
+    color: var(--warning);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .overview-message p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Today's agenda: time on the start edge, a rule linking the items like a day planner. */
+  .agenda {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .agenda li {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+    border-block-start: 1px solid var(--gray-100);
+  }
+
+  .agenda li:first-child {
+    border-block-start: 0;
+    padding-block-start: 0;
+  }
+
+  .agenda-time {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .agenda-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-inline-start: var(--space-4);
+    border-inline-start: 3px solid var(--blue-100);
+  }
+
+  .agenda-meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .overview-setup {
+    margin-block-start: var(--space-6);
+  }
+
+  .overview-setup-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-block-end: var(--space-3);
+    font-size: var(--text-base);
+    color: var(--gray-700);
+  }
+
+  /* Parent home: the whole card head opens the child's page. */
+  .child-card-head {
+    position: relative;
+  }
+
+  .child-card-open {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .child-card-open::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .child-card-open:hover {
+    color: var(--accent);
+  }
+
+  .child-card-open:focus-visible {
+    outline: none;
+  }
+
+  .child-card-open:focus-visible::after {
+    outline: 3px solid var(--focus);
+  }
 }
 
 @layer responsive {
   /* Tablets and below: the child's sections become a bottom tab bar. */
   @media (max-width: 1023px) {
+    /* The child's sections move to a bottom tab bar, like the child's own app. */
+    .child-tabs {
+      display: none;
+    }
+
+    .child-tabbar {
+      position: fixed;
+      z-index: 20;
+      inset-inline: 0;
+      inset-block-end: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      padding: var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));
+      border-block-start: 1px solid var(--border);
+      background: rgb(255 255 255 / 0.96);
+      backdrop-filter: saturate(1.4) blur(12px);
+    }
+
+    .child-tabbar .child-nav-item {
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      min-height: 56px;
+      padding: var(--space-1);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    html[lang='ar'] .child-tabbar .child-nav-item {
+      font-size: 12px;
+    }
+
+    .child-tabbar .child-nav-item[aria-current='page'] {
+      background: transparent;
+      color: var(--navy-800);
+    }
+
+    .child-tabbar .child-nav-item[aria-current='page'] svg {
+      padding: 2px 14px;
+      box-sizing: content-box;
+      border-radius: var(--radius-full);
+      background: var(--blue-100);
+    }
+
+    body:has(.child-tabbar) {
+      padding-block-end: calc(76px + env(safe-area-inset-bottom));
+    }
+
+    body:has(.child-tabbar) .chat {
+      block-size: calc(100dvh - 330px - env(safe-area-inset-bottom));
+    }
+
+    .child-band {
+      margin-block-end: var(--space-5);
+    }
+
+    .overview-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'schedule'
+        'day'
+        'visits'
+        'messages';
+    }
+
+    /* Filters wrap instead of running off the edge. */
+    .filter-tabs {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
+
+    .filter-tab {
+      min-height: 36px;
+      padding: 0 var(--space-3);
+      gap: 6px;
+    }
+
+    .filter-count {
+      min-inline-size: 20px;
+      block-size: 20px;
+    }
+
+    /* The page is already labelled by the band and the active tab. */
+    .child-page .section-note {
+      display: none;
+    }
+
+    .child-page .section-bar .btn {
+      inline-size: 100%;
+    }
+
     .child-nav-inline {
       display: none;
     }

@@ -36,7 +36,7 @@ export default async function ChildDayPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <main className="page">
+      <main className="page child-page">
         <ChildContext locale={locale} child={child} active="day" />
         <div className="content-narrow">
           <div className="section-bar">

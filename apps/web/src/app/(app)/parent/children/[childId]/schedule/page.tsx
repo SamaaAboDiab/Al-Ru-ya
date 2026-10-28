@@ -27,7 +27,7 @@ export default async function ChildSchedulePage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <main className="page">
+      <main className="page child-page">
         <ChildContext locale={locale} child={child} active="schedule" />
         <div className="section-bar">
           <p className="section-note">{s.childSubtitle(child.name)}</p>

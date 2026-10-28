@@ -39,7 +39,7 @@ export default async function ChildVisitsPage({ params, searchParams }: Props) {
 
   return (
     <>
-      <main className="page">
+      <main className="page child-page">
         <ChildContext locale={locale} child={child} active="visits" />
         <div className="content-narrow">
           <div className="section-bar">

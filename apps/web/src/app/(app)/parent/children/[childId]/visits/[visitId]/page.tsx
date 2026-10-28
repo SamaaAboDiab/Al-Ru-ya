@@ -27,7 +27,7 @@ export default async function ParentVisitPage({ params }: Props) {
   const isMine = visit.parent.id === user.id;
 
   return (
-    <main className="page">
+    <main className="page child-page">
       <ChildContext locale={locale} child={child} active="visits" />
       <div className="content-narrow">
         <VisitDetail

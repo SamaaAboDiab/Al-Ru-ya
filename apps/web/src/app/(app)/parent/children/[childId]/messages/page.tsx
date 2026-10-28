@@ -23,7 +23,7 @@ export default async function ParentChatPage({ params }: { params: Promise<{ chi
 
   return (
     <>
-      <main className="page page-chat">
+      <main className="page page-chat child-page">
         <ChildContext locale={locale} child={child} active="messages" />
         <div className="content-narrow">
           {!child.hasAccount && <FormAlert tone="warning">{t.messages.noAccount}</FormAlert>}

@@ -123,7 +123,10 @@ function ChildCard({ locale, child, extras }: { locale: Locale; child: ChildDTO;
         <Avatar name={child.name} id={child.id} size="lg" />
         <div className="child-card-id">
           <h3 className="child-card-name">
-            <bdi>{child.name}</bdi>
+            {/* Stretched over the card head: tapping the name, avatar or details opens the child page. */}
+            <Link href={base} className="child-card-open">
+              <bdi>{child.name}</bdi>
+            </Link>
           </h3>
           <p className="child-card-meta">{p.age(age)}</p>
           <p className="child-card-sub">{p.born(formatDate(child.birthDate, locale))}</p>
