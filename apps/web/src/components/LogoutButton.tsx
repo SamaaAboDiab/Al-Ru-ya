@@ -7,7 +7,7 @@ import type { Locale } from '@ruya/shared';
 import { apiPost } from '@/lib/client';
 import { dictionaries } from '@/lib/i18n';
 
-type Props = { locale: Locale; redirectTo?: string; variant?: 'icon' | 'button' };
+type Props = { locale: Locale; redirectTo?: string; variant?: 'icon' | 'button' | 'row' };
 
 export function LogoutButton({ locale, redirectTo = '/login', variant = 'icon' }: Props) {
   const router = useRouter();
@@ -19,6 +19,18 @@ export function LogoutButton({ locale, redirectTo = '/login', variant = 'icon' }
     await apiPost('/api/auth/logout');
     router.replace(redirectTo);
     router.refresh();
+  }
+
+  // A row in the account menu, styled like the links around it.
+  if (variant === 'row') {
+    return (
+      <button type="button" className="menu-row menu-row-danger" onClick={logout} disabled={pending}>
+        <span className="menu-icon">
+          {pending ? <span className="spinner" aria-hidden /> : <LogOut size={20} aria-hidden className="rtl-flip" />}
+        </span>
+        <span className="menu-label">{label}</span>
+      </button>
+    );
   }
 
   if (variant === 'button') {

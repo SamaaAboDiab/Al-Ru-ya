@@ -322,6 +322,45 @@ const ar = {
     },
     by: (name: string) => `من ${name}`,
   },
+  account: {
+    title: 'حسابي',
+    open: 'حسابي',
+    settings: 'الإعدادات',
+    help: 'المساعدة',
+    footer: 'أسر أقوى، ومستقبل أحسن',
+    settingsSubtitle: 'لغة التطبيق وبيانات حسابك.',
+    language: 'اللغة',
+    languageHint: 'اللغة بتتغير على الجهاز ده.',
+    arabic: 'العربية',
+    english: 'English',
+    details: 'بيانات الحساب',
+    name: 'الاسم',
+    email: 'الإيميل',
+    role: 'نوع الحساب',
+    helpSubtitle: 'إجابات سريعة عن أكتر الحاجات اللي بتتسأل.',
+    faq: [
+      {
+        q: 'مين يقدر يشوف بيانات الطفل؟',
+        a: 'الأب والأم المربوطين بالطفل، والطفل نفسه. كل طفل بياناته منفصلة عن إخواته، ومحدش تاني يقدر يوصل لها.',
+      },
+      {
+        q: 'الزيارة بتتأكد إزاي؟',
+        a: 'الطفل بيسجل الزيارة، والوالد اللي الزيارة معاه بيأكد إن الطفل معاه. التأكيد بيتسجل بوقته واسم صاحبه، وبيظهر للاتنين.',
+      },
+      {
+        q: 'لو مش هقدر أزور أعمل إيه؟',
+        a: 'افتح الزيارة واختار "مش هقدر أزور" مع السبب. الطرف التاني والطفل هيوصلهم إشعار، والزيارة هتفضل في السجل ملغاة.',
+      },
+      {
+        q: 'الطرف التاني بيشوف رسايلي مع الطفل؟',
+        a: 'لأ. كل والد ليه محادثة خاصة مع الطفل، والطرف التاني ما بيشوفهاش.',
+      },
+      {
+        q: 'ينفع أعدّل حاجة اتسجلت امبارح؟',
+        a: 'لأ. اليومية والزيارة بيتعدّلوا في نفس اليوم بس، عشان السجل يفضل دقيق.',
+      },
+    ],
+  },
   home: {
     nextVisit: 'الزيارة الجاية',
     today: 'النهاردة',
@@ -682,6 +721,45 @@ const en: Dictionary = {
       cancelled: 'Cancelled',
     },
     by: (name) => `by ${name}`,
+  },
+  account: {
+    title: 'My account',
+    open: 'My account',
+    settings: 'Settings',
+    help: 'Help',
+    footer: 'Stronger families, brighter futures',
+    settingsSubtitle: 'App language and your account details.',
+    language: 'Language',
+    languageHint: 'The language changes on this device.',
+    arabic: 'العربية',
+    english: 'English',
+    details: 'Account details',
+    name: 'Name',
+    email: 'Email',
+    role: 'Account type',
+    helpSubtitle: 'Quick answers to the most common questions.',
+    faq: [
+      {
+        q: "Who can see a child's information?",
+        a: "The mother and father linked to the child, and the child. Each child's data is kept apart from their siblings', and no one else can reach it.",
+      },
+      {
+        q: 'How is a visit confirmed?',
+        a: 'The child logs the visit, and the parent the visit is with confirms the child is with them. The confirmation is saved with its time and author, and both parents see it.',
+      },
+      {
+        q: "What if I can't make a visit?",
+        a: "Open the visit and choose \"I can't visit\" with a reason. The other parent and the child are notified, and the visit stays in the log as cancelled.",
+      },
+      {
+        q: 'Can the other parent read my messages with the child?',
+        a: 'No. Each parent has a private conversation with the child that the other parent cannot see.',
+      },
+      {
+        q: 'Can I change something logged yesterday?',
+        a: 'No. Daily logs and visits can only be edited on the same day, so the record stays accurate.',
+      },
+    ],
   },
   home: {
     nextVisit: 'Next visit',

@@ -2772,6 +2772,233 @@
     font-size: var(--text-sm);
     color: rgb(255 255 255 / 0.65);
   }
+
+  /* ========== Account ========== */
+  .user-chip {
+    border-radius: var(--radius-full);
+    padding: 2px;
+    padding-inline-end: var(--space-3);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 150ms var(--ease-out);
+  }
+
+  .user-chip:hover {
+    background: var(--gray-50);
+  }
+
+  .avatar-xl {
+    inline-size: 88px;
+    block-size: 88px;
+    font-size: var(--text-3xl);
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+  }
+
+  .account {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 140% at 100% 0%, var(--blue-50) 0%, transparent 60%),
+      var(--surface);
+  }
+
+  .profile-name {
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+  }
+
+  .profile-role {
+    margin-block-start: var(--space-1);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .profile-email {
+    margin-block-start: 2px;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    text-align: start;
+  }
+
+  .menu-list {
+    margin: 0;
+    padding: var(--space-2);
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+
+  .menu-list li + li {
+    border-block-start: 1px solid var(--gray-100);
+  }
+
+  .menu-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    inline-size: 100%;
+    min-height: 56px;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-weight: 600;
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-out);
+  }
+
+  .menu-row:hover {
+    background: var(--gray-50);
+  }
+
+  .menu-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 40px;
+    block-size: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--blue-50);
+    color: var(--navy-700);
+  }
+
+  .menu-label {
+    flex: 1;
+  }
+
+  .menu-chevron {
+    color: var(--gray-400);
+  }
+
+  .menu-row-danger {
+    color: var(--danger);
+  }
+
+  .menu-row-danger .menu-icon {
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+
+  .menu-row-danger:hover {
+    background: var(--danger-bg);
+  }
+
+  .count-badge-danger {
+    background: var(--danger);
+  }
+
+  .account-footer {
+    --logo-eye: var(--navy-800);
+    --logo-iris: #ffffff;
+    --logo-figure: var(--navy-800);
+    --logo-accent: var(--blue-500);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-6) var(--space-4) var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    text-align: center;
+  }
+
+  .account-footer-name {
+    margin-block-start: var(--space-2);
+    color: var(--navy-800);
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-size: var(--text-xl);
+  }
+
+  .account-footer p {
+    margin-block-start: var(--space-2);
+  }
+
+  .details-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+  }
+
+  .details-list > div {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--space-3);
+    padding-block: var(--space-2);
+    border-block-end: 1px solid var(--gray-100);
+  }
+
+  .details-list > div:last-child {
+    border-block-end: 0;
+  }
+
+  .details-list dt {
+    color: var(--text-muted);
+  }
+
+  .details-list dd {
+    margin: 0;
+    font-weight: 600;
+    justify-self: start;
+  }
+
+  .faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-5);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-chevron {
+    flex-shrink: 0;
+    color: var(--gray-400);
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+
+  .faq-item p {
+    padding: 0 var(--space-5) var(--space-5);
+    color: var(--gray-700);
+  }
 }
 
 @layer responsive {
@@ -2848,6 +3075,30 @@
 
   /* Phones */
   @media (max-width: 640px) {
+    /* Sign-out lives in the account screen on phones, as in the design. */
+    .header-logout {
+      display: none;
+    }
+
+    .user-chip {
+      padding-inline-end: 2px;
+    }
+
+    .profile {
+      padding: var(--space-5);
+      gap: var(--space-4);
+    }
+
+    .avatar-xl {
+      inline-size: 72px;
+      block-size: 72px;
+    }
+
+    .details-list > div {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+
     .app-header-inner {
       gap: var(--space-2);
       min-height: 60px;

@@ -45,14 +45,16 @@ export async function AppHeader({ locale, user }: { locale: Locale; user: UserDT
               </span>
             )}
           </Link>
-          <div className="user-chip">
+          <Link href="/account" className="user-chip" aria-label={t.account.open} title={t.account.open}>
             <Avatar name={user.name} id={user.id} />
             <span className="user-chip-name">
               <bdi>{user.name}</bdi>
               <small>{user.role === ROLES.CHILD ? t.nav.child : t.nav.parent}</small>
             </span>
-          </div>
-          <LogoutButton locale={locale} />
+          </Link>
+          <span className="header-logout">
+            <LogoutButton locale={locale} />
+          </span>
         </div>
       </header>
       {isChild && <ChildNav locale={locale} variant="bar" />}
