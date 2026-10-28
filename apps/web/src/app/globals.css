@@ -2414,14 +2414,15 @@
   }
 
   /* ========== Child navigation ========== */
-  .child-nav-bar {
-    display: none;
-  }
-
   .child-nav {
     display: flex;
     gap: var(--space-1);
     margin-inline: auto;
+  }
+
+  /* The bottom bar is for phones only; the responsive layer shows it. */
+  .child-nav-bar {
+    display: none;
   }
 
   .child-nav-item {
