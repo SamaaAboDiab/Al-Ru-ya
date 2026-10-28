@@ -1,0 +1,11 @@
+{
+  "name": "al-ruya",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:api": "npm run dev -w @ruya/api",
+    "dev:web": "npm run dev -w @ruya/web",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
