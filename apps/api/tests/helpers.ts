@@ -5,11 +5,12 @@ import request from 'supertest';
 import { loadConfig } from '../src/config';
 import { createApp } from '../src/app';
 import { createLogger } from '../src/utils/logger';
+import type { MailMessage } from '../src/utils/mailer';
 
 let mongo: MongoMemoryServer;
 
 export function useTestApp() {
-  const ctx = {} as { app: ReturnType<typeof createApp> };
+  const ctx = { mails: [] } as unknown as { app: ReturnType<typeof createApp>; mails: MailMessage[] };
 
   beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
@@ -20,10 +21,15 @@ export function useTestApp() {
       MONGODB_URI: mongo.getUri(),
       JWT_SECRET: 'test-secret-that-is-long-enough-for-validation',
     });
-    ctx.app = createApp(config, createLogger('silent', false));
+    ctx.app = createApp(config, createLogger('silent', false), {
+      send: async (message) => {
+        ctx.mails.push(message);
+      },
+    });
   });
 
   afterEach(async () => {
+    ctx.mails.length = 0;
     await Promise.all(
       Object.values(mongoose.connection.collections).map((c) => c.deleteMany({})),
     );

@@ -6,14 +6,14 @@ import type { Locale } from '@ruya/shared';
 import { apiPost } from '@/lib/client';
 import { dictionaries } from '@/lib/i18n';
 
-export function LogoutButton({ locale }: { locale: Locale }) {
+export function LogoutButton({ locale, redirectTo = '/login' }: { locale: Locale; redirectTo?: string }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
 
   async function logout() {
     setPending(true);
     await apiPost('/api/auth/logout');
-    router.replace('/login');
+    router.replace(redirectTo);
     router.refresh();
   }
 

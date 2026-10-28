@@ -17,3 +17,15 @@ export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'ar';
 
 export const PASSWORD_MIN_LENGTH = 8;
+
+/** US-04: an invitation to link the other parent stays valid for this many days. */
+export const INVITE_TTL_DAYS = 7;
+export const MAX_PARENTS_PER_CHILD = 2;
+
+export const INVITE_STATUSES = {
+  PENDING: 'pending',
+  ACCEPTED: 'accepted',
+  REVOKED: 'revoked',
+  EXPIRED: 'expired',
+} as const;
+export type InviteStatus = (typeof INVITE_STATUSES)[keyof typeof INVITE_STATUSES];

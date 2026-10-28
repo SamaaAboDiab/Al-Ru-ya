@@ -291,6 +291,13 @@ a {
   background: var(--blue-100);
 }
 
+.btn-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .btn:disabled {
   opacity: 0.6;
   cursor: progress;
@@ -365,6 +372,55 @@ a {
   text-align: center;
   border: 1px dashed var(--border);
   border-radius: var(--radius);
+}
+
+/* Invitations */
+.linked-parents {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.invite-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+}
+
+.hint-text {
+  margin: var(--space-1) 0 0;
+  font-size: 0.875rem;
+}
+
+.invite-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.invite-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+}
+
+.invite-facts dt {
+  color: var(--text-muted);
+}
+
+.invite-facts dd {
+  margin: 0;
+  font-weight: 500;
+  /* Keeps LTR values (emails) on the page's start side in RTL. */
+  justify-self: start;
 }
 
 /* Welcome screen */

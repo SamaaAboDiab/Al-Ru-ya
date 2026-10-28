@@ -44,3 +44,7 @@ export const createChildAccountSchema = z.object({
   password,
 });
 export type CreateChildAccountInput = z.infer<typeof createChildAccountSchema>;
+
+/** US-04 */
+export const createInvitationSchema = z.object({ email });
+export type CreateInvitationInput = z.infer<typeof createInvitationSchema>;

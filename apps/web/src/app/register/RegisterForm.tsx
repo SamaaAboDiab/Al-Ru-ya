@@ -8,7 +8,9 @@ import { dictionaries } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
 import { useApiForm } from '@/lib/useApiForm';
 
-export function RegisterForm({ locale }: { locale: Locale }) {
+type Props = { locale: Locale; next?: string; email?: string };
+
+export function RegisterForm({ locale, next, email }: Props) {
   const t = dictionaries[locale];
   const router = useRouter();
   const { pending, formError, fieldErrors, submit } = useApiForm<UserDTO>(locale);
@@ -24,7 +26,7 @@ export function RegisterForm({ locale }: { locale: Locale }) {
       locale,
     });
     if (result.ok) {
-      router.replace(homeFor(result.data.role));
+      router.replace(next ?? homeFor(result.data.role));
       router.refresh();
     }
   }
@@ -56,6 +58,7 @@ export function RegisterForm({ locale }: { locale: Locale }) {
         autoComplete="email"
         dir="ltr"
         required
+        defaultValue={email}
         error={fieldErrors.email}
       />
       <Field

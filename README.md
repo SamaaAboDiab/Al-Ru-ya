@@ -49,4 +49,9 @@ npm run typecheck
 | US-03 Child sign-in, "no permission" on parent pages | Done |
 | US-05 Sibling data isolation | Server check in place; applied to each new feature |
 | US-16 Arabic / English | Language switch, RTL, localized dates and numbers |
-| US-04 Invite the other parent | Next |
+| US-04 Invite the other parent | Done (emails are logged until a mail provider is added) |
+| US-06 Child's weekly schedule | Next |
+
+## Before launch
+
+- **Email:** `apps/api/src/utils/mailer.ts` only logs emails, including invitation links. Plug in a real provider (Resend, SES, SMTP) before production, and stop logging message bodies.

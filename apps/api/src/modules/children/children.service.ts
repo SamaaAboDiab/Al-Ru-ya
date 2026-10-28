@@ -7,6 +7,7 @@ import {
   type ChildDTO,
   type CreateChildAccountInput,
   type CreateChildInput,
+  type ParentSummary,
   type UserDTO,
 } from '@ruya/shared';
 import { ChildModel, type Child } from '../../models/Child';
@@ -15,12 +16,22 @@ import type { AuthUser } from '../../middlewares/auth';
 import { AppError } from '../../utils/AppError';
 import { assertEmailFree, hashPassword, toUserDTO } from '../auth/auth.service';
 
-function toChildDTO(child: Child & { _id: unknown }): ChildDTO {
+type PopulatedParent = { _id: unknown; name: string; role: string };
+type ChildWithParents = Omit<Child, 'parents'> & { _id: unknown; parents: PopulatedParent[] };
+
+const PARENT_FIELDS = 'name role';
+
+function toChildDTO(child: ChildWithParents): ChildDTO {
   return {
     id: String(child._id),
     name: child.name,
     birthDate: child.birthDate,
     hasAccount: Boolean(child.account),
+    parents: child.parents.map((p) => ({
+      id: String(p._id),
+      name: p.name,
+      role: p.role as ParentSummary['role'],
+    })),
   };
 }
 
@@ -41,12 +52,21 @@ export async function findAccessibleChild(user: AuthUser, childId: string) {
 }
 
 export async function listChildrenForParent(parentId: string): Promise<ChildDTO[]> {
-  const children = await ChildModel.find({ parents: parentId }).sort({ createdAt: 1 }).limit(50).lean();
+  const children = await ChildModel.find({ parents: parentId })
+    .sort({ createdAt: 1 })
+    .limit(50)
+    .populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS)
+    .lean();
   return children.map(toChildDTO);
 }
 
 export async function getChild(user: AuthUser, childId: string): Promise<ChildDTO> {
-  return toChildDTO(await findAccessibleChild(user, childId));
+  const child = await findAccessibleChild(user, childId);
+  const populated = await ChildModel.findById(child._id)
+    .populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS)
+    .lean();
+  if (!populated) throw AppError.notFound('Child');
+  return toChildDTO(populated);
 }
 
 /** A child profile managed by the parents, for any age. */
@@ -57,7 +77,8 @@ export async function createChild(parentId: string, input: CreateChildInput): Pr
     parents: [parentId],
     createdBy: parentId,
   });
-  return toChildDTO(child.toObject());
+  const populated = await child.populate<{ parents: PopulatedParent[] }>('parents', PARENT_FIELDS);
+  return toChildDTO(populated.toObject());
 }
 
 /** US-02: a child gets their own login only from MIN_CHILD_ACCOUNT_AGE. */

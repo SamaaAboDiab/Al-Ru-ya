@@ -1,5 +1,11 @@
-import type { Locale, Role } from './constants';
+import type { InviteStatus, Locale, ParentRole, Role } from './constants';
 import type { ErrorCode } from './errors';
+
+export interface ParentSummary {
+  id: string;
+  name: string;
+  role: ParentRole;
+}
 
 export interface UserDTO {
   id: string;
@@ -16,6 +22,25 @@ export interface ChildDTO {
   name: string;
   birthDate: string;
   hasAccount: boolean;
+  parents: ParentSummary[];
+}
+
+/** What the inviting parent sees. `inviteUrl` is only returned right after creating it. */
+export interface InvitationDTO {
+  id: string;
+  email: string;
+  status: InviteStatus;
+  expiresAt: string;
+  inviteUrl?: string;
+}
+
+/** What the invited person sees when opening the link. */
+export interface InvitationPreviewDTO {
+  childName: string;
+  inviterName: string;
+  email: string;
+  status: InviteStatus;
+  expiresAt: string;
 }
 
 export type ApiSuccess<T> = { success: true; data: T };

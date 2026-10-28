@@ -1,12 +1,19 @@
 import { redirect } from 'next/navigation';
-import { MIN_CHILD_ACCOUNT_AGE, ROLES, ageInYears } from '@ruya/shared';
+import {
+  INVITE_STATUSES,
+  MAX_PARENTS_PER_CHILD,
+  MIN_CHILD_ACCOUNT_AGE,
+  ROLES,
+  ageInYears,
+} from '@ruya/shared';
 import { Forbidden } from '@/components/Forbidden';
 import { TopBar } from '@/components/TopBar';
 import { formatDate } from '@/lib/i18n';
 import { homeFor } from '@/lib/routes';
-import { getCurrentUser, getDictionary, getLocale, getMyChildren } from '@/lib/server';
+import { getCurrentUser, getDictionary, getInvitations, getLocale, getMyChildren } from '@/lib/server';
 import { AddChildForm } from './AddChildForm';
 import { ChildAccountForm } from './ChildAccountForm';
+import { InviteParentForm } from './InviteParentForm';
 
 export default async function ParentPage() {
   const user = await getCurrentUser();
@@ -17,6 +24,17 @@ export default async function ParentPage() {
 
   const t = await getDictionary();
   const children = (await getMyChildren()) ?? [];
+  // Only children still missing a parent need their invitations.
+  const pendingInvites = new Map(
+    await Promise.all(
+      children
+        .filter((c) => c.parents.length < MAX_PARENTS_PER_CHILD)
+        .map(async (c) => {
+          const invites = (await getInvitations(c.id)) ?? [];
+          return [c.id, invites.find((i) => i.status === INVITE_STATUSES.PENDING)] as const;
+        }),
+    ),
+  );
 
   return (
     <main className="page">
@@ -61,6 +79,28 @@ export default async function ParentPage() {
                       <span className="badge" style={{ alignSelf: 'start' }}>
                         {t.parent.managedByParents}
                       </span>
+                    )}
+                    <p className="muted linked-parents">
+                      {t.parent.linkedParents}{' '}
+                      {child.parents.map((p, i) => (
+                        <span key={p.id}>
+                          {i > 0 && (locale === 'ar' ? '، ' : ', ')}
+                          <bdi>{p.name}</bdi> ({t.fields[p.role]})
+                        </span>
+                      ))}
+                    </p>
+                    {child.parents.length < MAX_PARENTS_PER_CHILD && (
+                      <div className="invite-box">
+                        {pendingInvites.get(child.id) && (
+                          <p className="muted hint-text">
+                            {t.parent.pendingInvite(
+                              pendingInvites.get(child.id)!.email,
+                              formatDate(pendingInvites.get(child.id)!.expiresAt.slice(0, 10), locale),
+                            )}
+                          </p>
+                        )}
+                        <InviteParentForm locale={locale} childId={child.id} />
+                      </div>
                     )}
                   </li>
                 );
