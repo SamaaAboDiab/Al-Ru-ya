@@ -49,6 +49,15 @@ export function formatDateTime(iso: string, locale: Locale) {
   }).format(new Date(iso));
 }
 
+/** A date split for a calendar-style tile: day number, short month, weekday. */
+export function formatDateParts(isoDate: string, locale: Locale) {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  const tag = locale === 'ar' ? 'ar-EG' : 'en-GB';
+  const part = (options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat(tag, { ...options, timeZone: 'UTC' }).format(date);
+  return { day: part({ day: 'numeric' }), month: part({ month: 'short' }), weekday: part({ weekday: 'long' }) };
+}
+
 /** "الأربع، ٢٨ أكتوبر" / "Wednesday, 28 October". */
 export function formatDayLong(isoDate: string, locale: Locale) {
   return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-GB', {
