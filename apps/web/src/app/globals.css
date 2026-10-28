@@ -2201,7 +2201,7 @@
   }
 
   .content-narrow {
-    max-width: 760px;
+    min-width: 0;
   }
 
   /* ========== Child cards on the parent home ========== */
@@ -3172,17 +3172,15 @@
 
   .overview-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
       'schedule day'
-      'schedule visits'
-      'schedule messages';
+      'visits messages';
     gap: var(--space-4);
   }
 
   .overview-schedule {
     grid-area: schedule;
-    align-self: start;
   }
 
   .overview-card {
@@ -3729,6 +3727,50 @@
   }
 
   /* ========== Encouragement phrases (parents) ========== */
+  .chat-aside {
+    display: none;
+  }
+
+  .chat-aside-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+    color: var(--navy-800);
+  }
+
+  .chat-aside-title svg {
+    color: var(--accent);
+  }
+
+  .chat-aside-list {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .chat-aside .chat-preset {
+    border-color: var(--border);
+  }
+
+  .chat-aside .chat-preset:hover {
+    border-color: var(--accent);
+    background: var(--blue-50);
+  }
+
+  .chat-aside-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    padding-block-start: var(--space-3);
+    border-block-start: 1px solid var(--gray-100);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .chat-aside-note svg {
+    flex-shrink: 0;
+    margin-block-start: 4px;
+  }
   .chat-presets {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4045,6 +4087,53 @@
     .tile-grid {
       grid-template-columns: repeat(4, 1fr);
       gap: var(--space-4);
+    }
+  }
+  /* Wide screens: use the width with grids instead of a narrow column stuck to one side. */
+  @media (min-width: 1024px) {
+    /* Visits: two columns of cards. */
+    .visit-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+
+    /* Visit details beside the change log. */
+    .visit-detail {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    /* Parent chat: conversation plus a side panel with the phrases always in reach. */
+    .chat-layout-aside {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .chat-aside {
+      position: sticky;
+      inset-block-start: 88px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .chat-layout-aside .chat-presets-toggle,
+    .chat-layout-aside .chat .chat-presets,
+    .chat-layout-aside .chat-privacy {
+      display: none;
+    }
+
+    .child-page .chat {
+      block-size: calc(100dvh - 390px);
+    }
+
+    /* Seven daily items sit as 4 + 3 instead of 5 + 2. */
+    .check-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 }

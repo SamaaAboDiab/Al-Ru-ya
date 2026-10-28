@@ -128,97 +128,122 @@ export function ChatThread({ locale, childId, parentId, initial, privacyNote, sh
   const lastMine = [...messages].reverse().find((msg) => msg.fromMe);
 
   return (
-    <section className="chat card">
-      <p className="chat-privacy">
-        <Lock size={14} aria-hidden />
-        {privacyNote}
-      </p>
+    <div className={showPresets ? 'chat-layout chat-layout-aside' : 'chat-layout'}>
+      <section className="chat card">
+        <p className="chat-privacy">
+          <Lock size={14} aria-hidden />
+          {privacyNote}
+        </p>
 
-      <div className="chat-scroll" ref={scroller} onScroll={onScroll} aria-live="polite">
-        {hasOlder && (
-          <button type="button" className="btn btn-secondary btn-sm chat-older" onClick={loadOlder}>
-            {m.loadOlder}
-          </button>
-        )}
-        {messages.length === 0 && <p className="chat-empty">{m.empty}</p>}
-        {messages.map((msg) => {
-          const day = todayIn(undefined, new Date(msg.createdAt));
-          const showDay = day !== lastDay;
-          lastDay = day;
-          return (
-            <Fragment key={msg.id}>
-              {showDay && (
-                <div className="chat-day">
-                  <span>{day === today ? t.day.today : formatDayLong(day, locale)}</span>
-                </div>
-              )}
-              <div className="bubble-row" data-mine={msg.fromMe || undefined}>
-                <div className="bubble">
-                  <p dir="auto">{msg.body}</p>
-                  <span className="bubble-meta">
-                    {formatClock(msg.createdAt, locale)}
-                    {msg.fromMe && msg.id === lastMine?.id && (
-                      <span className="bubble-status" title={msg.read ? m.seen : m.sent}>
-                        {msg.read ? <CheckCheck size={14} aria-hidden /> : <Check size={14} aria-hidden />}
-                        <span className="visually-hidden">{msg.read ? m.seen : m.sent}</span>
-                      </span>
-                    )}
-                  </span>
-                </div>
-              </div>
-            </Fragment>
-          );
-        })}
-      </div>
-
-      {showPresets && presetsOpen && (
-        <div id="chat-presets" className="chat-presets" role="group" aria-label={m.encourage}>
-          {m.presets.map((p) => {
-            const Icon = PRESET_ICONS[p.id];
+        <div className="chat-scroll" ref={scroller} onScroll={onScroll} aria-live="polite">
+          {hasOlder && (
+            <button type="button" className="btn btn-secondary btn-sm chat-older" onClick={loadOlder}>
+              {m.loadOlder}
+            </button>
+          )}
+          {messages.length === 0 && <p className="chat-empty">{m.empty}</p>}
+          {messages.map((msg) => {
+            const day = todayIn(undefined, new Date(msg.createdAt));
+            const showDay = day !== lastDay;
+            lastDay = day;
             return (
-              <button key={p.id} type="button" className="chat-preset" onClick={() => pickPreset(p.text)}>
-                <Icon size={16} aria-hidden />
-                {p.text}
-              </button>
+              <Fragment key={msg.id}>
+                {showDay && (
+                  <div className="chat-day">
+                    <span>{day === today ? t.day.today : formatDayLong(day, locale)}</span>
+                  </div>
+                )}
+                <div className="bubble-row" data-mine={msg.fromMe || undefined}>
+                  <div className="bubble">
+                    <p dir="auto">{msg.body}</p>
+                    <span className="bubble-meta">
+                      {formatClock(msg.createdAt, locale)}
+                      {msg.fromMe && msg.id === lastMine?.id && (
+                        <span className="bubble-status" title={msg.read ? m.seen : m.sent}>
+                          {msg.read ? <CheckCheck size={14} aria-hidden /> : <Check size={14} aria-hidden />}
+                          <span className="visually-hidden">{msg.read ? m.seen : m.sent}</span>
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </Fragment>
             );
           })}
         </div>
-      )}
 
-      {error && <FormAlert>{error}</FormAlert>}
-      <form className="chat-composer" onSubmit={send}>
-        {showPresets && (
-          <button
-            type="button"
-            className="chat-presets-toggle"
-            onClick={() => setPresetsOpen((o) => !o)}
-            aria-expanded={presetsOpen}
-            aria-controls="chat-presets"
-            aria-label={m.encourage}
-            title={m.encourage}
-          >
-            <Sparkles size={20} aria-hidden />
-          </button>
+        {showPresets && presetsOpen && (
+          <div id="chat-presets" className="chat-presets" role="group" aria-label={m.encourage}>
+            {m.presets.map((p) => {
+              const Icon = PRESET_ICONS[p.id];
+              return (
+                <button key={p.id} type="button" className="chat-preset" onClick={() => pickPreset(p.text)}>
+                  <Icon size={16} aria-hidden />
+                  {p.text}
+                </button>
+              );
+            })}
+          </div>
         )}
-        <label htmlFor="chat-input" className="visually-hidden">
-          {m.placeholder}
-        </label>
-        <textarea
-          ref={inputRef}
-          id="chat-input"
-          value={draft}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={onKeyDown}
-          placeholder={m.placeholder}
-          maxLength={MESSAGE_MAX_LENGTH}
-          rows={1}
-          dir="auto"
-          title={m.sendHint}
-        />
-        <button type="submit" className="btn btn-primary chat-send" disabled={sending || !draft.trim()} aria-label={m.send}>
-          {sending ? <span className="spinner" aria-hidden /> : <SendHorizontal size={20} aria-hidden className="rtl-flip" />}
-        </button>
-      </form>
-    </section>
+
+        {error && <FormAlert>{error}</FormAlert>}
+        <form className="chat-composer" onSubmit={send}>
+          {showPresets && (
+            <button
+              type="button"
+              className="chat-presets-toggle"
+              onClick={() => setPresetsOpen((o) => !o)}
+              aria-expanded={presetsOpen}
+              aria-controls="chat-presets"
+              aria-label={m.encourage}
+              title={m.encourage}
+            >
+              <Sparkles size={20} aria-hidden />
+            </button>
+          )}
+          <label htmlFor="chat-input" className="visually-hidden">
+            {m.placeholder}
+          </label>
+          <textarea
+            ref={inputRef}
+            id="chat-input"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={onKeyDown}
+            placeholder={m.placeholder}
+            maxLength={MESSAGE_MAX_LENGTH}
+            rows={1}
+            dir="auto"
+            title={m.sendHint}
+          />
+          <button type="submit" className="btn btn-primary chat-send" disabled={sending || !draft.trim()} aria-label={m.send}>
+            {sending ? <span className="spinner" aria-hidden /> : <SendHorizontal size={20} aria-hidden className="rtl-flip" />}
+          </button>
+        </form>
+      </section>
+      {showPresets && (
+        <aside className="chat-aside card">
+          <h2 className="chat-aside-title">
+            <Sparkles size={18} aria-hidden />
+            {m.encourage}
+          </h2>
+          <div className="chat-aside-list">
+            {m.presets.map((p) => {
+              const Icon = PRESET_ICONS[p.id];
+              return (
+                <button key={p.id} type="button" className="chat-preset" onClick={() => pickPreset(p.text)}>
+                  <Icon size={16} aria-hidden />
+                  {p.text}
+                </button>
+              );
+            })}
+          </div>
+          <p className="chat-aside-note">
+            <Lock size={14} aria-hidden />
+            {privacyNote}
+          </p>
+        </aside>
+      )}
+    </div>
   );
 }
