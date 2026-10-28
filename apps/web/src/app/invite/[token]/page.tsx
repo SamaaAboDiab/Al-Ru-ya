@@ -80,7 +80,7 @@ export default async function InvitePage({ params }: { params: Promise<{ token: 
         ) : user.email !== preview.email ? (
           <div className="stack">
             <FormAlert tone="warning">{p.wrongAccount(user.email, preview.email)}</FormAlert>
-            <LogoutButton locale={locale} redirectTo={`/login${authQuery}`} variant="button" />
+            <LogoutButton locale={locale} redirectTo={`/login${authQuery}`} />
           </div>
         ) : (
           <AcceptInviteButton locale={locale} token={token} />

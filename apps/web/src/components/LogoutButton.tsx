@@ -7,9 +7,10 @@ import type { Locale } from '@ruya/shared';
 import { apiPost } from '@/lib/client';
 import { dictionaries } from '@/lib/i18n';
 
-type Props = { locale: Locale; redirectTo?: string; variant?: 'icon' | 'button' | 'row' };
+type Props = { locale: Locale; redirectTo?: string; variant?: 'button' | 'row' };
 
-export function LogoutButton({ locale, redirectTo = '/login', variant = 'icon' }: Props) {
+/** Sign-out lives on the account screen (as a menu row) and on the invitation page (as a button). */
+export function LogoutButton({ locale, redirectTo = '/login', variant = 'button' }: Props) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const label = dictionaries[locale].nav.logout;
@@ -33,18 +34,10 @@ export function LogoutButton({ locale, redirectTo = '/login', variant = 'icon' }
     );
   }
 
-  if (variant === 'button') {
-    return (
-      <button type="button" className="btn btn-secondary" onClick={logout} disabled={pending}>
-        <LogOut size={18} aria-hidden className="rtl-flip" />
-        {label}
-      </button>
-    );
-  }
-
   return (
-    <button type="button" className="icon-btn" onClick={logout} disabled={pending} aria-label={label} title={label}>
-      <LogOut size={20} aria-hidden className="rtl-flip" />
+    <button type="button" className="btn btn-secondary" onClick={logout} disabled={pending}>
+      <LogOut size={18} aria-hidden className="rtl-flip" />
+      {label}
     </button>
   );
 }

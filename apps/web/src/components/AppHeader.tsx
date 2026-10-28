@@ -7,7 +7,6 @@ import { Avatar } from './Avatar';
 import { ChildNav } from './ChildNav';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { LogoMark } from './Logo';
-import { LogoutButton } from './LogoutButton';
 
 export function BrandLink({ locale }: { locale: Locale }) {
   const t = dictionaries[locale];
@@ -52,9 +51,6 @@ export async function AppHeader({ locale, user }: { locale: Locale; user: UserDT
               <small>{user.role === ROLES.CHILD ? t.nav.child : t.nav.parent}</small>
             </span>
           </Link>
-          <span className="header-logout">
-            <LogoutButton locale={locale} />
-          </span>
         </div>
       </header>
       {isChild && <ChildNav locale={locale} variant="bar" />}

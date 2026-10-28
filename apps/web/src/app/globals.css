@@ -3075,11 +3075,6 @@
 
   /* Phones */
   @media (max-width: 640px) {
-    /* Sign-out lives in the account screen on phones, as in the design. */
-    .header-logout {
-      display: none;
-    }
-
     .user-chip {
       padding-inline-end: 2px;
     }
