@@ -149,6 +149,9 @@ const ar = {
     father: 'أب',
     childName: 'اسم الطفل',
     birthDate: 'تاريخ الميلاد',
+    chooseDate: 'اختار التاريخ',
+    chooseTime: 'اختار الوقت',
+    clear: 'امسح',
   },
   parent: {
     greeting: (name: string) => `أهلاً يا ${name}`,
@@ -567,6 +570,9 @@ const en: Dictionary = {
     father: 'Father',
     childName: "Child's name",
     birthDate: 'Date of birth',
+    chooseDate: 'Choose a date',
+    chooseTime: 'Choose a time',
+    clear: 'Clear',
   },
   parent: {
     greeting: (name) => `Hello, ${name}`,

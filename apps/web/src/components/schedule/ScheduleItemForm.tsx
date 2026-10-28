@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { SCHEDULE_DAYS, type Locale, type ScheduleDay, type ScheduleItemDTO } from '@ruya/shared';
 import { Field } from '@/components/Field';
+import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
 import { SelectField } from '@/components/SelectField';
 import { SubmitButton } from '@/components/SubmitButton';
@@ -67,7 +68,8 @@ export function ScheduleItemForm({ locale, childId, item, defaultDay, onDone }: 
         error={fieldErrors.day}
       />
       <div className="field-row">
-        <Field
+        <PickerField
+          locale={locale}
           label={s.start}
           name="startTime"
           type="time"
@@ -75,7 +77,8 @@ export function ScheduleItemForm({ locale, childId, item, defaultDay, onDone }: 
           defaultValue={item?.startTime}
           error={fieldErrors.startTime}
         />
-        <Field
+        <PickerField
+          locale={locale}
           label={s.end}
           name="endTime"
           type="time"

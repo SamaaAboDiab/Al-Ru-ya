@@ -3414,6 +3414,90 @@
   .child-card-open:focus-visible::after {
     outline: 3px solid var(--focus);
   }
+
+  /* ========== Date and time fields ========== */
+  .picker {
+    position: relative;
+  }
+
+  .picker-button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    inline-size: 100%;
+    min-height: 48px;
+    padding: 0 var(--space-4);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    transition:
+      border-color 150ms var(--ease-out),
+      box-shadow 150ms var(--ease-out);
+  }
+
+  .picker-button:hover {
+    border-color: var(--gray-400);
+  }
+
+  .picker-button:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgb(61 123 224 / 0.15);
+  }
+
+  .picker-button[aria-invalid='true'] {
+    border-color: var(--danger);
+  }
+
+  .picker-icon {
+    flex-shrink: 0;
+    color: var(--accent);
+  }
+
+  .picker-value {
+    font-weight: 500;
+  }
+
+  .picker-placeholder {
+    color: var(--gray-400);
+  }
+
+  .picker:has(.picker-clear) .picker-button {
+    padding-inline-end: 48px;
+  }
+
+  .picker-clear {
+    position: absolute;
+    inset-inline-end: 6px;
+    display: grid;
+    place-items: center;
+    inline-size: 36px;
+    block-size: 36px;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--gray-500);
+    cursor: pointer;
+  }
+
+  .picker-clear:hover {
+    background: var(--gray-100);
+    color: var(--text);
+  }
+
+  /* The native input stays in the form and anchors the browser's picker, but is never seen. */
+  .picker-native {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 @layer responsive {

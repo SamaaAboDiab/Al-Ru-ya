@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
 import type { ChildDTO, Locale } from '@ruya/shared';
 import { Field } from '@/components/Field';
+import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
 import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
@@ -32,7 +33,8 @@ export function AddChildForm({ locale, onDone }: { locale: Locale; onDone: () =>
     <form className="form" onSubmit={onSubmit} noValidate>
       {formError && <FormAlert>{formError}</FormAlert>}
       <Field label={t.fields.childName} name="name" required autoFocus error={fieldErrors.name} />
-      <Field
+      <PickerField
+        locale={locale}
         label={t.fields.birthDate}
         name="birthDate"
         type="date"

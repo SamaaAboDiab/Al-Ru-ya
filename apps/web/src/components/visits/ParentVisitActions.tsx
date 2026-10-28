@@ -6,6 +6,7 @@ import type { FormEvent } from 'react';
 import { CANCEL_NOTE_MAX, CANCEL_REASONS, todayIn, type Locale, type VisitDTO } from '@ruya/shared';
 import { Dialog } from '@/components/Dialog';
 import { Field } from '@/components/Field';
+import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
 import { SubmitButton } from '@/components/SubmitButton';
 import { dictionaries } from '@/lib/i18n';
@@ -69,8 +70,8 @@ function CantVisitForm({ locale, childId, visitId, onDone }: CancelProps) {
       {formError && <FormAlert>{formError}</FormAlert>}
       {!visitId && (
         <div className="field-row">
-          <Field label={v.date} name="date" type="date" required min={todayIn()} defaultValue={todayIn()} error={fieldErrors.date} />
-          <Field label={v.from} name="startTime" type="time" required error={fieldErrors.startTime} />
+          <PickerField locale={locale} label={v.date} name="date" type="date" required min={todayIn()} defaultValue={todayIn()} error={fieldErrors.date} />
+          <PickerField locale={locale} label={v.from} name="startTime" type="time" required error={fieldErrors.startTime} />
         </div>
       )}
       <fieldset className="choice-group" aria-describedby={fieldErrors.reasonCode ? 'reason-error' : undefined}>

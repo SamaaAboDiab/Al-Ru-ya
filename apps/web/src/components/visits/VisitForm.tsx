@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { todayIn, type Locale, type ParentSummary, type VisitDTO } from '@ruya/shared';
-import { Field } from '@/components/Field';
+import { PickerField } from '@/components/PickerField';
 import { FormAlert } from '@/components/FormAlert';
 import { SelectField } from '@/components/SelectField';
 import { SubmitButton } from '@/components/SubmitButton';
@@ -56,7 +56,8 @@ export function VisitForm({ locale, childId, parents, visit, onDone }: Props) {
         options={parents.map((p) => ({ value: p.id, label: `${p.name} (${t.fields[p.role]})` }))}
         error={fieldErrors.parentId}
       />
-      <Field
+      <PickerField
+        locale={locale}
         label={v.date}
         name="date"
         type="date"
@@ -65,8 +66,8 @@ export function VisitForm({ locale, childId, parents, visit, onDone }: Props) {
         error={fieldErrors.date}
       />
       <div className="field-row">
-        <Field label={v.from} name="startTime" type="time" required defaultValue={visit?.startTime} error={fieldErrors.startTime} />
-        <Field label={v.to} name="endTime" type="time" defaultValue={visit?.endTime} error={fieldErrors.endTime} />
+        <PickerField locale={locale} label={v.from} name="startTime" type="time" required defaultValue={visit?.startTime} error={fieldErrors.startTime} />
+        <PickerField locale={locale} label={v.to} name="endTime" type="time" defaultValue={visit?.endTime} error={fieldErrors.endTime} />
       </div>
       <SubmitButton className="btn btn-primary btn-block" loading={pending}>
         {visit ? v.save : v.log}
