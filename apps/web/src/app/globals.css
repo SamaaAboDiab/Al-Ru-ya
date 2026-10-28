@@ -3008,7 +3008,6 @@
 
   .profile {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-5);
     padding: var(--space-6);
@@ -3037,34 +3036,53 @@
     text-align: start;
   }
 
-  .profile-text {
-    flex: 1;
+  /* Settings: the photo with a camera button on its edge, and the same actions spelled out beside it. */
+  .photo-setting {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .photo-setting-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
     min-width: 0;
   }
 
-  .profile-photo-hint {
-    margin-block-start: var(--space-2);
-    color: var(--gray-400);
-    font-size: var(--text-xs);
-  }
-
-  html[lang='ar'] .profile-photo-hint {
-    font-size: var(--text-sm);
-  }
-
-  .profile-error {
-    flex-basis: 100%;
-  }
-
-  /* The photo with a camera button on its edge; tapping it opens the file picker. */
-  .profile-photo {
+  .photo-setting-actions {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: wrap;
     gap: var(--space-2);
   }
 
+  .photo-setting-actions label.btn {
+    cursor: pointer;
+  }
+
+  .photo-setting-actions label.btn[aria-disabled] {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
+  .photo-setting:has(input:focus-visible) label.btn {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .photo-setting-remove {
+    border: 0;
+    background: transparent;
+    color: var(--danger);
+  }
+
+  .photo-setting-remove:hover {
+    background: var(--danger-bg);
+  }
+
   .profile-photo-frame {
+    position: relative;
+    flex-shrink: 0;
     position: relative;
   }
 
@@ -3096,33 +3114,10 @@
     background: var(--accent);
   }
 
-  .profile-photo-frame:has(input:focus-visible) .profile-photo-btn {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .profile-photo-frame:has(input:disabled) .profile-photo-btn {
+  .photo-setting:has(input:disabled) .profile-photo-btn {
     cursor: progress;
   }
 
-  .profile-photo-remove {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px var(--space-2);
-    border: 0;
-    border-radius: var(--radius-full);
-    background: transparent;
-    color: var(--gray-500);
-    font: inherit;
-    font-size: var(--text-xs);
-    cursor: pointer;
-  }
-
-  .profile-photo-remove:hover {
-    background: var(--danger-bg);
-    color: var(--danger);
-  }
 
   .menu-list {
     margin: 0;

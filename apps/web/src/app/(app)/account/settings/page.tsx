@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { BackButton } from '@/components/BackButton';
 import { LanguageChoice } from '@/components/account/LanguageChoice';
+import { ProfilePhoto } from '@/components/account/ProfilePhoto';
 import { dictionaries } from '@/lib/i18n';
 import { getCurrentUser, getLocale } from '@/lib/server';
 
@@ -25,6 +26,8 @@ export default async function SettingsPage() {
         </div>
 
         <div className="stack">
+          <ProfilePhoto locale={locale} user={user} isChild={user.role === ROLES.CHILD} />
+
           <section className="card">
             <LanguageChoice locale={locale} />
           </section>

@@ -11,7 +11,7 @@ import {
 import { redirect } from 'next/navigation';
 import { ROLES } from '@ruya/shared';
 import { MenuList, type MenuItem } from '@/components/account/MenuList';
-import { ProfilePhoto } from '@/components/account/ProfilePhoto';
+import { Avatar } from '@/components/Avatar';
 import { BackButton } from '@/components/BackButton';
 import { LogoMark } from '@/components/Logo';
 import { LogoutButton } from '@/components/LogoutButton';
@@ -58,13 +58,16 @@ export default async function AccountPage() {
             <h1 className="page-title">{t.account.title}</h1>
           </div>
         </div>
-        <ProfilePhoto locale={locale} user={user} isChild={isChild}>
-          <h2 className="profile-name">
-            <bdi>{user.name}</bdi>
-          </h2>
-          <p className="profile-role">{isChild ? t.nav.child : t.fields[user.role as 'mother' | 'father']}</p>
-          <p className="profile-email ltr">{user.email}</p>
-        </ProfilePhoto>
+        <section className="profile">
+          <Avatar name={user.name} id={user.id} photo={user.photoUrl} size="xl" />
+          <div>
+            <h2 className="profile-name">
+              <bdi>{user.name}</bdi>
+            </h2>
+            <p className="profile-role">{isChild ? t.nav.child : t.fields[user.role as 'mother' | 'father']}</p>
+            <p className="profile-email ltr">{user.email}</p>
+          </div>
+        </section>
 
         <MenuList locale={locale} items={sections} />
         <MenuList locale={locale} items={general}>

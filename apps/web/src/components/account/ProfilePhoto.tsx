@@ -2,7 +2,7 @@
 
 import { Camera, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useState } from 'react';
 import type { Locale } from '@ruya/shared';
 import { Avatar } from '@/components/Avatar';
 import { FormAlert } from '@/components/FormAlert';
@@ -34,24 +34,19 @@ async function toSquare(file: File): Promise<Blob | null> {
   return webp?.type === 'image/webp' ? webp : encode('image/jpeg');
 }
 
-type Props = {
-  locale: Locale;
-  user: { id: string; name: string; photoUrl?: string };
-  isChild: boolean;
-  /** Name, role and email, shown beside the photo. */
-  children: ReactNode;
-};
+type Props = { locale: Locale; user: { id: string; name: string; photoUrl?: string }; isChild: boolean };
 
-/** The profile card with its photo: tap the camera to add or change it, or remove it. */
-export function ProfilePhoto({ locale, user, isChild, children }: Props) {
+/** Settings card for the profile photo: add, change or remove it. */
+export function ProfilePhoto({ locale, user, isChild }: Props) {
   const t = dictionaries[locale];
+  const a = t.account;
   const router = useRouter();
   const inputId = useId();
   const [preview, setPreview] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const photo = preview ?? user.photoUrl;
-  const pickLabel = photo ? t.account.photoChange : t.account.photoAdd;
+  const pickLabel = photo ? a.photoChange : a.photoAdd;
 
   const fail = (code: string) => setError(t.errors[code as keyof typeof t.errors] ?? t.errors.INTERNAL);
 
@@ -83,50 +78,53 @@ export function ProfilePhoto({ locale, user, isChild, children }: Props) {
   }
 
   return (
-    <section className="profile">
-      <div className="profile-photo">
+    <section className="card stack">
+      <h2 className="section-title">{a.photoTitle}</h2>
+      <div className="photo-setting">
         <div className="profile-photo-frame" data-busy={busy || undefined}>
           <Avatar name={user.name} id={user.id} photo={photo} size="xl" />
           <label htmlFor={inputId} className="profile-photo-btn" title={pickLabel}>
             {busy ? <span className="spinner" aria-hidden /> : <Camera size={18} aria-hidden />}
             <span className="visually-hidden">{pickLabel}</span>
           </label>
-          <input
-            id={inputId}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/*"
-            className="visually-hidden"
-            disabled={busy}
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              e.target.value = '';
-              if (file) void upload(file);
-            }}
-          />
         </div>
-        {user.photoUrl && !busy && (
-          <button type="button" className="profile-photo-remove" onClick={remove}>
-            <Trash2 size={14} aria-hidden />
-            {t.account.photoRemove}
-          </button>
-        )}
-        {busy && (
-          <span className="visually-hidden" role="status">
-            {t.account.photoSaving}
-          </span>
-        )}
-      </div>
 
-      <div className="profile-text">
-        {children}
-        <p className="profile-photo-hint">{t.account.photoHint(isChild)}</p>
-      </div>
-
-      {error && (
-        <div className="profile-error">
-          <FormAlert>{error}</FormAlert>
+        <div className="photo-setting-text">
+          <p className="muted">{a.photoHint(isChild)}</p>
+          <div className="photo-setting-actions">
+            {/* A label opens the file picker, so the visible button needs no script. */}
+            <label htmlFor={inputId} className="btn btn-secondary btn-sm" aria-disabled={busy || undefined}>
+              <Camera size={16} aria-hidden />
+              {busy ? a.photoSaving : pickLabel}
+            </label>
+            {user.photoUrl && !busy && (
+              <button type="button" className="btn btn-sm photo-setting-remove" onClick={remove}>
+                <Trash2 size={16} aria-hidden />
+                {a.photoRemove}
+              </button>
+            )}
+          </div>
         </div>
+
+        <input
+          id={inputId}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/*"
+          className="visually-hidden"
+          disabled={busy}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            e.target.value = '';
+            if (file) void upload(file);
+          }}
+        />
+      </div>
+      {busy && (
+        <span className="visually-hidden" role="status">
+          {a.photoSaving}
+        </span>
       )}
+      {error && <FormAlert>{error}</FormAlert>}
     </section>
   );
 }
