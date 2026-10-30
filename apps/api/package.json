@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
-    "start": "tsx --env-file=.env src/server.ts",
+    "start": "tsx src/server.ts",
     "typecheck": "tsc -p .",
     "test": "vitest run",
     "dev:db": "tsx scripts/dev-db.ts"
