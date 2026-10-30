@@ -132,7 +132,7 @@ const ar = {
   },
   signin: {
     or: 'أو',
-    withLink: 'سجل دخول',
+    withLink: 'أدخل برابط البريد الإلكتروني',
     withGoogle: 'أدخل بحساب Google',
     googleFailed: 'تعذر تسجيل الدخول عبر Google. حاول مرة أخرى أو استخدم طريقة أخرى.',
     withPhone: 'أدخل برقم الهاتف',
@@ -142,7 +142,7 @@ const ar = {
     linkSentTitle: 'تحقق من بريدك الإلكتروني',
     linkSentBody: (email: string): string =>
       `أرسلنا رابطاً إلى ${email}. افتحه لتسجيل الدخول من الجهاز الذي فتحت فيه البريد. يعمل مرة واحدة لمدة ١٥ دقيقة.`,
-    usePassword: 'أدخل ببريدك الإلكتروني وكلمة المرور',
+    usePassword: 'سجل دخول',
     continueTitle: 'أهلاً بك',
     continueBody: 'اضغط متابعة لتسجيل الدخول إلى الرؤية.',
     continue: 'متابعة',
