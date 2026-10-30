@@ -132,7 +132,7 @@ const ar = {
   },
   signin: {
     or: 'أو',
-    withLink: 'أدخل برابط البريد الإلكتروني',
+    withLink: 'سجل دخول',
     withGoogle: 'أدخل بحساب Google',
     googleFailed: 'تعذر تسجيل الدخول عبر Google. حاول مرة أخرى أو استخدم طريقة أخرى.',
     withPhone: 'أدخل برقم الهاتف',
