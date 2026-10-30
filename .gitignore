@@ -5,6 +5,7 @@ dist/
 .env.local
 *.log
 .dev-db/
+.vercel/
 .playwright-mcp/
 next-env.d.ts
 *.tsbuildinfo
