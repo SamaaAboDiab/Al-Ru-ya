@@ -142,7 +142,7 @@ const ar = {
     linkSentTitle: 'تحقق من بريدك الإلكتروني',
     linkSentBody: (email: string): string =>
       `أرسلنا رابطاً إلى ${email}. افتحه لتسجيل الدخول من الجهاز الذي فتحت فيه البريد. يعمل مرة واحدة لمدة ١٥ دقيقة.`,
-    usePassword: 'سجل دخول',
+    usePassword: 'أدخل',
     continueTitle: 'أهلاً بك',
     continueBody: 'اضغط متابعة لتسجيل الدخول إلى الرؤية.',
     continue: 'متابعة',
