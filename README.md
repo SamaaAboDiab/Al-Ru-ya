@@ -6,7 +6,7 @@
 
 **تنظيم زيارات الأطفال وجدولهم بعد الانفصال — بهدوء ووضوح**
 
-[Live Demo](https://al-ruya.vercel.app)
+[Try it live — جرّب الموقع](https://al-ruya.vercel.app)
 
 ![Al-Ru'ya](docs/screenshots/ruya-home.jpg)
 
@@ -14,116 +14,104 @@
 
 ---
 
-## About the Project
+## What is Al-Ru'ya? — الرؤية يعني إيه؟
 
-When parents separate, the child is often caught in the middle of confusion: who has the child this weekend, was the visit confirmed, what happened in the child's day?
+When parents separate, the child is often caught in the middle: Who has the child this weekend? Was the visit confirmed? How was the child's day?
 
-Al-Ru'ya puts everything in one calm place. Each parent sees the child's weekly schedule, visits are confirmed by both sides, and the child has a simple space to keep in touch with each parent. Each child's data stays private.
+Al-Ru'ya puts all of this in one calm place. Both parents see the child's week, visits are confirmed by both sides, and the child can keep in touch with each parent. Every child's information stays private.
 
-The app works in Arabic (RTL) and English.
+لما الأب والأم بينفصلوا، الطفل غالبًا بيبقى في النص: مين معاه الطفل الويك إند ده؟ الزيارة اتأكدت ولا لأ؟ يومه كان عامل إزاي؟
 
-## المشروع ده إيه؟
+الرؤية بتجمع كل ده في مكان واحد هادي. الأب والأم الاتنين بيشوفوا أسبوع الطفل، والزيارات بتتأكد من الطرفين، والطفل يقدر يفضل على تواصل مع كل واحد فيهم. وبيانات كل طفل خاصة بيه لوحده.
 
-لما الأب والأم بينفصلوا، الطفل غالبًا بيبقى في النص وسط لخبطة: مين معاه الطفل الويك إند ده؟ الزيارة اتأكدت ولا لأ؟ يومه كان عامل إزاي؟
+The site works in **Arabic and English** — switch any time from the language button at the top.
 
-الرؤية بتجمع كل ده في مكان واحد هادي. كل واحد من الأهل بيشوف جدول الطفل الأسبوعي، والزيارات بتتأكد من الطرفين، والطفل عنده مساحة بسيطة يتواصل منها مع أبوه وأمه. وبيانات كل طفل خاصة بيه لوحده.
-
-الموقع بيشتغل بالعربي والإنجليزي.
+الموقع بيشتغل **بالعربي والإنجليزي**، وتقدر تغيّر اللغة في أي وقت من الزرار اللي فوق.
 
 ---
 
-## Screenshots — صور من الموقع
+## How to use it — إزاي تستخدم الموقع
 
-| Register — إنشاء حساب للأهل | Sign In (English) — تسجيل الدخول |
-| :---: | :---: |
-| ![Register](docs/screenshots/ruya-register.jpg) | ![Sign in](docs/screenshots/ruya-login-en.jpg) |
+### 1. Create a parent account — اعمل حساب للأب أو الأم
 
----
+Choose whether you are the mother or the father, then enter your name, email and password.
 
-## Features — المميزات
+اختار إنت الأم ولا الأب، واكتب اسمك وإيميلك وباسورد.
 
-**For Parents — للأهل**
+![Register](docs/screenshots/ruya-register.jpg)
 
-| Feature | Description | الميزة |
+### 2. Your home page — صفحتك الرئيسية
+
+After signing in you see a welcome page with **your next visit** at the top and **your children** below.
+
+بعد ما تدخل هتلاقي صفحة ترحيب، فوق فيها **الزيارة الجاية**، وتحت **أولادك**.
+
+![Parent home](docs/screenshots/ruya-parent-home.jpg)
+
+### 3. Add your child — ضيف طفلك
+
+Click **"إضافة طفل" (Add child)** and write the child's name and date of birth. If the child is 10 or older, you can also create a login so they can use the site themselves.
+
+دوس **"إضافة طفل"** واكتب اسم الطفل وتاريخ ميلاده. لو الطفل عنده 10 سنين أو أكتر، تقدر تعمله حساب دخول عشان يستخدم الموقع بنفسه.
+
+![Add child](docs/screenshots/ruya-add-child.jpg)
+
+### 4. Invite the other parent — ادعي الطرف التاني
+
+From the child's card, click **"دعوة الطرف التاني" (Invite the other parent)**. They get a link by email, and from then on both of you follow the same child.
+
+من كارت الطفل دوس **"دعوة الطرف التاني"**. هيوصله لينك على الإيميل، ومن ساعتها انتوا الاتنين بتتابعوا نفس الطفل.
+
+### 5. Follow your child — تابع طفلك
+
+Open the child's page to see everything in one place:
+
+افتح صفحة الطفل وهتلاقي كل حاجة قدامك:
+
+| Tab | What you see | التبويب |
 | --- | --- | --- |
-| Children | Add each child and manage their profile | إضافة كل طفل وإدارة بياناته |
-| Invitations | Invite the other parent or the child by email link | دعوة الطرف التاني أو الطفل بلينك على الإيميل |
-| Weekly schedule | A shared weekly schedule both parents can see | جدول أسبوعي مشترك بيشوفه الأب والأم |
-| Visits | Plan visits and confirm them from both sides | تنظيم الزيارات وتأكيدها من الطرفين |
-| Child's day | A daily log of the child's day | سجل يومي ليوم الطفل |
-| Messages | Message the child directly | رسايل مباشرة مع الطفل |
-| Notifications | Alerts for visits, schedule changes and messages | تنبيهات بالزيارات وتغييرات الجدول والرسايل |
+| Summary | Today at a glance: schedule, diary, visits and messages | **الملخص**: اليوم كله على بعضه |
+| Schedule | The child's weekly schedule | **الجدول**: جدول الطفل الأسبوعي |
+| Diary | What the child did today, with the time of each item | **اليوميات**: الطفل عمل إيه النهارده، وكل حاجة بوقتها |
+| Visits | Every visit and its status — nothing is deleted, every change is recorded with who made it and when | **الزيارات**: كل زيارة وحالتها — مفيش زيارة بتتمسح، وكل تغيير متسجل بوقته وصاحبه |
+| Messages | A private chat between you and your child | **الرسايل**: محادثة خاصة بينك وبين طفلك |
 
-**For the Child — للطفل**
+![Child summary](docs/screenshots/ruya-child-summary.jpg)
 
-| Feature | Description | الميزة |
-| --- | --- | --- |
-| My schedule | See the week and upcoming visits | يشوف جدوله والزيارات الجاية |
-| My day | Follow the day's plan | يتابع يومه |
-| Messages | Talk to each parent separately | يكلّم كل واحد من أهله لوحده |
+### 6. The child's side — من ناحية الطفل
 
-**Accounts — الحسابات**
+The child signs in with their own account. They fill in their weekly schedule and their day, see their upcoming visits, and message each parent separately.
 
-Sign in with email and password, a magic email link, or a phone code · password reset · Google sign-in (optional).
+الطفل بيدخل بحسابه هو. بيكتب جدوله الأسبوعي ويومه، ويشوف زياراته الجاية، ويكلّم كل واحد من أهله لوحده.
 
-تسجيل دخول بالإيميل والباسورد، أو بلينك على الإيميل، أو بكود على الموبايل · استرجاع الباسورد · الدخول بجوجل (اختياري).
+### 7. Notifications — الإشعارات
+
+The bell at the top tells you about new visits, schedule changes and messages.
+
+الجرس اللي فوق بينبّهك بالزيارات الجديدة، وتغييرات الجدول، والرسايل.
 
 ---
 
-## Tech Stack — التقنيات المستخدمة
+## Ways to sign in — طرق الدخول
 
-| Layer | Technologies |
-| --- | --- |
-| Frontend — الواجهة | Next.js, React, TypeScript, Lucide icons |
-| Backend — السيرفر | Node.js, Express, TypeScript, JWT, Zod validation, Helmet, rate limiting, Nodemailer |
-| Database — قاعدة البيانات | MongoDB with Mongoose |
-| Shared — مشترك | `packages/shared`: shared types and validation used by both web and API |
-| Testing — الاختبارات | Vitest, Supertest, in-memory MongoDB |
+- Email and password — بالإيميل والباسورد
+- A sign-in link sent to your email — بلينك يوصلك على الإيميل
+- Forgot your password? Reset it by email — نسيت الباسورد؟ ترجّعه من الإيميل
 
-Monorepo structure:
-
-```
-apps/api         Express + MongoDB API
-apps/web         Next.js web app
-packages/shared  Shared types and validation
-```
+![Sign in](docs/screenshots/ruya-login-en.jpg)
 
 ---
 
-## Run Locally — التشغيل على جهازك
+## Built with — اتعمل بإيه
 
-Requires Node 20+.
-
-Create `apps/api/.env`:
-
-```
-PORT=4000
-MONGODB_URI=mongodb://127.0.0.1:27017/ruya
-JWT_SECRET= # 32+ random characters
-WEB_ORIGIN=http://localhost:3000
-```
-
-Optional: `SMTP_*` for email, `GOOGLE_CLIENT_*` for Google sign-in, `TWILIO_*` for phone codes.
-
-```bash
-npm install
-cp apps/web/.env.example apps/web/.env.local
-npm run dev:db    # local MongoDB (skip if you have one)
-npm run dev:api   # http://localhost:4000
-npm run dev:web   # http://localhost:3000
-```
-
-Tests:
-
-```bash
-npm test
-npm run typecheck
-```
+Next.js · React · TypeScript · Node.js · Express · MongoDB
 
 ---
 
 <div align="center">
 
 Made by **Samaa Abo Diab** · [Portfolio](https://samaa-portfolio21.vercel.app) · [LinkedIn](https://www.linkedin.com/in/samaa-abo-diab)
+
+© Samaa Abo Diab. All rights reserved.
 
 </div>
